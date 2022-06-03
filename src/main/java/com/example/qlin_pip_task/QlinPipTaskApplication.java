@@ -8,6 +8,7 @@ public class QlinPipTaskApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(QlinPipTaskApplication.class, args);
+        System.out.println("hello");
     }
 
 }
