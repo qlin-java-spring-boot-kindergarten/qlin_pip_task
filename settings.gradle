@@ -6,3 +6,6 @@ pluginManagement {
     }
 }
 rootProject.name = 'qlin_pip_task'
+include 'src:isolation-test'
+findProject(':src:isolation-test')?.name = 'isolation-test'
+
