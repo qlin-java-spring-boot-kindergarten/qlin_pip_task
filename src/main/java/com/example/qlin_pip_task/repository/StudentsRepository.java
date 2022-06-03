@@ -1,7 +1,6 @@
 package com.example.qlin_pip_task.repository;
 
 import com.example.qlin_pip_task.dto.StudentsData;
-import com.example.qlin_pip_task.dto.StudentsResponse;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
