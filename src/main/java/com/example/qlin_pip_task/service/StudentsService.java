@@ -1,6 +1,6 @@
 package com.example.qlin_pip_task.service;
 
-import com.example.qlin_pip_task.dto.Student;
+import com.example.qlin_pip_task.dto.StudentResponse;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,8 +13,11 @@ public class StudentsService {
 
     private final StudentRepository studentRepository;
 
-    public List<Student> getAllStudentsResponse() {
-        List<Student> studentList = studentRepository.findAll();
-        return studentList;
+    private final StudentResponse studentResponse;
+
+    public StudentResponse getAllStudentsResponse() {
+        List<StudentResponse.Student> allStudentsData = studentRepository.findAll();
+        studentResponse.setData(allStudentsData);
+        return studentResponse;
     }
 }
