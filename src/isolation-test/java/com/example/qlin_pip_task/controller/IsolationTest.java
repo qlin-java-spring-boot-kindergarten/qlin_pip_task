@@ -1,7 +1,7 @@
 package com.example.qlin_pip_task.controller;
 
-import io.restassured.RestAssured;
 import com.example.qlin_pip_task.QlinPipTaskApplication;
+import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
