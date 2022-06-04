@@ -12,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 public class StudentsResponse {
-    private List<StudentsData> data;
+    private List<Student> data;
 }

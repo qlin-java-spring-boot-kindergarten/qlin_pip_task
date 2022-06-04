@@ -1,6 +1,6 @@
 package com.example.qlin_pip_task.repository;
 
-import com.example.qlin_pip_task.dto.StudentsData;
+import com.example.qlin_pip_task.dto.Student;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -13,24 +13,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentsRepository {
 
-    public List<StudentsData> getAllData() {
+    public List<Student> getAllData() {
 
-        List<StudentsData> studentsDataList = new ArrayList<>();
+        List<Student> studentList = new ArrayList<>();
 
-        StudentsData studentsDataOne = new StudentsData();
-        studentsDataOne.setId(1);
-        studentsDataOne.setName("aaaaa");
-        studentsDataOne.setGrade("3");
-        studentsDataOne.setClassroom("1");
+        Student studentOne = new Student();
+        studentOne.setId(1);
+        studentOne.setName("aaaaa");
+        studentOne.setGrade(3);
+        studentOne.setClassroom(1);
 
-        StudentsData studentsDataTwo = new StudentsData();
-        studentsDataTwo.setId(2);
-        studentsDataTwo.setName("bbbbb");
-        studentsDataTwo.setGrade("1");
-        studentsDataTwo.setClassroom("1");
+        Student studentTwo = new Student();
+        studentTwo.setId(2);
+        studentTwo.setName("bbbbb");
+        studentTwo.setGrade(1);
+        studentTwo.setClassroom(1);
 
-        studentsDataList.add(studentsDataOne);
-        studentsDataList.add(studentsDataTwo);
-        return studentsDataList;
+        studentList.add(studentOne);
+        studentList.add(studentTwo);
+        return studentList;
     }
 }
