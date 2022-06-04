@@ -20,4 +20,9 @@ public class StudentsService {
         studentResponse.setData(allStudentsData);
         return studentResponse;
     }
+
+    public String save(StudentResponse.Student student){
+        StudentResponse.Student studentData = studentRepository.save(student);
+        return String.valueOf(studentData.getId());
+    }
 }

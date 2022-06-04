@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.SequenceGenerator;
 import java.util.List;
 
 @Data
@@ -30,7 +29,8 @@ public class StudentResponse {
     @Entity(name = "student")
     public static class Student {
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.AUTO, generator = "student_seq_generator")
+        @SequenceGenerator(name = "student_seq_generator", sequenceName = "student_seq", allocationSize=1)
         private Integer id;
         private String name;
         private Integer grade;
