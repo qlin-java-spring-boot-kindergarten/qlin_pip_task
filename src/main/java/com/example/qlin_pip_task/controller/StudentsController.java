@@ -3,11 +3,15 @@ package com.example.qlin_pip_task.controller;
 import com.example.qlin_pip_task.dto.StudentResponse;
 import com.example.qlin_pip_task.service.StudentsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,10 +24,12 @@ public class StudentsController {
         return ResponseEntity.ok(studentsService.getAllStudentsResponse());
     }
 
-    @PostMapping("/students")
-    public ResponseEntity<String> receiveStudentData(@RequestBody StudentResponse.Student student){
+    @PostMapping( "/students")
+    public ResponseEntity<Map<String, Object>> receiveStudentData(@RequestBody StudentResponse.Student student){
         String saveData = studentsService.save(student);
-        return ResponseEntity.ok(saveData);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", saveData);
+        return ResponseEntity.ok(map);
     }
 
 }

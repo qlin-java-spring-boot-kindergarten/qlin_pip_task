@@ -29,8 +29,8 @@ public class StudentResponse {
     @Entity(name = "student")
     public static class Student {
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO, generator = "student_seq_generator")
-        @SequenceGenerator(name = "student_seq_generator", sequenceName = "student_seq", allocationSize=1)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_generator")
+        @SequenceGenerator(name = "student_id_generator", sequenceName = "student_id_seq", allocationSize = 1)
         private Integer id;
         private String name;
         private Integer grade;

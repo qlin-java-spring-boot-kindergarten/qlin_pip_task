@@ -23,6 +23,6 @@ public class StudentsService {
 
     public String save(StudentResponse.Student student){
         StudentResponse.Student studentData = studentRepository.save(student);
-        return String.valueOf(studentData.getId());
+        return studentData.getId().toString();
     }
 }
