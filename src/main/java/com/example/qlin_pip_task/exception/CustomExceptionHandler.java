@@ -16,4 +16,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             RuntimeException exception, WebRequest webRequest) {
         return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
     }
+
+    @ExceptionHandler(value = {GradeInvalidException.class})
+    protected ResponseEntity<Object> handleGradeInvalidException(
+            RuntimeException exception, WebRequest webRequest) {
+        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
+    }
 }
