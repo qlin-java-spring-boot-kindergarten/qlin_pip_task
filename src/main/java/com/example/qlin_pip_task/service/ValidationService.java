@@ -14,7 +14,7 @@ public class ValidationService {
         if (student.getName() == null) {
             throw new NameInvalidException("Name is invalid.");
         }
-        if (student.getGrade() < 1 ) {
+        if (student.getGrade() < 1 || student.getGrade() > 9) {
             throw new GradeInvalidException("Grade is invalid.");
         }
         return true;

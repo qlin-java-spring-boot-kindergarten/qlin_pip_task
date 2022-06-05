@@ -46,4 +46,18 @@ class ValidationServiceTest {
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
+    @Test
+    void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine(){
+        Exception exception = assertThrows(GradeInvalidException.class, ()->{
+                validationService.checkIfStudentDataIsValid(
+                StudentResponse.Student.builder()
+                        .name("name")
+                        .id(1)
+                        .classroom(1)
+                        .grade(10)
+                        .build());
+        });
+        assertTrue(exception.getMessage().contains("Grade is invalid."));
+    }
+
 }
