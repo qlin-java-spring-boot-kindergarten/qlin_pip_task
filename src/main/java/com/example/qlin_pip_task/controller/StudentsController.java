@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -19,13 +20,14 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/students")
 public class StudentsController {
 
     private final StudentsService studentsService;
 
     private final ValidationService validationService;
 
-    @PostMapping("/students")
+    @PostMapping
     public ResponseEntity<Map<String, Object>> receiveStudentData(StudentResponse.Student student, @RequestBody @Validated StudentSubmitRequest studentSubmitRequest){
         validationService.validateStudentData(studentSubmitRequest);
         studentsService.handle(student, studentSubmitRequest);
@@ -35,12 +37,6 @@ public class StudentsController {
         return ResponseEntity.ok(map);
     }
 
-
-    @GetMapping("/students/{id}")
-    public ResponseEntity< Optional<StudentResponse.Student>> getTheStudentData(@PathVariable Integer id) {
-        Optional<StudentResponse.Student> theStudent = validationService.getTheExistedStudentData(id);
-        return ResponseEntity.ok(theStudent);
-    }
 
 }
 
