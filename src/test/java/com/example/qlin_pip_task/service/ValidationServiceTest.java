@@ -32,6 +32,19 @@ class ValidationServiceTest {
         });
         assertTrue(exception.getMessage().contains("Name is invalid."));
     }
+    @Test
+    void should_throw_name_invalid_exception_when_name_is_empty() {
+        Exception exception = assertThrows(NameInvalidException.class, () -> {
+            validationService.checkIfStudentDataIsValid(
+                    StudentResponse.Student.builder()
+                            .name("")
+                            .id(1)
+                            .classroom(1)
+                            .grade(1)
+                            .build());
+        });
+        assertTrue(exception.getMessage().contains("Name is invalid."));
+    }
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
