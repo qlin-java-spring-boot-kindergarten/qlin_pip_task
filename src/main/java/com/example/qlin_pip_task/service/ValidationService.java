@@ -18,7 +18,7 @@ public class ValidationService {
         if (student.getGrade() < 1 || student.getGrade() > 9) {
             throw new GradeInvalidException("Grade is invalid.");
         }
-        if (student.getClassroom() < 1) {
+        if (student.getClassroom() < 1 || student.getClassroom() > 20) {
             throw new ClassroomInvalidException("Classroom is invalid.");
         }
         return true;

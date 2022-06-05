@@ -20,57 +20,71 @@ class ValidationServiceTest {
     private ValidationService validationService;
 
     @Test
-    void should_throw_name_invalid_exception_when_name_is_null(){
-        Exception exception = assertThrows(NameInvalidException.class, ()->{
-                validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
-                        .name(null)
-                        .id(1)
-                        .classroom(1)
-                        .grade(1)
-                        .build());
+    void should_throw_name_invalid_exception_when_name_is_null() {
+        Exception exception = assertThrows(NameInvalidException.class, () -> {
+            validationService.checkIfStudentDataIsValid(
+                    StudentResponse.Student.builder()
+                            .name(null)
+                            .id(1)
+                            .classroom(1)
+                            .grade(1)
+                            .build());
         });
         assertTrue(exception.getMessage().contains("Name is invalid."));
     }
 
     @Test
-    void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one(){
-        Exception exception = assertThrows(GradeInvalidException.class, ()->{
-                validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
-                        .name("name")
-                        .id(1)
-                        .classroom(1)
-                        .grade(0)
-                        .build());
+    void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
+        Exception exception = assertThrows(GradeInvalidException.class, () -> {
+            validationService.checkIfStudentDataIsValid(
+                    StudentResponse.Student.builder()
+                            .name("name")
+                            .id(1)
+                            .classroom(1)
+                            .grade(0)
+                            .build());
         });
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
     @Test
-    void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine(){
-        Exception exception = assertThrows(GradeInvalidException.class, ()->{
-                validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
-                        .name("name")
-                        .id(1)
-                        .classroom(1)
-                        .grade(10)
-                        .build());
+    void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine() {
+        Exception exception = assertThrows(GradeInvalidException.class, () -> {
+            validationService.checkIfStudentDataIsValid(
+                    StudentResponse.Student.builder()
+                            .name("name")
+                            .id(1)
+                            .classroom(1)
+                            .grade(10)
+                            .build());
         });
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
     @Test
-    void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one(){
-        Exception exception = assertThrows(ClassroomInvalidException.class, ()->{
-                validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
-                        .name("name")
-                        .id(1)
-                        .classroom(0)
-                        .grade(1)
-                        .build());
+    void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one() {
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> {
+            validationService.checkIfStudentDataIsValid(
+                    StudentResponse.Student.builder()
+                            .name("name")
+                            .id(1)
+                            .classroom(0)
+                            .grade(1)
+                            .build());
+        });
+        assertTrue(exception.getMessage().contains("Classroom is invalid."));
+    }
+
+    @Test
+    void should_throw_classroom_invalid_exception_when_classroom_is_larger_than_twenty() {
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> {
+            validationService.checkIfStudentDataIsValid(
+                    StudentResponse.Student.builder()
+                            .name("name")
+                            .id(1)
+                            .classroom(21)
+                            .grade(1)
+                            .build());
         });
         assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
