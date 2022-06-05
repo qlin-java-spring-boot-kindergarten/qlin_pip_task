@@ -120,13 +120,9 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_data_not_found_exception_when_id_is_not_in_the_table() {
-
-        Optional<StudentResponse.Student> theStudentResponse = studentsService.getTheStudentResponse(anyInt());
-
         Exception exception = assertThrows(DataNotFoundException.class, () -> {
             validationService.getTheExistedStudentData(anyInt());
         });
-
         assertTrue(exception.getMessage().contains("Data is not found."));
     }
 
