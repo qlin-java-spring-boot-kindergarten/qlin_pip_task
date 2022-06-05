@@ -21,4 +21,19 @@ public class StudentsControllerTest extends IsolationTest {
 
 
     }
+    @Test
+    void should_return_student_when_call_get_students_id_api() {
+
+        givenRestWithAuth()
+                .when()
+                .get("/students/1")
+                .then()
+                .statusCode(200)
+                .body("id", Matchers.equalTo(1))
+                .body("name", Matchers.equalTo("student1"))
+                .body("grade", Matchers.equalTo(1))
+                .body("classroom", Matchers.equalTo(1));
+
+
+    }
 }
