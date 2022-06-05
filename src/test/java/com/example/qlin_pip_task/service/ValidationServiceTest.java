@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.StudentResponse;
+import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
 import org.junit.jupiter.api.Test;
@@ -58,6 +59,20 @@ class ValidationServiceTest {
                         .build());
         });
         assertTrue(exception.getMessage().contains("Grade is invalid."));
+    }
+
+    @Test
+    void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one(){
+        Exception exception = assertThrows(ClassroomInvalidException.class, ()->{
+                validationService.checkIfStudentDataIsValid(
+                StudentResponse.Student.builder()
+                        .name("name")
+                        .id(1)
+                        .classroom(0)
+                        .grade(1)
+                        .build());
+        });
+        assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
 
 }

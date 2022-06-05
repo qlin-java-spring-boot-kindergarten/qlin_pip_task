@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.StudentResponse;
+import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ public class ValidationService {
         }
         if (student.getGrade() < 1 || student.getGrade() > 9) {
             throw new GradeInvalidException("Grade is invalid.");
+        }
+        if (student.getClassroom() < 1) {
+            throw new ClassroomInvalidException("Classroom is invalid.");
         }
         return true;
     }
