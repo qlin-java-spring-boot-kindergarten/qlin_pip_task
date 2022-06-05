@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
 
@@ -22,7 +20,7 @@ class StudentRepositoryTest {
     private StudentResponse.Student student;
 
     @Test
-    void should_return_student_object_given_find_by_id(){
+    void should_return_student_object_given_find_by_id() {
         StudentResponse.Student student = StudentResponse.Student.builder()
                 .name("name")
                 .id(1)
@@ -32,10 +30,10 @@ class StudentRepositoryTest {
         studentRepository.save(student);
         when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 
-        StudentResponse.Student student1 = studentRepository.findById(student.getId()).get();
+        StudentResponse.Student theStudent = studentRepository.findById(student.getId()).get();
 
-        assertThat(student1).isNotNull();
-        assertThat(student1.getName()).isEqualTo("name");
+        assertThat(theStudent).isNotNull();
+        assertThat(theStudent.getName()).isEqualTo("name");
 
-}
+    }
 }
