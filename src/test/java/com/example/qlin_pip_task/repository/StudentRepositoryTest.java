@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,10 +31,10 @@ class StudentRepositoryTest {
         studentRepository.save(student);
         when(studentRepository.findById(student.getId())).thenReturn(Optional.of(student));
 
-        StudentResponse.Student theStudent = studentRepository.findById(student.getId()).get();
+        Optional<StudentResponse.Student> theStudent = studentRepository.findById(student.getId());
 
         assertThat(theStudent).isNotNull();
-        assertThat(theStudent.getName()).isEqualTo("name");
+        assertThat(student.getId().getClass().getName()).isEqualTo("name");
 
     }
 }
