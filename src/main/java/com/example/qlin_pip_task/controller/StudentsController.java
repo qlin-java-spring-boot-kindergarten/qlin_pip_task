@@ -25,11 +25,6 @@ public class StudentsController {
 
     private final ValidationService validationService;
 
-    @GetMapping("/students")
-    public ResponseEntity<StudentResponse> getStudentsData() {
-        return ResponseEntity.ok(studentsService.getAllStudentsResponse());
-    }
-
     @PostMapping("/students")
     public ResponseEntity<Map<String, Object>> receiveStudentData(StudentResponse.Student student, @RequestBody @Validated StudentSubmitRequest studentSubmitRequest){
         validationService.validateStudentData(studentSubmitRequest);
