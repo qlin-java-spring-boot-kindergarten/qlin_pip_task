@@ -22,7 +22,21 @@ public class MockStudentRepositoryImpl implements StudentRepository {
 
     @Override
     public List<StudentResponse.Student> findAll() {
-        return null;
+        StudentResponse.Student student1 = StudentResponse.Student.builder()
+                .name("student1")
+                .id(1)
+                .classroom(1)
+                .grade(1)
+                .build();
+
+        StudentResponse.Student student2 = StudentResponse.Student.builder()
+                .name("student2")
+                .id(2)
+                .classroom(2)
+                .grade(2)
+                .build();
+
+        return List.of(student1, student2);
     }
 
     @Override
