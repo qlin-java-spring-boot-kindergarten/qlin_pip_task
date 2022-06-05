@@ -14,9 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -120,10 +122,25 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_data_not_found_exception_when_id_is_not_in_the_table() {
+        when(studentsService.getTheStudentResponse(2)).thenReturn(Optional.empty());
         Exception exception = assertThrows(DataNotFoundException.class, () -> {
-            validationService.getTheExistedStudentData(anyInt());
+            validationService.getTheExistedStudentData(2);
         });
         assertTrue(exception.getMessage().contains("Data is not found."));
+    }
+
+    @Test
+    void should_return_valid_student_data_when_id_is_in_the_table(){
+        when(studentsService.getTheStudentResponse(1))
+                .thenReturn(Optional.ofNullable(StudentResponse.Student.builder()
+                        .name("name")
+                        .id(1)
+                        .classroom(1)
+                        .grade(1)
+                        .build()));
+        Optional<StudentResponse.Student> theExistedStudentData = validationService.getTheExistedStudentData(1);
+        assertThat(theExistedStudentData.isPresent()).isTrue();
+        assertThat(theExistedStudentData.get().getName()).isEqualTo("name");
     }
 
 

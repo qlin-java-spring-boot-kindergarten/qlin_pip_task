@@ -42,7 +42,6 @@ public class StudentsController {
     @GetMapping("/students/{id}")
     public ResponseEntity< Optional<StudentResponse.Student>> getTheStudentData(@PathVariable Integer id) {
         Optional<StudentResponse.Student> theStudent = validationService.getTheExistedStudentData(id);
-
         return ResponseEntity.ok(theStudent);
     }
 
