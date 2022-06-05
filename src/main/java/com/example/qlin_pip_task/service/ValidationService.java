@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class ValidationService {
 
     public void checkIfStudentDataIsValid(StudentResponse.Student student) {
-        if (student.getName().isEmpty()) {
+        if (student.getName() == null || student.getName().equals("")) {
             throw new NameInvalidException("Name is invalid.");
         }
         if (student.getGrade() < 1 || student.getGrade() > 9) {
