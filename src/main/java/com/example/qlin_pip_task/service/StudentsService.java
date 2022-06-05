@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
-import com.example.qlin_pip_task.dto.StudentResponse;
+import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.StudentResponse;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,11 @@ public class StudentsService {
 
     public Optional<StudentResponse.Student> getTheStudentResponse(Integer id) {
         return studentRepository.findById(id);
+    }
+
+    public void handle(StudentResponse.Student student, StudentSubmitRequest studentSubmitRequest) {
+        student.setName(studentSubmitRequest.getName());
+        student.setGrade(studentSubmitRequest.getGrade());
+        student.setClassroom(studentSubmitRequest.getClassroom());
     }
 }

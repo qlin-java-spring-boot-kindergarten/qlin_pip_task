@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.controller;
 
-import com.example.qlin_pip_task.dto.StudentResponse;
+import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.StudentResponse;
 import com.example.qlin_pip_task.service.StudentsService;
 import com.example.qlin_pip_task.service.ValidationService;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,12 @@ public class StudentsController {
     }
 
     @PostMapping("/students")
-    public ResponseEntity<Map<String, Object>> receiveStudentData(@RequestBody @Validated StudentResponse.Student student) {
-        validationService.checkIfStudentDataIsValid(student);
-        String saveData = studentsService.save(student);
+    public ResponseEntity<Map<String, Object>> receiveStudentData(StudentResponse.Student student, @RequestBody @Validated StudentSubmitRequest studentSubmitRequest){
+        validationService.validateStudentData(studentSubmitRequest);
+        studentsService.handle(student, studentSubmitRequest);
+        String savedStudentData = studentsService.save(student);
         HashMap<String, Object> map = new HashMap<>();
-        map.put("id", saveData);
+        map.put("id", savedStudentData);
         return ResponseEntity.ok(map);
     }
 

@@ -1,6 +1,6 @@
 package com.example.qlin_pip_task.mockbean;
 
-import com.example.qlin_pip_task.dto.StudentResponse;
+import com.example.qlin_pip_task.dto.response.StudentResponse;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;

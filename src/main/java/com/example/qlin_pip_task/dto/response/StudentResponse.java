@@ -1,4 +1,4 @@
-package com.example.qlin_pip_task.dto;
+package com.example.qlin_pip_task.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

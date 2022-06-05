@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
-import com.example.qlin_pip_task.dto.StudentResponse;
+import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.StudentResponse;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.DataNotFoundException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
@@ -16,16 +17,17 @@ public class ValidationService {
 
     private final StudentsService studentsService;
 
-    public void checkIfStudentDataIsValid(StudentResponse.Student student) {
-        if (student.getName() == null || student.getName().equals("")) {
+    public void validateStudentData(StudentSubmitRequest studentSubmitRequest) {
+        if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
             throw new NameInvalidException("Name is invalid.");
         }
-        if (student.getGrade() < 1 || student.getGrade() > 9) {
+        if (studentSubmitRequest.getGrade() < 1 || studentSubmitRequest.getGrade() > 9) {
             throw new GradeInvalidException("Grade is invalid.");
         }
-        if (student.getClassroom() < 1 || student.getClassroom() > 20) {
+        if (studentSubmitRequest.getClassroom() < 1 || studentSubmitRequest.getClassroom() > 20) {
             throw new ClassroomInvalidException("Classroom is invalid.");
         }
+
     }
 
 

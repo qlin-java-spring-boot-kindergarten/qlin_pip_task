@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
-import com.example.qlin_pip_task.dto.StudentResponse;
+import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.StudentResponse;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.DataNotFoundException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
@@ -30,10 +31,9 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_name_invalid_exception_when_name_is_null() {
-        Exception exception = assertThrows(NameInvalidException.class, () -> validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
+        Exception exception = assertThrows(NameInvalidException.class, () -> validationService.validateStudentData(
+                StudentSubmitRequest.builder()
                         .name(null)
-                        .id(1)
                         .classroom(1)
                         .grade(1)
                         .build()));
@@ -42,10 +42,9 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_name_invalid_exception_when_name_is_empty() {
-        Exception exception = assertThrows(NameInvalidException.class, () -> validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
+        Exception exception = assertThrows(NameInvalidException.class, () -> validationService.validateStudentData(
+                StudentSubmitRequest.builder()
                         .name("")
-                        .id(1)
                         .classroom(1)
                         .grade(1)
                         .build()));
@@ -54,10 +53,9 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
-        Exception exception = assertThrows(GradeInvalidException.class, () -> validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
+        Exception exception = assertThrows(GradeInvalidException.class, () -> validationService.validateStudentData(
+                StudentSubmitRequest.builder()
                         .name("name")
-                        .id(1)
                         .classroom(1)
                         .grade(0)
                         .build()));
@@ -66,10 +64,9 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine() {
-        Exception exception = assertThrows(GradeInvalidException.class, () -> validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
+        Exception exception = assertThrows(GradeInvalidException.class, () -> validationService.validateStudentData(
+                StudentSubmitRequest.builder()
                         .name("name")
-                        .id(1)
                         .classroom(1)
                         .grade(10)
                         .build()));
@@ -78,10 +75,9 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one() {
-        Exception exception = assertThrows(ClassroomInvalidException.class, () -> validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> validationService.validateStudentData(
+                StudentSubmitRequest.builder()
                         .name("name")
-                        .id(1)
                         .classroom(0)
                         .grade(1)
                         .build()));
@@ -90,10 +86,9 @@ class ValidationServiceTest {
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_larger_than_twenty() {
-        Exception exception = assertThrows(ClassroomInvalidException.class, () -> validationService.checkIfStudentDataIsValid(
-                StudentResponse.Student.builder()
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> validationService.validateStudentData(
+                StudentSubmitRequest.builder()
                         .name("name")
-                        .id(1)
                         .classroom(21)
                         .grade(1)
                         .build()));
