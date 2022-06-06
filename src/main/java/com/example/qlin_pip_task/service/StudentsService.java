@@ -3,10 +3,12 @@ package com.example.qlin_pip_task.service;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.mapper.StudentMapper;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,28 +22,32 @@ public class StudentsService {
 
     private final StudentResponses.StudentResponse StudentResponse;
 
-
+    private final StudentMapper studentMapper;
 
     public StudentResponses getAllStudentsResponse() {
 
         List<StudentEntity> allStudentsData = studentRepository.findAll();
         // mapper
-        studentResponsesAfterMapper;
+        StudentResponses studentResponses = studentMapper.entitiesToStudentResponses(allStudentsData);
 //        studentResponses.setData();
-        return studentResponsesAfterMapper;
+        return studentResponses;
     }
 
     public String save(StudentSubmitRequest studentSubmitRequest){
         /// mapper - studentSubmitRequest
-        studentEnityAfterMapper
-        StudentEntity studentData = studentRepository.save(studentEnityAfterMapper);
+        StudentEntity studentEntity = studentMapper.requestToStudentEntity(studentSubmitRequest);
+        StudentEntity studentData = studentRepository.save(studentEntity);
         return studentData.getId().toString();
     }
 
-    public Optional<StudentEntity.Student> getTheStudentResponse(Integer id) {
-        studentRepository.findById(id);
+    public Optional<StudentResponses.StudentResponse> getTheStudentResponse(Integer id) {
+        Optional<StudentEntity> studentEntity = studentRepository.findById(id);
+        if (studentEntity.isEmpty()){
+            throw new InvalidParameterException("Data is not found.");
+        }
         // mapper
-        return studentResponses;
+        StudentResponses.StudentResponse studentResponse = studentMapper.entityToStudentResponse(studentEntity);
+        return Optional.ofNullable(studentResponse);
     }
 
 }

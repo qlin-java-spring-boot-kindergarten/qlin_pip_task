@@ -8,30 +8,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.security.InvalidParameterException;
+
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {NameInvalidException.class})
-    protected ResponseEntity<Object> handleNameInvalidException(
+    @ExceptionHandler(value = {InvalidParameterException.class})
+    protected ResponseEntity<Object> handleInvalidParameterException(
             RuntimeException exception, WebRequest webRequest) {
         return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
     }
 
-    @ExceptionHandler(value = {GradeInvalidException.class})
-    protected ResponseEntity<Object> handleGradeInvalidException(
-            RuntimeException exception, WebRequest webRequest) {
-        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
-    }
-
-    @ExceptionHandler(value = {ClassroomInvalidException.class})
-    protected ResponseEntity<Object> handleClassroomInvalidException(
-            RuntimeException exception, WebRequest webRequest) {
-        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
-    }
-
-    @ExceptionHandler(value = {DataNotFoundException.class})
-    protected ResponseEntity<Object> handleDataNotFoundException(
-            RuntimeException exception, WebRequest webRequest) {
-        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, webRequest);
-    }
 }
