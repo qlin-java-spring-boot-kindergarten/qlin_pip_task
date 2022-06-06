@@ -1,12 +1,7 @@
 package com.example.qlin_pip_task.controller;
 
-import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import static io.restassured.RestAssured.given;
 
 
 public class StudentsControllerTest extends IsolationTest {

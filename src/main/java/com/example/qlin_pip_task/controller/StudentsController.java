@@ -32,19 +32,18 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> receiveStudentRequest(@RequestBody @Validated StudentSubmitRequest studentSubmitRequest) {
+    public ResponseEntity<Map<String, Integer>> receiveStudentRequest(@RequestBody @Validated StudentSubmitRequest studentSubmitRequest) {
         validationService.validateStudentData(studentSubmitRequest);
-        String savedStudentData = studentsService.save(studentSubmitRequest);
-        HashMap<String, Object> map = new HashMap<>();
+        Integer savedStudentData = studentsService.save(studentSubmitRequest);
+        HashMap<String, Integer> map = new HashMap<>();
         map.put("id", savedStudentData);
         return ResponseEntity.ok(map);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentResponses> getTheStudentData(@PathVariable Integer id) {
-        theStudentResponse = validationService.getTheExistedStudentData(id);
-        return ResponseEntity.ok(theStudentRepsons);
+    public ResponseEntity<StudentResponses.StudentResponse> getTheStudentData(@PathVariable Integer id) {
+        return ResponseEntity.ok(studentsService.getTheStudentResponse(id));
     }
 
 }

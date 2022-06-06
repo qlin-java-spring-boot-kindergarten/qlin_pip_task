@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,34 +21,34 @@ public class StudentsService {
 
     private final StudentResponses studentResponses;
 
-    private final StudentResponses.StudentResponse StudentResponse;
-
     private final StudentMapper studentMapper;
 
     public StudentResponses getAllStudentsResponse() {
 
         List<StudentEntity> allStudentsData = studentRepository.findAll();
         // mapper
-        StudentResponses studentResponses = studentMapper.entitiesToStudentResponses(allStudentsData);
-//        studentResponses.setData();
+        ArrayList<StudentResponses.StudentResponse> studentResponsesList = new ArrayList<>();
+        for (StudentEntity allStudentsDatum : allStudentsData) {
+            StudentResponses.StudentResponse studentResponse = studentMapper.entityToStudentResponse(allStudentsDatum);
+            studentResponsesList.add(studentResponse);
+        }
+        studentResponses.setData(studentResponsesList);
         return studentResponses;
     }
 
-    public String save(StudentSubmitRequest studentSubmitRequest){
-        /// mapper - studentSubmitRequest
+    public Integer save(StudentSubmitRequest studentSubmitRequest){
         StudentEntity studentEntity = studentMapper.requestToStudentEntity(studentSubmitRequest);
         StudentEntity studentData = studentRepository.save(studentEntity);
-        return studentData.getId().toString();
+        return studentData.getId();
     }
 
-    public Optional<StudentResponses.StudentResponse> getTheStudentResponse(Integer id) {
-        Optional<StudentEntity> studentEntity = studentRepository.findById(id);
-        if (studentEntity.isEmpty()){
+    public StudentResponses.StudentResponse getTheStudentResponse(Integer id) {
+        Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
+        if (optionalStudentEntity.isEmpty()){
             throw new InvalidParameterException("Data is not found.");
         }
-        // mapper
-        StudentResponses.StudentResponse studentResponse = studentMapper.entityToStudentResponse(studentEntity);
-        return Optional.ofNullable(studentResponse);
+        StudentEntity studentEntity = optionalStudentEntity.get();
+        return studentMapper.entityToStudentResponse(studentEntity);
     }
 
 }

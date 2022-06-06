@@ -1,6 +1,5 @@
 package com.example.qlin_pip_task.dto.response;
 
-import com.example.qlin_pip_task.entity.StudentEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +21,7 @@ public class StudentResponses {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Component
     public static class StudentResponse {
         private Integer id;
         private String name;
