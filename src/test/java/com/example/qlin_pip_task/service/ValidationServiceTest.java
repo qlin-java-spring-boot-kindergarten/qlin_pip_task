@@ -1,7 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import com.example.qlin_pip_task.dto.response.StudentResponse;
+import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.DataNotFoundException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
@@ -105,13 +105,13 @@ class ValidationServiceTest {
     @Test
     void should_return_valid_student_data_when_id_is_in_the_table(){
         when(studentsService.getTheStudentResponse(1))
-                .thenReturn(Optional.ofNullable(StudentResponse.Student.builder()
+                .thenReturn(Optional.ofNullable(StudentEntity.Student.builder()
                         .name("name")
                         .id(1)
                         .classroom(1)
                         .grade(1)
                         .build()));
-        Optional<StudentResponse.Student> theExistedStudentData = validationService.getTheExistedStudentData(1);
+        Optional<StudentEntity.Student> theExistedStudentData = validationService.getTheExistedStudentData(1);
         assertThat(theExistedStudentData.isPresent()).isTrue();
         assertThat(theExistedStudentData.get().getName()).isEqualTo("name");
     }

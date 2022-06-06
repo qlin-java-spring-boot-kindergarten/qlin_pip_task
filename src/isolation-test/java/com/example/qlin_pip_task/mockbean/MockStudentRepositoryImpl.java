@@ -1,6 +1,6 @@
 package com.example.qlin_pip_task.mockbean;
 
-import com.example.qlin_pip_task.dto.response.StudentResponse;
+import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
@@ -21,15 +21,15 @@ import java.util.function.Function;
 public class MockStudentRepositoryImpl implements StudentRepository {
 
     @Override
-    public List<StudentResponse.Student> findAll() {
-        StudentResponse.Student student1 = StudentResponse.Student.builder()
+    public List<StudentEntity.Student> findAll() {
+        StudentEntity.Student student1 = StudentEntity.Student.builder()
                 .name("student1")
                 .id(1)
                 .classroom(1)
                 .grade(1)
                 .build();
 
-        StudentResponse.Student student2 = StudentResponse.Student.builder()
+        StudentEntity.Student student2 = StudentEntity.Student.builder()
                 .name("student2")
                 .id(2)
                 .classroom(2)
@@ -40,17 +40,17 @@ public class MockStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public List<StudentResponse.Student> findAll(Sort sort) {
+    public List<StudentEntity.Student> findAll(Sort sort) {
         return null;
     }
 
     @Override
-    public Page<StudentResponse.Student> findAll(Pageable pageable) {
+    public Page<StudentEntity.Student> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public List<StudentResponse.Student> findAllById(Iterable<Integer> integers) {
+    public List<StudentEntity.Student> findAllById(Iterable<Integer> integers) {
         return null;
     }
 
@@ -65,7 +65,7 @@ public class MockStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public void delete(StudentResponse.Student entity) {
+    public void delete(StudentEntity.Student entity) {
 
     }
 
@@ -75,7 +75,7 @@ public class MockStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public void deleteAll(Iterable<? extends StudentResponse.Student> entities) {
+    public void deleteAll(Iterable<? extends StudentEntity.Student> entities) {
 
     }
 
@@ -85,18 +85,18 @@ public class MockStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public <S extends StudentResponse.Student> S save(S entity) {
+    public <S extends StudentEntity.Student> S save(S entity) {
         return null;
     }
 
     @Override
-    public <S extends StudentResponse.Student> List<S> saveAll(Iterable<S> entities) {
+    public <S extends StudentEntity.Student> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
 
     @Override
-    public Optional<StudentResponse.Student> findById(Integer integer) {
-        return Optional.of(StudentResponse.Student.builder()
+    public Optional<StudentEntity.Student> findById(Integer integer) {
+        return Optional.of(StudentEntity.Student.builder()
                 .name("student1")
                 .id(1)
                 .classroom(1)
@@ -115,17 +115,17 @@ public class MockStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public <S extends StudentResponse.Student> S saveAndFlush(S entity) {
+    public <S extends StudentEntity.Student> S saveAndFlush(S entity) {
         return null;
     }
 
     @Override
-    public <S extends StudentResponse.Student> List<S> saveAllAndFlush(Iterable<S> entities) {
+    public <S extends StudentEntity.Student> List<S> saveAllAndFlush(Iterable<S> entities) {
         return null;
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<StudentResponse.Student> entities) {
+    public void deleteAllInBatch(Iterable<StudentEntity.Student> entities) {
 
     }
 
@@ -140,52 +140,52 @@ public class MockStudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public StudentResponse.Student getOne(Integer integer) {
+    public StudentEntity.Student getOne(Integer integer) {
         return null;
     }
 
     @Override
-    public StudentResponse.Student getById(Integer integer) {
+    public StudentEntity.Student getById(Integer integer) {
         return null;
     }
 
     @Override
-    public StudentResponse.Student getReferenceById(Integer integer) {
+    public StudentEntity.Student getReferenceById(Integer integer) {
         return null;
     }
 
     @Override
-    public <S extends StudentResponse.Student> Optional<S> findOne(Example<S> example) {
+    public <S extends StudentEntity.Student> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends StudentResponse.Student> List<S> findAll(Example<S> example) {
+    public <S extends StudentEntity.Student> List<S> findAll(Example<S> example) {
         return null;
     }
 
     @Override
-    public <S extends StudentResponse.Student> List<S> findAll(Example<S> example, Sort sort) {
+    public <S extends StudentEntity.Student> List<S> findAll(Example<S> example, Sort sort) {
         return null;
     }
 
     @Override
-    public <S extends StudentResponse.Student> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends StudentEntity.Student> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends StudentResponse.Student> long count(Example<S> example) {
+    public <S extends StudentEntity.Student> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends StudentResponse.Student> boolean exists(Example<S> example) {
+    public <S extends StudentEntity.Student> boolean exists(Example<S> example) {
         return false;
     }
 
     @Override
-    public <S extends StudentResponse.Student, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends StudentEntity.Student, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 }

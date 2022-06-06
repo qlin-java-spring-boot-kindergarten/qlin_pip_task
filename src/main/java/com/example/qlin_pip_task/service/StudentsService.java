@@ -1,7 +1,8 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import com.example.qlin_pip_task.dto.response.StudentResponse;
+import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,26 +16,32 @@ public class StudentsService {
 
     private final StudentRepository studentRepository;
 
-    private final StudentResponse studentResponse;
+    private final StudentResponses studentResponses;
 
-    public StudentResponse getAllStudentsResponse() {
-        List<StudentResponse.Student> allStudentsData = studentRepository.findAll();
-        studentResponse.setData(allStudentsData);
-        return studentResponse;
+    private final StudentResponses.StudentResponse StudentResponse;
+
+
+
+    public StudentResponses getAllStudentsResponse() {
+
+        List<StudentEntity> allStudentsData = studentRepository.findAll();
+        // mapper
+        studentResponsesAfterMapper;
+//        studentResponses.setData();
+        return studentResponsesAfterMapper;
     }
 
-    public String save(StudentResponse.Student student){
-        StudentResponse.Student studentData = studentRepository.save(student);
+    public String save(StudentSubmitRequest studentSubmitRequest){
+        /// mapper - studentSubmitRequest
+        studentEnityAfterMapper
+        StudentEntity studentData = studentRepository.save(studentEnityAfterMapper);
         return studentData.getId().toString();
     }
 
-    public Optional<StudentResponse.Student> getTheStudentResponse(Integer id) {
-        return studentRepository.findById(id);
+    public Optional<StudentEntity.Student> getTheStudentResponse(Integer id) {
+        studentRepository.findById(id);
+        // mapper
+        return studentResponses;
     }
 
-    public void handle(StudentResponse.Student student, StudentSubmitRequest studentSubmitRequest) {
-        student.setName(studentSubmitRequest.getName());
-        student.setGrade(studentSubmitRequest.getGrade());
-        student.setClassroom(studentSubmitRequest.getClassroom());
-    }
 }

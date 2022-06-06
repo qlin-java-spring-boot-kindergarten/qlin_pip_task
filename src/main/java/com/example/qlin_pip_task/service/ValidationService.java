@@ -1,7 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import com.example.qlin_pip_task.dto.response.StudentResponse;
+import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.DataNotFoundException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
@@ -31,8 +31,8 @@ public class ValidationService {
     }
 
 
-    public Optional<StudentResponse.Student> getTheExistedStudentData(Integer id) {
-        Optional<StudentResponse.Student> theStudentData = studentsService.getTheStudentResponse(id);
+    public Optional<StudentEntity.Student> getTheExistedStudentData(Integer id) {
+        Optional<StudentEntity.Student> theStudentData = studentsService.getTheStudentResponse(id);
         if(theStudentData.isEmpty()) {
             throw new DataNotFoundException("Data is not found.");
         }
