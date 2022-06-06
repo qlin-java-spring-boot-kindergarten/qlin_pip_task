@@ -27,7 +27,12 @@ public class StudentsController {
 
     private final ValidationService validationService;
 
-    @PostMapping
+    @GetMapping("/students")
+    public ResponseEntity<StudentResponse> getStudentsData() {
+        return ResponseEntity.ok(studentsService.getAllStudentsResponse());
+    }
+
+    @PostMapping("/students")
     public ResponseEntity<Map<String, Object>> receiveStudentData(StudentResponse.Student student, @RequestBody @Validated StudentSubmitRequest studentSubmitRequest){
         validationService.validateStudentData(studentSubmitRequest);
         studentsService.handle(student, studentSubmitRequest);
@@ -37,6 +42,12 @@ public class StudentsController {
         return ResponseEntity.ok(map);
     }
 
+
+    @GetMapping("/students/{id}")
+    public ResponseEntity< Optional<StudentResponse.Student>> getTheStudentData(@PathVariable Integer id) {
+        Optional<StudentResponse.Student> theStudent = validationService.getTheExistedStudentData(id);
+        return ResponseEntity.ok(theStudent);
+    }
 
 }
 
