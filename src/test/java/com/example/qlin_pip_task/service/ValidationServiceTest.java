@@ -1,29 +1,19 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import com.example.qlin_pip_task.dto.response.StudentResponses;
-import com.example.qlin_pip_task.entity.StudentEntity;
-import com.example.qlin_pip_task.exception.NameInvalidException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.InvalidParameterException;
-import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
 class ValidationServiceTest {
-
-    @Mock
-    private StudentsService studentsService;
 
     @InjectMocks
     private ValidationService validationService;
