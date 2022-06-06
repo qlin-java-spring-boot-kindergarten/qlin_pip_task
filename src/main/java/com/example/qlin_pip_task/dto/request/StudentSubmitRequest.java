@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentSubmitRequest {
-
     private String name;
     private Integer grade;
     private Integer classroom;
