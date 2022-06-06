@@ -32,10 +32,22 @@ class StudentsServiceTest {
     @InjectMocks
     private StudentsService studentsService;
 
-//    @Test
-//    void should_return_two_students_when_there_are_two_students_in_the_table(){
-//        when(studentResponses.setData()).thenReturn();
-//    }
+    @Test
+    void should_return_two_students_when_there_are_two_students_in_the_table(){
+        StudentEntity studentEntity1 = StudentEntity.builder().name("student1").classroom(1).grade(1).build();
+        StudentEntity studentEntity2 = StudentEntity.builder().name("student2").classroom(2).grade(2).build();
+        StudentResponses.StudentResponse studentResponse1 = StudentResponses.StudentResponse.builder().name("student1").classroom(1).grade(1).build();
+        StudentResponses.StudentResponse studentResponse2 = StudentResponses.StudentResponse.builder().name("student2").classroom(2).grade(2).build();
+        when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2));
+        when(studentMapper.entityToStudentResponse(studentEntity1)).thenReturn(studentResponse1);
+        when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(studentResponse2);
+
+        // void
+//        when(studentResponses.setData(List.of(studentResponse1, studentResponse2))).thenReturn(??);
+
+        StudentResponses result = studentsService.getAllStudentsResponse();
+        assertThat(result.getData().get(0).getName()).isEqualTo("student1");
+    }
 
     @Test
     void should_save_student_and_get_id_when_receive_student_submit_request(){
