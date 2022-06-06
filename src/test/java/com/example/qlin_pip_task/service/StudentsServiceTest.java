@@ -83,5 +83,13 @@ class StudentsServiceTest {
     assertTrue(exception.getMessage().contains("Data is not found."));
     }
 
-
+    @Test
+    void should_get_stduent_response_when_id_is_valid (){
+        StudentEntity studentEntity = StudentEntity.builder().id(2).name("student2").classroom(2).grade(2).build();
+        when(studentRepository.findById(anyInt())).thenReturn(Optional.ofNullable(studentEntity));
+        Optional<StudentEntity> mockOptionalEntity = studentRepository.findById(2);
+        when(mockOptionalEntity.get()).thenReturn(Optional.ofNullable(studentEntity).get());
+        StudentResponses.StudentResponse response = studentsService.getTheStudentResponse(2);
+        assertThat(response.getId()).isEqualTo(2);
+    }
 }
