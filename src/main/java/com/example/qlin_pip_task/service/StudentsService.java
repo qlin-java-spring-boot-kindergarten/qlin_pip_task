@@ -27,8 +27,8 @@ public class StudentsService {
 
         List<StudentEntity> allStudentsData = studentRepository.findAll();
         ArrayList<StudentResponses.StudentResponse> studentResponsesList = new ArrayList<>();
-        for (StudentEntity allStudentsDatum : allStudentsData) {
-            StudentResponses.StudentResponse studentResponse = studentMapper.entityToStudentResponse(allStudentsDatum);
+        for (StudentEntity studentData : allStudentsData) {
+            StudentResponses.StudentResponse studentResponse = studentMapper.entityToStudentResponse(studentData);
             studentResponsesList.add(studentResponse);
         }
         studentResponses.setData(studentResponsesList);
