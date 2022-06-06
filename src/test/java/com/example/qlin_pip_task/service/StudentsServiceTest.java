@@ -11,11 +11,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 @ExtendWith(MockitoExtension.class)
 class StudentsServiceTest {
@@ -65,6 +74,15 @@ class StudentsServiceTest {
 
         assertThat(id).isEqualTo(1);
         verify(studentRepository).save(studentEntity);
+    }
+
+    @Test
+    void should_throw_invalid_parameter_exception_when_id_is_not_found(){
+        when(studentRepository.findById(anyInt())).thenReturn(Optional.empty());
+    Exception exception = assertThrows (InvalidParameterException.class, () -> {
+        studentsService.getTheStudentResponse(anyInt());
+    });
+    assertTrue(exception.getMessage().contains("Data is not found."));
     }
 
 
