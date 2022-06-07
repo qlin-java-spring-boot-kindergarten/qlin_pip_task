@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -106,5 +107,19 @@ class StudentsServiceTest {
         StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
 
         assertThat(theStudentResponseByName.getName(), is("student1"));
+        assertThat(theStudentResponseByName.getId(), is(1));
+        assertThat(theStudentResponseByName.getClassroom(), is(1));
+        assertThat(theStudentResponseByName.getGrade(), is(1));
+    }
+
+    @Test
+    void should_get_empty_response_when_name_not_in_the_table() {
+        StudentEntity studentEntity = StudentEntity.builder().build();
+        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
+        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(null);
+
+        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
+
+        assertThat(theStudentResponseByName, is(nullValue()));
     }
 }
