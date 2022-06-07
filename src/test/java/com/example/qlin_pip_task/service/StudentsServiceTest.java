@@ -94,6 +94,17 @@ class StudentsServiceTest {
         assertThat(theStudentResponse.getId(), is(2));
         assertThat(theStudentResponse.getClassroom(), is(2));
         assertThat(theStudentResponse.getGrade(), is(2));
+    }
 
+    @Test
+    void should_get_student_response_when_name_can_be_found_in_the_table() {
+        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build();
+        StudentResponses.StudentResponse studentResponse = StudentResponses.StudentResponse.builder().name("student1").classroom(1).grade(1).id(1).build();
+        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
+        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(studentResponse);
+
+        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
+
+        assertThat(theStudentResponseByName.getName(), is("student1"));
     }
 }

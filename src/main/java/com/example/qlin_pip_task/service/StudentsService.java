@@ -50,4 +50,8 @@ public class StudentsService {
         return studentMapper.entityToStudentResponse(studentEntity);
     }
 
+    public StudentResponses.StudentResponse getTheStudentResponseByName(String name) {
+        StudentEntity studentEntity = studentRepository.findByName(name);
+        return studentMapper.entityToStudentResponse(studentEntity);
+    }
 }
