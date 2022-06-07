@@ -12,6 +12,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,19 +20,19 @@ public class StudentsService {
 
     private final StudentRepository studentRepository;
 
-    private final StudentResponses studentResponses;
-
     private final StudentMapper studentMapper;
 
     public StudentResponses getAllStudentsResponse() {
         List<StudentEntity> allStudentsData = studentRepository.findAll();
-        ArrayList<StudentResponses.StudentResponse> studentResponsesList = new ArrayList<>();
-        for (StudentEntity studentData : allStudentsData) {
-            StudentResponses.StudentResponse studentResponse = studentMapper.entityToStudentResponse(studentData);
-            studentResponsesList.add(studentResponse);
-        }
-        studentResponses.setData(studentResponsesList);
-        return studentResponses;
+
+        List<StudentResponses.StudentResponse> studentResponsesList
+                = allStudentsData.stream()
+                .map(studentMapper::entityToStudentResponse)
+                .collect(Collectors.toList());
+
+        return StudentResponses.builder()
+                .data(studentResponsesList)
+                .build();
     }
 
     public Integer save(StudentSubmitRequest studentSubmitRequest){
