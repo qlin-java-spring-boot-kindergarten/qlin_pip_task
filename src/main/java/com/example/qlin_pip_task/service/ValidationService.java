@@ -7,8 +7,6 @@ import com.example.qlin_pip_task.exception.NameInvalidException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.security.InvalidParameterException;
-
 @Service
 @RequiredArgsConstructor
 public class ValidationService {

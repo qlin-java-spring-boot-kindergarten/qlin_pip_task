@@ -49,8 +49,11 @@ public class StudentsService {
         return studentMapper.entityToStudentResponse(studentEntity);
     }
 
-    public StudentResponses.StudentResponse getTheStudentResponseByName(String name) {
-        StudentEntity studentEntity = studentRepository.findByName(name);
-        return studentMapper.entityToStudentResponse(studentEntity);
+    public StudentResponses getTheStudentResponseByName(String name) {
+        List<StudentEntity> studentEntityList = studentRepository.findAllByName(name);
+        List<StudentResponses.StudentResponse> studentResponses = studentEntityList.stream().map(studentMapper::entityToStudentResponse).collect(Collectors.toList());
+        return StudentResponses.builder()
+                .data(studentResponses)
+                .build();
     }
 }
