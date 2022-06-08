@@ -98,18 +98,10 @@ class StudentsServiceTest {
     }
 
     @Test
-    void should_get_student_response_when_name_can_be_found_in_the_table() {
-        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build();
-        StudentResponses.StudentResponse studentResponse = StudentResponses.StudentResponse.builder().name("student1").classroom(1).grade(1).id(1).build();
-        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
-        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(studentResponse);
-
-        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
-
-        assertThat(theStudentResponseByName.getName(), is("student1"));
-        assertThat(theStudentResponseByName.getId(), is(1));
-        assertThat(theStudentResponseByName.getClassroom(), is(1));
-        assertThat(theStudentResponseByName.getGrade(), is(1));
+    void should_throw_student_not_found_exception_when_student_not_exsits() {
+        when(studentRepository.existsById(1)).thenReturn(false);
+        Exception exception = assertThrows(StudentNotFoundException.class, () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build()));
+        assertTrue(exception.getMessage().contains("Student not found."));
     }
 
     @Test
