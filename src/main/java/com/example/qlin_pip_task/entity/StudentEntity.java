@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import java.util.List;
 
 
 @Getter
@@ -25,4 +28,8 @@ public class StudentEntity {
     private String name;
     private Integer grade;
     private Integer classroom;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @OneToMany(mappedBy="students", cascade= CascadeType.ALL)
+    private List<HomeworkEntity> homework;
 }
