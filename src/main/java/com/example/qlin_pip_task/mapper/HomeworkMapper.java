@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface HomeworkMapper {
 
-
     @Mapping(target = "id", ignore = true)
     HomeworkEntity homeworkRequestToEntity(HomeworkSubmitRequest homeworkSubmitRequest);
 

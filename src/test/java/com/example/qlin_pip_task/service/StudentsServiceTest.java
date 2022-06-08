@@ -1,8 +1,12 @@
 package com.example.qlin_pip_task.service;
 
+import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.exception.StudentNotFoundException;
+import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
@@ -17,7 +21,6 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -29,6 +32,9 @@ class StudentsServiceTest {
 
     @Mock
     private StudentMapper studentMapper;
+
+    @Mock
+    private HomeworkMapper homeworkMapper;
 
     @Mock
     private StudentRepository studentRepository;
@@ -97,6 +103,33 @@ class StudentsServiceTest {
         assertThat(theStudentResponse.getGrade(), is(2));
     }
 
+//    @Test
+//    void should_get_student_response_when_name_can_be_found_in_the_table() {
+//        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build();
+//        StudentResponses.StudentResponse studentResponse = StudentResponses.StudentResponse.builder().name("student1").classroom(1).grade(1).id(1).build();
+//        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
+//        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(studentResponse);
+//
+//        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
+//
+//        assertThat(theStudentResponseByName.getName(), is("student1"));
+//        assertThat(theStudentResponseByName.getId(), is(1));
+//        assertThat(theStudentResponseByName.getClassroom(), is(1));
+//        assertThat(theStudentResponseByName.getGrade(), is(1));
+//    }
+
+//    @Test
+//    void should_get_empty_response_when_name_not_in_the_table() {
+//        StudentEntity studentEntity = StudentEntity.builder().build();
+//        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
+//        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(null);
+//
+//        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
+//
+//        assertThat(theStudentResponseByName, is(nullValue()));
+//    }
+
+
     @Test
     void should_throw_student_not_found_exception_when_student_not_exsits() {
         when(studentRepository.existsById(1)).thenReturn(false);
@@ -105,13 +138,18 @@ class StudentsServiceTest {
     }
 
     @Test
-    void should_get_empty_response_when_name_not_in_the_table() {
-        StudentEntity studentEntity = StudentEntity.builder().build();
-        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
-        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(null);
+    void should_save_content_and_return_student_id_and_when_receive_homework_content() {
+        when(studentRepository.existsById(1)).thenReturn(true);
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().content("test_content").build();
+        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(HomeworkEntity.builder().content("test_content").build());
+        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build();
+        when(studentRepository.findById(1).get()).thenReturn(studentEntity);
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(999).content("test_content").studentId(1).build();
+        studentEntity.getHomework().add(homeworkEntity);
+        when(studentRepository.save(studentEntity).getHomework().get(0)).thenReturn(homeworkEntity);
 
-        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
+        String homeworkId = studentsService.submitStudentHomework(1, homeworkSubmitRequest);
 
-        assertThat(theStudentResponseByName, is(nullValue()));
+        assertThat(homeworkId, is("1"));
     }
 }

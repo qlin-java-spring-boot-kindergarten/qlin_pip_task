@@ -1,8 +1,12 @@
 package com.example.qlin_pip_task.service;
 
+import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.exception.StudentNotFoundException;
+import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,8 @@ public class StudentsService {
     private final StudentRepository studentRepository;
 
     private final StudentMapper studentMapper;
+
+    private final HomeworkMapper homeworkMapper;
 
     public StudentResponses getAllStudentsResponse() {
         List<StudentEntity> allStudentsData = studentRepository.findAll();
@@ -55,5 +61,18 @@ public class StudentsService {
         return StudentResponses.builder()
                 .data(studentResponses)
                 .build();
+    }
+
+    public String submitStudentHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
+        if (!studentRepository.existsById(id)) {
+            throw new StudentNotFoundException("Student not found.");
+        }
+        HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
+        homeworkEntity.setStudentId(id);
+        Integer studentId = homeworkEntity.getStudentId();
+        StudentEntity studentEntity = studentRepository.findById(studentId).get();
+        studentEntity.getHomework().add(homeworkEntity);
+        HomeworkEntity homeworkEntity1 = studentRepository.save(studentEntity).getHomework().get(0);
+        return homeworkEntity1.getId().toString();
     }
 }
