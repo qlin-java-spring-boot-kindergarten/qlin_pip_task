@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.security.InvalidParameterException;
-
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {InvalidParameterException.class})
+    @ExceptionHandler(value = {CustomParameterException.class})
     protected ResponseEntity<Object> handleInvalidParameterException(
             RuntimeException exception, WebRequest webRequest) {
         return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
