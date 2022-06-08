@@ -10,7 +10,6 @@ public interface HomeworkMapper {
 
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "studentId", ignore = true)
     HomeworkEntity homeworkRequestToEntity(HomeworkSubmitRequest homeworkSubmitRequest);
 
 }

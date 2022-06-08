@@ -20,7 +20,7 @@ import javax.persistence.Table;
 public class HomeworkEntity {
     @Id
     private Integer id;
-    private Integer studentId;
+    private Integer homeworkId;
     private String content;
 
     @ManyToOne

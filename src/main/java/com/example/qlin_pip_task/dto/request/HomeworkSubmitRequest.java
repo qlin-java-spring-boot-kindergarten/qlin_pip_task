@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class HomeworkSubmitRequest {
 
-    private String homeContent;
+    private String content;
 }
