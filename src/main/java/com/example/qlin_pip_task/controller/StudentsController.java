@@ -48,9 +48,11 @@ public class StudentsController {
         return ResponseEntity.ok(studentsService.getTheStudentResponse(id));
     }
 
-    @GetMapping(params = "name")
-    public StudentResponses.StudentResponse getTheStudentByName(@RequestParam String name){
-        return studentsService.getTheStudentResponseByName(name);
+
+    @PostMapping("/{id}/homework")
+    public ResponseEntity<String> receiveHomeRequest(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
+        studentsService.submitStudentHomework(id, homeworkSubmitRequest);
+        return ResponseEntity.ok("string");
     }
 }
 
