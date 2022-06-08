@@ -4,9 +4,11 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
 
-    StudentEntity findByName(String name);
+    List<StudentEntity> findAllByName(String name);
 
 }
