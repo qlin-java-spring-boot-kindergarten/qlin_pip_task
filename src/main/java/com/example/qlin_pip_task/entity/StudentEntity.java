@@ -2,7 +2,7 @@ package com.example.qlin_pip_task.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
@@ -12,14 +12,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.List;
 
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "student")
+@Entity
+@Table(name="student")
 public class StudentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_generator")
@@ -29,7 +31,6 @@ public class StudentEntity {
     private Integer grade;
     private Integer classroom;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @OneToMany(mappedBy="students", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy="studentEntity", cascade= CascadeType.ALL)
     private List<HomeworkEntity> homework;
 }
