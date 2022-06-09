@@ -139,17 +139,6 @@ class StudentsServiceTest {
 
     @Test
     void should_save_content_and_return_student_id_and_when_receive_homework_content() {
-        when(studentRepository.existsById(1)).thenReturn(true);
-        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().content("test_content").build();
-        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(HomeworkEntity.builder().content("test_content").build());
-        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build();
-        when(studentRepository.findById(1).get()).thenReturn(studentEntity);
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(999).content("test_content").studentId(1).build();
-        studentEntity.getHomework().add(homeworkEntity);
-        when(studentRepository.save(studentEntity).getHomework().get(0)).thenReturn(homeworkEntity);
 
-        String homeworkId = studentsService.submitStudentHomework(1, homeworkSubmitRequest);
-
-        assertThat(homeworkId, is("1"));
     }
 }
