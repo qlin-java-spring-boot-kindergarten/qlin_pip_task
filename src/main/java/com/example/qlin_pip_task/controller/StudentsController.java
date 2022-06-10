@@ -54,7 +54,7 @@ public class StudentsController {
 
 
     @PostMapping("/{id}/homework")
-    public ResponseEntity<String> receiveHomeRequest(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
+    public ResponseEntity<Integer> receiveHomeRequest(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
         return ResponseEntity.ok(studentsService.submitStudentHomework(id, homeworkSubmitRequest));
     }
 }

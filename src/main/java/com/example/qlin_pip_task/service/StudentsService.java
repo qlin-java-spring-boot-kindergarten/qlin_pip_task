@@ -63,21 +63,18 @@ public class StudentsService {
                 .build();
     }
 
-    public String submitStudentHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
+    public Integer submitStudentHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
         if (!studentRepository.existsById(id)) {
             throw new StudentNotFoundException("Student not found.");
         }
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
         Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
         StudentEntity studentEntity = optionalStudentEntity.get();
-
         homeworkEntity.setStudentEntity(studentEntity);
-
         studentEntity.getHomework().add(homeworkEntity);
-        StudentEntity save = studentRepository.save(studentEntity);
-
-        List<HomeworkEntity> homeworkEntityList = save.getHomework();
-        HomeworkEntity homeworkEntity1 = homeworkEntityList.get(homeworkEntityList.size() - 1);
-        return homeworkEntity1.getId().toString();
+        StudentEntity theStudentEntity = studentRepository.save(studentEntity);
+        List<HomeworkEntity> homeworkEntityList = theStudentEntity.getHomework();
+        HomeworkEntity theHomeEntity = homeworkEntityList.get(homeworkEntityList.size() - 1);
+        return theHomeEntity.getId();
     }
 }

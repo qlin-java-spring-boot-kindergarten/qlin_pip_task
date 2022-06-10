@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,6 +141,16 @@ class StudentsServiceTest {
 
     @Test
     void should_save_content_and_return_student_id_and_when_receive_homework_content() {
+        when(studentRepository.existsById(1)).thenReturn(true);
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(99).content("test").build();
+        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
+        StudentEntity studentEntity = StudentEntity.builder().id(1).homework(new ArrayList<>()).build();
+        when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity));
+        when(studentRepository.save(studentEntity)).thenReturn(studentEntity);
 
+        Integer id = studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build());
+
+        assertThat(id, is(99));
     }
 }
