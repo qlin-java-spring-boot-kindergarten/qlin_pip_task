@@ -6,6 +6,7 @@ import com.example.qlin_pip_task.dto.response.HomeworkGroupResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -69,9 +70,22 @@ public class StudentsService {
         if (!studentRepository.existsById(id)) {
             throw new StudentNotFoundException("Student not found.");
         }
-        HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
+        
         Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
         StudentEntity studentEntity = optionalStudentEntity.get();
+        List<HomeworkEntity> theStudentHomeworkList = studentEntity.getHomework();
+
+        Integer requestHomeworkType = homeworkSubmitRequest.getHomeworkType();
+
+        for (HomeworkEntity entity : theStudentHomeworkList) {
+            if (entity.getHomeworkType().equals(requestHomeworkType)) {
+                throw new HomeworkAlreadyExistedException("The homework already existed.");
+            }
+        }
+
+        HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
+
+
         homeworkEntity.setStudentEntity(studentEntity);
         studentEntity.getHomework().add(homeworkEntity);
         StudentEntity theStudentEntity = studentRepository.save(studentEntity);

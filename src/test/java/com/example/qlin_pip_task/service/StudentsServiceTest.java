@@ -6,6 +6,7 @@ import com.example.qlin_pip_task.dto.response.HomeworkGroupResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -138,6 +139,19 @@ class StudentsServiceTest {
         when(studentRepository.existsById(1)).thenReturn(false);
         Exception exception = assertThrows(StudentNotFoundException.class, () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build()));
         assertTrue(exception.getMessage().contains("Student not found."));
+    }
+
+
+    @Test
+    void should_throw_homework_already_existed_exception_when_the_student_has_the_same_homework_type_existed_in_the_table() {
+        when(studentRepository.existsById(1)).thenReturn(true);
+        when(studentRepository.findById(1))
+                .thenReturn(Optional.of(
+                        StudentEntity.builder().id(1)
+                                .homework(List.of(
+                                        HomeworkEntity.builder().id(99).homeworkType(1).content("test").build())).build()));
+        Exception exception = assertThrows(HomeworkAlreadyExistedException.class, () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().homeworkType(1).content("test").build()));
+        assertTrue(exception.getMessage().contains("The homework already existed."));
     }
 
     @Test
