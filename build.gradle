@@ -22,17 +22,21 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.postgresql:postgresql:42.3.6'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.7.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.vladmihalcea:hibernate-types-52:2.16.2'
     implementation 'org.mapstruct:mapstruct:1.5.1.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 //    implementation 'org.springframework.boot:spring-boot-starter'
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
 //    implementation 'org.postgresql:postgresql:42.3.6'
