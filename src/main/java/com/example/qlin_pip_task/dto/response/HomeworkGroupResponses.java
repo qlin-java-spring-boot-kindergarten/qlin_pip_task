@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class GroupResponses {
-    private List group;
+public class HomeworkGroupResponses {
+    private List<List<String>> group;
 }

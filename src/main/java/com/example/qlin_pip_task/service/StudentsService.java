@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.HomeworkGroupResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,4 +79,25 @@ public class StudentsService {
         HomeworkEntity theHomeEntity = homeworkEntityList.get(homeworkEntityList.size() - 1);
         return theHomeEntity.getId();
     }
+
+    public HomeworkGroupResponses getHomeworkGroup() {
+        List<List<String>> homeworkGroupList = studentRepository.getHomeworkGroupList();
+        HomeworkGroupResponses studentNamesList = new HomeworkGroupResponses(new ArrayList<>());
+
+        for (int i = 0; i < homeworkGroupList.size(); i++) {
+            List<String> theStudentIdListOfTheHomework = homeworkGroupList.get(i);
+            List<String> theStudentNamesListOfTheHomework = new ArrayList<>();
+
+            for (int j = 0; j < theStudentIdListOfTheHomework.size(); j++) {
+                String studentIdStr = theStudentIdListOfTheHomework.get(j);
+                Integer studentId = Integer.parseInt(studentIdStr);
+                Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(studentId);
+                String studentName = optionalStudentEntity.get().getName();
+                theStudentNamesListOfTheHomework.add(studentName);
+            }
+            studentNamesList.getGroup().add(theStudentNamesListOfTheHomework);
+        }
+        return studentNamesList;
+    }
 }
+

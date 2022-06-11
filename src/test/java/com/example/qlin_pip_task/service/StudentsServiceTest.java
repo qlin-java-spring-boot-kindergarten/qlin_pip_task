@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.HomeworkGroupResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
@@ -17,12 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -152,5 +153,19 @@ class StudentsServiceTest {
         Integer id = studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build());
 
         assertThat(id, is(99));
+    }
+
+
+    @Test
+    void should_return_a_group_list_of_students_grouped_by_student_id_when_call_get_homework_group(){
+        when(studentRepository.getHomeworkGroupList()).thenReturn(List.of(List.of("1","3"), List.of("2")));
+
+        when(studentRepository.findById(1)).thenReturn(Optional.of(StudentEntity.builder().id(1).name("student1").build()));
+        when(studentRepository.findById(3)).thenReturn(Optional.of(StudentEntity.builder().id(3).name("student3").build()));
+        when(studentRepository.findById(2)).thenReturn(Optional.of(StudentEntity.builder().id(2).name("student2").build()));
+
+        HomeworkGroupResponses homeworkGroupResponses = studentsService.getHomeworkGroup();
+        assertThat(homeworkGroupResponses,
+                is(HomeworkGroupResponses.builder().group(List.of(List.of("student1", "student3"), List.of("student2"))).build()));
     }
 }
