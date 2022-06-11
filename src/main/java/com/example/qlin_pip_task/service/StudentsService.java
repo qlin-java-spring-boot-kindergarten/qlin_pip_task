@@ -84,20 +84,22 @@ public class StudentsService {
         List<List<String>> homeworkGroupList = studentRepository.getHomeworkGroupList();
         HomeworkGroupResponses studentNamesList = new HomeworkGroupResponses(new ArrayList<>());
 
-        for (int i = 0; i < homeworkGroupList.size(); i++) {
-            List<String> theStudentIdListOfTheHomework = homeworkGroupList.get(i);
-            List<String> theStudentNamesListOfTheHomework = new ArrayList<>();
-
-            for (int j = 0; j < theStudentIdListOfTheHomework.size(); j++) {
-                String studentIdStr = theStudentIdListOfTheHomework.get(j);
-                Integer studentId = Integer.parseInt(studentIdStr);
-                Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(studentId);
-                String studentName = optionalStudentEntity.get().getName();
-                theStudentNamesListOfTheHomework.add(studentName);
-            }
+        for (List<String> theStudentIdListOfTheHomework : homeworkGroupList) {
+            List<String> theStudentNamesListOfTheHomework = getStudentNamesListOfTheSingleHomeworkGroup(theStudentIdListOfTheHomework);
             studentNamesList.getGroup().add(theStudentNamesListOfTheHomework);
         }
         return studentNamesList;
+    }
+
+    private List<String> getStudentNamesListOfTheSingleHomeworkGroup(List<String> theStudentIdListOfTheHomework) {
+        List<String> theStudentNamesListOfTheHomework = new ArrayList<>();
+        for (String studentIdStr : theStudentIdListOfTheHomework) {
+            Integer studentId = Integer.parseInt(studentIdStr);
+            Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(studentId);
+            String studentName = optionalStudentEntity.get().getName();
+            theStudentNamesListOfTheHomework.add(studentName);
+        }
+        return theStudentNamesListOfTheHomework;
     }
 }
 
