@@ -67,37 +67,37 @@ public class StudentsService {
     }
 
     public Integer submitStudentHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
-        if (!studentRepository.existsById(id)) {
-            throw new StudentNotFoundException("Student not found.");
-        }
-        
+        checkIfTheStudentExisted(id);
         Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
         StudentEntity studentEntity = optionalStudentEntity.get();
         List<HomeworkEntity> theStudentHomeworkList = studentEntity.getHomework();
-
-        Integer requestHomeworkType = homeworkSubmitRequest.getHomeworkType();
-
-        for (HomeworkEntity entity : theStudentHomeworkList) {
-            if (entity.getHomeworkType().equals(requestHomeworkType)) {
-                throw new HomeworkAlreadyExistedException("The homework already existed.");
-            }
-        }
-
+        checkIfHomeworkAlreadyExisted(theStudentHomeworkList, homeworkSubmitRequest.getHomeworkType());
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
-
-
         homeworkEntity.setStudentEntity(studentEntity);
-        studentEntity.getHomework().add(homeworkEntity);
+        theStudentHomeworkList.add(homeworkEntity);
         StudentEntity theStudentEntity = studentRepository.save(studentEntity);
         List<HomeworkEntity> homeworkEntityList = theStudentEntity.getHomework();
         HomeworkEntity theHomeEntity = homeworkEntityList.get(homeworkEntityList.size() - 1);
         return theHomeEntity.getId();
     }
 
+    private void checkIfTheStudentExisted(Integer id) {
+        if (!studentRepository.existsById(id)) {
+            throw new StudentNotFoundException("Student not found.");
+        }
+    }
+
+    private void checkIfHomeworkAlreadyExisted(List<HomeworkEntity> theStudentHomeworkList, Integer requestHomeworkType) {
+        for (HomeworkEntity entity : theStudentHomeworkList) {
+            if (entity.getHomeworkType().equals(requestHomeworkType)) {
+                throw new HomeworkAlreadyExistedException("The homework already existed.");
+            }
+        }
+    }
+
     public HomeworkGroupResponses getHomeworkGroup() {
         List<List<String>> homeworkGroupList = studentRepository.getHomeworkGroupList();
         HomeworkGroupResponses studentNamesList = new HomeworkGroupResponses(new ArrayList<>());
-
         for (List<String> theStudentIdListOfTheHomework : homeworkGroupList) {
             List<String> theStudentNamesListOfTheHomework = getStudentNamesListOfTheSingleHomeworkGroup(theStudentIdListOfTheHomework);
             studentNamesList.getGroup().add(theStudentNamesListOfTheHomework);
