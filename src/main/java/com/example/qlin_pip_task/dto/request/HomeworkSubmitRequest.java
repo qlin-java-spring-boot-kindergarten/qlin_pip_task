@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class HomeworkSubmitRequest {
 
     private String content;
+    private Integer homeworkType;
 }

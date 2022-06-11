@@ -30,6 +30,7 @@ public class HomeworkEntity {
     @SequenceGenerator(name = "homework_id_generator", sequenceName = "homework_id_seq", allocationSize = 1)
     private Integer id;
     private String content;
+    private Integer homeworkType;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
