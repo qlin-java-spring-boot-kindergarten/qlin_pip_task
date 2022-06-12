@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +45,7 @@ public class StudentsService {
                 .build();
     }
 
-    public Integer save(StudentSubmitRequest studentSubmitRequest){
+    public Integer save(StudentSubmitRequest studentSubmitRequest) {
         StudentEntity studentEntity = studentMapper.requestToStudentEntity(studentSubmitRequest);
         StudentEntity studentData = studentRepository.save(studentEntity);
         return studentData.getId();
@@ -50,7 +53,7 @@ public class StudentsService {
 
     public StudentResponses.StudentResponse getTheStudentResponse(Integer id) {
         Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
-        if (optionalStudentEntity.isEmpty()){
+        if (optionalStudentEntity.isEmpty()) {
             throw new InvalidParameterException("Data is not found.");
         }
         StudentEntity studentEntity = optionalStudentEntity.get();
@@ -79,6 +82,33 @@ public class StudentsService {
         HomeworkEntity theHomeEntity = homeworkEntityList.get(homeworkEntityList.size() - 1);
         return theHomeEntity.getId();
     }
+
+    public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomewrokTypes() {
+        List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
+
+        Set<Integer> allHomeworkTypes = allStudentEntitiesList.stream()
+                .map(stduent -> stduent.getHomework().stream()
+                        .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet()))
+                .flatMap(Collection::stream).collect(Collectors.toSet());
+
+        StudentGroupsByHomeworkTypeResponses studentGroupsByHomeworkTypeResponses = new StudentGroupsByHomeworkTypeResponses( new ArrayList<>());
+
+        for (Integer homeworkType: allHomeworkTypes){
+            List<StudentResponses.StudentResponse> studentsOfTheHomeworkType = new ArrayList<>();
+            for( StudentEntity studentEntity: allStudentEntitiesList){
+                Set<Integer> singleStudentHomeworkTypes = studentEntity.getHomework().stream()
+                        .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet());
+                if (singleStudentHomeworkTypes.contains(homeworkType)){
+                    studentsOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity));
+                }
+            }
+            studentGroupsByHomeworkTypeResponses.getHomework().add(studentsOfTheHomeworkType);
+        }
+
+        // will nodidy the return body later
+        return studentGroupsByHomeworkTypeResponses;
+    }
+
 
     private void checkIfTheStudentExisted(Integer id) {
         if (!studentRepository.existsById(id)) {

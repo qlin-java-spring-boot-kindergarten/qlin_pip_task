@@ -2,7 +2,7 @@ package com.example.qlin_pip_task.controller;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import com.example.qlin_pip_task.dto.response.HomeworkGroupResponses;
+import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.service.StudentsService;
 import com.example.qlin_pip_task.service.ValidationService;
@@ -60,8 +60,8 @@ public class StudentsController {
     }
 
     @GetMapping("/group-by-homework")
-    public ResponseEntity<HomeworkGroupResponses> getHomeworkGroup(){
-        return ResponseEntity.ok(studentsService.getHomeworkGroup());
+    public ResponseEntity<StudentGroupsByHomeworkTypeResponses> getHomeworkGroup(){
+        return ResponseEntity.ok(studentsService.getStudentGroupsByHomewrokTypes());
     }
 }
 

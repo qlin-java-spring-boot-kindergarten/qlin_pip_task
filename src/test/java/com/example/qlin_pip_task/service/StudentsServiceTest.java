@@ -2,7 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import com.example.qlin_pip_task.dto.response.HomeworkGroupResponses;
+import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
@@ -21,10 +21,11 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -168,5 +169,41 @@ class StudentsServiceTest {
 
         assertThat(id, is(99));
     }
+
+    @Test
+    void should_get_student_groups_given_homework_types() {
+        StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
+                .homework(List.of(
+                        HomeworkEntity.builder().homeworkType(1).build(),
+                        HomeworkEntity.builder().homeworkType(3).build()
+                )).build();
+        StudentEntity studentEntity2 = StudentEntity.builder().id(2).name("student2")
+                .homework(List.of(
+                        HomeworkEntity.builder().homeworkType(2).build()
+                )).build();
+        StudentEntity studentEntity3 = StudentEntity.builder().id(3).name("student3")
+                .homework(List.of(
+                        HomeworkEntity.builder().homeworkType(1).build(),
+                        HomeworkEntity.builder().homeworkType(2).build(),
+                        HomeworkEntity.builder().homeworkType(3).build()
+                )).build();
+
+        when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2, studentEntity3));
+        when(studentMapper.entityToStudentResponse(studentEntity1)).thenReturn(StudentResponses.StudentResponse.builder().id(1).name("student1").build());
+        when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(StudentResponses.StudentResponse.builder().id(2).name("student2").build());
+        when(studentMapper.entityToStudentResponse(studentEntity3)).thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
+
+        StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomewrokTypes();
+        List<List<StudentResponses.StudentResponse>> resultGroup = result.getHomework();
+        assertThat(resultGroup.size(), is(3));
+        assertThat(resultGroup.get(0).size(), is(2));
+        assertThat(resultGroup.get(0).stream().map(StudentResponses.StudentResponse::getId).collect(Collectors.toSet()),
+                is(Set.of(1, 3)));
+        assertThat(resultGroup.get(1).stream().map(StudentResponses.StudentResponse::getId).collect(Collectors.toSet()),
+                is(Set.of(2, 3)));
+        assertThat(resultGroup.get(2).stream().map(StudentResponses.StudentResponse::getId).collect(Collectors.toSet()),
+                is(Set.of(1, 3)));
+    }
+
 
 }
