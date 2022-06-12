@@ -65,5 +65,12 @@ public class StudentsController {
     public ResponseEntity<StudentGroupsByHomeworkTypeResponses> getHomeworkGroup() {
         return ResponseEntity.ok(studentsService.getStudentGroupsByHomewrokTypes());
     }
+
+
+    @PutMapping("/{id}/homework")
+    public ResponseEntity updateHomeworkContent(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
+        studentsService.updateHomework(id, homeworkSubmitRequest);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }
 
