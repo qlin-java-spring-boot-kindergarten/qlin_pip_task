@@ -117,7 +117,7 @@ public class StudentsService {
 
     public void updateHomework(Integer id, HomeworkSubmitRequest updateHomeworkSubmitRequest) {
         checkIfTheStudentExisted(id);
-        if (updateHomeworkSubmitRequest.getContent() == null) {
+        if (updateHomeworkSubmitRequest.getContent() == null || updateHomeworkSubmitRequest.getContent().equals("")) {
             throw new HomeworkContentInvalidException("Homework content is invalid.");
         }
     }

@@ -245,5 +245,13 @@ class StudentsServiceTest {
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }
 
+    @Test
+    void should_throw_content_invalid_exception_when_submit_update_homework_request_with_content_is_empty(){
+        when(studentRepository.existsById(1)).thenReturn(true);
+        Exception exception = assertThrows(HomeworkContentInvalidException.class,
+                () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("").homeworkType(1).build()));
+        assertTrue(exception.getMessage().contains("Homework content is invalid."));
+    }
+
 
 }
