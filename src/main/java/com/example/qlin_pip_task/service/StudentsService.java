@@ -6,7 +6,10 @@ import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeRespons
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.exception.ClassroomInvalidException;
+import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
+import com.example.qlin_pip_task.exception.NameInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -17,9 +20,12 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +37,19 @@ public class StudentsService {
     private final StudentMapper studentMapper;
 
     private final HomeworkMapper homeworkMapper;
+
+    public void validateStudentData(StudentSubmitRequest studentSubmitRequest) {
+        if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
+            throw new NameInvalidException("Name is invalid.");
+        }
+        if (studentSubmitRequest.getGrade() < 1 || studentSubmitRequest.getGrade() > 9) {
+            throw new GradeInvalidException("Grade is invalid.");
+        }
+        if (studentSubmitRequest.getClassroom() < 1 || studentSubmitRequest.getClassroom() > 20) {
+            throw new ClassroomInvalidException("Classroom is invalid.");
+        }
+
+    }
 
     public StudentResponses getAllStudentsResponse() {
         List<StudentEntity> allStudentsData = studentRepository.findAll();
@@ -91,22 +110,32 @@ public class StudentsService {
                         .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet()))
                 .flatMap(Collection::stream).collect(Collectors.toSet());
 
-        StudentGroupsByHomeworkTypeResponses studentGroupsByHomeworkTypeResponses = new StudentGroupsByHomeworkTypeResponses( new ArrayList<>());
+        TreeSet<Integer> treeSet = new TreeSet<>(allHomeworkTypes);
 
-        for (Integer homeworkType: allHomeworkTypes){
-            List<StudentResponses.StudentResponse> studentsOfTheHomeworkType = new ArrayList<>();
-            for( StudentEntity studentEntity: allStudentEntitiesList){
+        StudentGroupsByHomeworkTypeResponses studentGroupsByHomeworkTypeResponses =
+                new StudentGroupsByHomeworkTypeResponses(
+                        new TreeMap<>(Comparator.comparingInt(s -> Integer.parseInt(s.substring(14)))));
+
+        for (Integer homeworkType : treeSet) {
+            List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType = new ArrayList<>();
+            for (StudentEntity studentEntity : allStudentEntitiesList) {
                 Set<Integer> singleStudentHomeworkTypes = studentEntity.getHomework().stream()
                         .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet());
-                if (singleStudentHomeworkTypes.contains(homeworkType)){
-                    studentsOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity));
+                if (singleStudentHomeworkTypes.contains(homeworkType)) {
+                    studentEntitiesOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity));
                 }
             }
-            studentGroupsByHomeworkTypeResponses.getHomework().add(studentsOfTheHomeworkType);
+
+            List<String> studentNamelist = studentEntitiesOfTheHomeworkType.stream().map(StudentResponses.StudentResponse::getName).collect(Collectors.toList());
+            studentGroupsByHomeworkTypeResponses.getHomework().put(String.format("homework_type_%d", homeworkType), studentNamelist);
         }
 
-        // will nodidy the return body later
         return studentGroupsByHomeworkTypeResponses;
+    }
+
+
+    public void updateHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
+
     }
 
 
@@ -123,7 +152,6 @@ public class StudentsService {
             }
         }
     }
-
-
 }
+
 

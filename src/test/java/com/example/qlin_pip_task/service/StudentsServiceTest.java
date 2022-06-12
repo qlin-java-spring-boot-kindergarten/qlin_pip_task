@@ -20,9 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -93,6 +92,71 @@ class StudentsServiceTest {
         assertTrue(exception.getMessage().contains("Data is not found."));
     }
 
+    @Test
+    void should_throw_name_invalid_exception_when_name_is_null() {
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+                StudentSubmitRequest.builder()
+                        .name(null)
+                        .classroom(1)
+                        .grade(1)
+                        .build()));
+        assertTrue(exception.getMessage().contains("Name is invalid."));
+    }
+
+    @Test
+    void should_throw_name_invalid_exception_when_name_is_empty() {
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+                StudentSubmitRequest.builder()
+                        .name("")
+                        .classroom(1)
+                        .grade(1)
+                        .build()));
+        assertTrue(exception.getMessage().contains("Name is invalid."));
+    }
+
+    @Test
+    void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+                StudentSubmitRequest.builder()
+                        .name("name")
+                        .classroom(1)
+                        .grade(0)
+                        .build()));
+        assertTrue(exception.getMessage().contains("Grade is invalid."));
+    }
+
+    @Test
+    void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine() {
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+                StudentSubmitRequest.builder()
+                        .name("name")
+                        .classroom(1)
+                        .grade(10)
+                        .build()));
+        assertTrue(exception.getMessage().contains("Grade is invalid."));
+    }
+
+    @Test
+    void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one() {
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+                StudentSubmitRequest.builder()
+                        .name("name")
+                        .classroom(0)
+                        .grade(1)
+                        .build()));
+        assertTrue(exception.getMessage().contains("Classroom is invalid."));
+    }
+
+    @Test
+    void should_throw_classroom_invalid_exception_when_classroom_is_larger_than_twenty() {
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+                StudentSubmitRequest.builder()
+                        .name("name")
+                        .classroom(21)
+                        .grade(1)
+                        .build()));
+        assertTrue(exception.getMessage().contains("Classroom is invalid."));
+    }
     @Test
     void should_get_stduent_response_when_id_is_valid() {
         StudentEntity studentEntity = StudentEntity.builder().id(2).name("student2").classroom(2).grade(2).build();
@@ -194,15 +258,12 @@ class StudentsServiceTest {
         when(studentMapper.entityToStudentResponse(studentEntity3)).thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
 
         StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomewrokTypes();
-        List<List<StudentResponses.StudentResponse>> resultGroup = result.getHomework();
+        Map<String, List<String>> resultGroup = result.getHomework();
         assertThat(resultGroup.size(), is(3));
-        assertThat(resultGroup.get(0).size(), is(2));
-        assertThat(resultGroup.get(0).stream().map(StudentResponses.StudentResponse::getId).collect(Collectors.toSet()),
-                is(Set.of(1, 3)));
-        assertThat(resultGroup.get(1).stream().map(StudentResponses.StudentResponse::getId).collect(Collectors.toSet()),
-                is(Set.of(2, 3)));
-        assertThat(resultGroup.get(2).stream().map(StudentResponses.StudentResponse::getId).collect(Collectors.toSet()),
-                is(Set.of(1, 3)));
+        assertThat(resultGroup.get("homework_type_1"), is(List.of("student1", "student3")));
+        assertThat(resultGroup.get("homework_type_2"), is(List.of("student2", "student3")));
+        assertThat(resultGroup.get("homework_type_3"), is(List.of("student1", "student3")));
+
     }
 
 

@@ -7,11 +7,13 @@ import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.service.StudentsService;
 import com.example.qlin_pip_task.service.ValidationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +37,7 @@ public class StudentsController {
 
     @PostMapping
     public ResponseEntity<Map<String, Integer>> receiveStudentRequest(@RequestBody @Validated StudentSubmitRequest studentSubmitRequest) {
-        validationService.validateStudentData(studentSubmitRequest);
+        studentsService.validateStudentData(studentSubmitRequest);
         Integer savedStudentData = studentsService.save(studentSubmitRequest);
         HashMap<String, Integer> map = new HashMap<>();
         map.put("id", savedStudentData);
@@ -60,7 +62,7 @@ public class StudentsController {
     }
 
     @GetMapping("/group-by-homework")
-    public ResponseEntity<StudentGroupsByHomeworkTypeResponses> getHomeworkGroup(){
+    public ResponseEntity<StudentGroupsByHomeworkTypeResponses> getHomeworkGroup() {
         return ResponseEntity.ok(studentsService.getStudentGroupsByHomewrokTypes());
     }
 }
