@@ -10,6 +10,7 @@ import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
+import com.example.qlin_pip_task.exception.HomeworkTypeNotExistedException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
@@ -92,15 +93,11 @@ public class StudentsService {
 
     public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomeworkTypes() {
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
-        Set<Integer> allHomeworkTypes = allStudentEntitiesList.stream()
-                .map(stduent -> stduent.getHomework().stream()
-                        .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet()))
-                .flatMap(Collection::stream).collect(Collectors.toSet());
-        TreeSet<Integer> treeSet = new TreeSet<>(allHomeworkTypes);
+        TreeSet<Integer> allHomeworkTypes = getAllHomeworkTypes(allStudentEntitiesList);
         StudentGroupsByHomeworkTypeResponses studentGroupsByHomeworkTypeResponses =
                 new StudentGroupsByHomeworkTypeResponses(
                         new TreeMap<>(Comparator.comparingInt(s -> Integer.parseInt(s.substring(14)))));
-        for (Integer homeworkType : treeSet) {
+        for (Integer homeworkType : allHomeworkTypes) {
             List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType = new ArrayList<>();
             for (StudentEntity studentEntity : allStudentEntitiesList) {
                 Set<Integer> singleStudentHomeworkTypes = studentEntity.getHomework().stream()
@@ -117,8 +114,12 @@ public class StudentsService {
 
     public void updateHomework(Integer id, HomeworkSubmitRequest updateHomeworkSubmitRequest) {
         checkIfTheStudentExisted(id);
+        List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
         if (updateHomeworkSubmitRequest.getContent() == null || updateHomeworkSubmitRequest.getContent().equals("")) {
             throw new HomeworkContentInvalidException("Homework content is invalid.");
+        }
+        if (!getAllHomeworkTypes(allStudentEntitiesList).contains(updateHomeworkSubmitRequest.getHomeworkType())){
+            throw new HomeworkTypeNotExistedException("Homework type is in invalid.");
         }
     }
 
@@ -133,7 +134,6 @@ public class StudentsService {
         if (studentSubmitRequest.getClassroom() < 1 || studentSubmitRequest.getClassroom() > 20) {
             throw new ClassroomInvalidException("Classroom is invalid.");
         }
-
     }
 
     private void checkIfTheStudentExisted(Integer id) {
@@ -148,6 +148,15 @@ public class StudentsService {
                 throw new HomeworkAlreadyExistedException("The homework already existed.");
             }
         }
+    }
+
+    private TreeSet<Integer> getAllHomeworkTypes(List<StudentEntity> allStudentEntitiesList){
+        Set<Integer> allHomeworkTypes = allStudentEntitiesList.stream()
+                .map(stduent -> stduent.getHomework().stream()
+                        .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet()))
+                .flatMap(Collection::stream).collect(Collectors.toSet());
+        TreeSet<Integer> treeSet = new TreeSet<>(allHomeworkTypes);
+        return treeSet;
     }
 }
 

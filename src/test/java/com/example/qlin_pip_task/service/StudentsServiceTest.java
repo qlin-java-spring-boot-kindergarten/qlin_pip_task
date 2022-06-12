@@ -8,6 +8,7 @@ import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
+import com.example.qlin_pip_task.exception.HomeworkTypeNotExistedException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -251,6 +252,31 @@ class StudentsServiceTest {
         Exception exception = assertThrows(HomeworkContentInvalidException.class,
                 () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("").homeworkType(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
+    }
+
+    @Test
+    void should_throw_homework_type_not_exist_exception_given_homework_type_not_existed(){
+        when(studentRepository.existsById(1)).thenReturn(true);
+        StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
+                .homework(List.of(
+                        HomeworkEntity.builder().homeworkType(1).build(),
+                        HomeworkEntity.builder().homeworkType(3).build()
+                )).build();
+        StudentEntity studentEntity2 = StudentEntity.builder().id(2).name("student2")
+                .homework(List.of(
+                        HomeworkEntity.builder().homeworkType(2).build()
+                )).build();
+        StudentEntity studentEntity3 = StudentEntity.builder().id(3).name("student3")
+                .homework(List.of(
+                        HomeworkEntity.builder().homeworkType(1).build(),
+                        HomeworkEntity.builder().homeworkType(2).build(),
+                        HomeworkEntity.builder().homeworkType(3).build()
+                )).build();
+
+        when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2, studentEntity3));
+        Exception exception = assertThrows(HomeworkTypeNotExistedException.class,
+                () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("test_content").homeworkType(99).build()));
+        assertTrue(exception.getMessage().contains("Homework type is in invalid."));
     }
 
 
