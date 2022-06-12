@@ -7,15 +7,6 @@ spring:
           tenant-id: ***REMOVED***
         credential:
           client-id: ***REMOVED***
-          client-secret:
-        app-id-uri: api://***REMOVED***
-        application-type: web_application_and_resource_server
-        authorization-clients:
-          graph:
-            authorizationGrantType: authorization_code
-            scopes:
-              - https://graph.microsoft.com/User.Read.All
-              - https://graph.microsoft.com/Directory.Read.All
   datasource:
     url: jdbc:postgresql://localhost:5432/students
     username: postgres

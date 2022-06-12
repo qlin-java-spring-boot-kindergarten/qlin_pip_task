@@ -39,7 +39,6 @@ dependencies {
     // Azure
     implementation 'com.azure.spring:spring-cloud-azure-starter-active-directory:4.2.0'
     // Oauth
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.0'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.7.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
