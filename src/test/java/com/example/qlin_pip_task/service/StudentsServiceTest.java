@@ -272,10 +272,11 @@ class StudentsServiceTest {
                         HomeworkEntity.builder().homeworkType(2).build(),
                         HomeworkEntity.builder().homeworkType(3).build()
                 )).build();
-
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2, studentEntity3));
+
         Exception exception = assertThrows(HomeworkTypeNotExistedException.class,
                 () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("test_content").homeworkType(99).build()));
+
         assertTrue(exception.getMessage().contains("Homework type is in invalid."));
     }
 

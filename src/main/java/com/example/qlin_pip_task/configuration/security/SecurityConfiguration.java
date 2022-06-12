@@ -20,6 +20,8 @@ public class SecurityConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             super.configure(http);
             http
+                    .csrf()
+                    .disable()
                     .authorizeRequests()
                     .antMatchers("/students/group-by-homework")
                     .authenticated();
