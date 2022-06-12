@@ -169,17 +169,4 @@ class StudentsServiceTest {
         assertThat(id, is(99));
     }
 
-
-    @Test
-    void should_return_a_group_list_of_students_grouped_by_student_id_when_call_get_homework_group(){
-        when(studentRepository.getHomeworkGroupList()).thenReturn(List.of(List.of("1","3"), List.of("2")));
-
-        when(studentRepository.findById(1)).thenReturn(Optional.of(StudentEntity.builder().id(1).name("student1").build()));
-        when(studentRepository.findById(3)).thenReturn(Optional.of(StudentEntity.builder().id(3).name("student3").build()));
-        when(studentRepository.findById(2)).thenReturn(Optional.of(StudentEntity.builder().id(2).name("student2").build()));
-
-        HomeworkGroupResponses homeworkGroupResponses = studentsService.getHomeworkGroup();
-        assertThat(homeworkGroupResponses,
-                is(HomeworkGroupResponses.builder().group(List.of(List.of("student1", "student3"), List.of("student2"))).build()));
-    }
 }

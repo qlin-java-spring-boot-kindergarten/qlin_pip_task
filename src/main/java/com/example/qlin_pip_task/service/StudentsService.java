@@ -2,7 +2,6 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
-import com.example.qlin_pip_task.dto.response.HomeworkGroupResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
@@ -95,25 +94,6 @@ public class StudentsService {
         }
     }
 
-    public HomeworkGroupResponses getHomeworkGroup() {
-        List<List<String>> homeworkGroupList = studentRepository.getHomeworkGroupList();
-        HomeworkGroupResponses studentNamesList = new HomeworkGroupResponses(new ArrayList<>());
-        for (List<String> theStudentIdListOfTheHomework : homeworkGroupList) {
-            List<String> theStudentNamesListOfTheHomework = getStudentNamesListOfTheSingleHomeworkGroup(theStudentIdListOfTheHomework);
-            studentNamesList.getGroup().add(theStudentNamesListOfTheHomework);
-        }
-        return studentNamesList;
-    }
 
-    private List<String> getStudentNamesListOfTheSingleHomeworkGroup(List<String> theStudentIdListOfTheHomework) {
-        List<String> theStudentNamesListOfTheHomework = new ArrayList<>();
-        for (String studentIdStr : theStudentIdListOfTheHomework) {
-            Integer studentId = Integer.parseInt(studentIdStr);
-            Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(studentId);
-            String studentName = optionalStudentEntity.get().getName();
-            theStudentNamesListOfTheHomework.add(studentName);
-        }
-        return theStudentNamesListOfTheHomework;
-    }
 }
 
