@@ -7,6 +7,7 @@ import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
+import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -33,7 +34,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StudentsServiceTest {
-
     @Mock
     private StudentMapper studentMapper;
 
@@ -74,11 +74,7 @@ class StudentsServiceTest {
         StudentEntity studentEntity = StudentEntity.builder().name("student1").classroom(1).grade(1).build();
         when(studentMapper.requestToStudentEntity(studentSubmitRequest)).thenReturn(studentEntity);
         when(studentRepository.save(studentEntity))
-                .thenReturn(StudentEntity.builder()
-                        .id(1)
-                        .name("student1")
-                        .classroom(1)
-                        .grade(1).build());
+                .thenReturn(StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build());
         Integer id = studentsService.save(studentSubmitRequest);
 
         assertThat(id, is(1));
@@ -95,66 +91,42 @@ class StudentsServiceTest {
     @Test
     void should_throw_name_invalid_exception_when_name_is_null() {
         Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder()
-                        .name(null)
-                        .classroom(1)
-                        .grade(1)
-                        .build()));
+                StudentSubmitRequest.builder().name(null).classroom(1).grade(1).build()));
         assertTrue(exception.getMessage().contains("Name is invalid."));
     }
 
     @Test
     void should_throw_name_invalid_exception_when_name_is_empty() {
         Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder()
-                        .name("")
-                        .classroom(1)
-                        .grade(1)
-                        .build()));
+                StudentSubmitRequest.builder().name("").classroom(1).grade(1).build()));
         assertTrue(exception.getMessage().contains("Name is invalid."));
     }
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
         Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder()
-                        .name("name")
-                        .classroom(1)
-                        .grade(0)
-                        .build()));
+                StudentSubmitRequest.builder().name("name").classroom(1).grade(0).build()));
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine() {
         Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder()
-                        .name("name")
-                        .classroom(1)
-                        .grade(10)
-                        .build()));
+                StudentSubmitRequest.builder().name("name").classroom(1).grade(10).build()));
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one() {
         Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder()
-                        .name("name")
-                        .classroom(0)
-                        .grade(1)
-                        .build()));
+                StudentSubmitRequest.builder().name("name").classroom(0).grade(1).build()));
         assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_larger_than_twenty() {
         Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder()
-                        .name("name")
-                        .classroom(21)
-                        .grade(1)
-                        .build()));
+                StudentSubmitRequest.builder().name("name").classroom(21).grade(1).build()));
         assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
     @Test
@@ -257,13 +229,20 @@ class StudentsServiceTest {
         when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(StudentResponses.StudentResponse.builder().id(2).name("student2").build());
         when(studentMapper.entityToStudentResponse(studentEntity3)).thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
 
-        StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomewrokTypes();
+        StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomeworkTypes();
         Map<String, List<String>> resultGroup = result.getHomework();
         assertThat(resultGroup.size(), is(3));
         assertThat(resultGroup.get("homework_type_1"), is(List.of("student1", "student3")));
         assertThat(resultGroup.get("homework_type_2"), is(List.of("student2", "student3")));
         assertThat(resultGroup.get("homework_type_3"), is(List.of("student1", "student3")));
+    }
 
+    @Test
+    void should_throw_content_invalid_exception_when_submit_update_homework_request_with_no_content_provided(){
+        when(studentRepository.existsById(1)).thenReturn(true);
+        Exception exception = assertThrows(HomeworkContentInvalidException.class,
+                () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().homeworkType(1).build()));
+        assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }
 
 

@@ -5,7 +5,6 @@ import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.service.StudentsService;
-import com.example.qlin_pip_task.service.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,6 @@ import java.util.Map;
 public class StudentsController {
 
     private final StudentsService studentsService;
-
-    private final ValidationService validationService;
 
     @GetMapping
     public ResponseEntity<StudentResponses> getStudentsData() {
@@ -63,7 +60,7 @@ public class StudentsController {
 
     @GetMapping("/group-by-homework")
     public ResponseEntity<StudentGroupsByHomeworkTypeResponses> getHomeworkGroup() {
-        return ResponseEntity.ok(studentsService.getStudentGroupsByHomewrokTypes());
+        return ResponseEntity.ok(studentsService.getStudentGroupsByHomeworkTypes());
     }
 
 

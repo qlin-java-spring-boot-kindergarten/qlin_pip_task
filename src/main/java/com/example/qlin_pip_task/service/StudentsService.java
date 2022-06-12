@@ -9,6 +9,7 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
+import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
@@ -37,19 +38,6 @@ public class StudentsService {
     private final StudentMapper studentMapper;
 
     private final HomeworkMapper homeworkMapper;
-
-    public void validateStudentData(StudentSubmitRequest studentSubmitRequest) {
-        if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
-            throw new NameInvalidException("Name is invalid.");
-        }
-        if (studentSubmitRequest.getGrade() < 1 || studentSubmitRequest.getGrade() > 9) {
-            throw new GradeInvalidException("Grade is invalid.");
-        }
-        if (studentSubmitRequest.getClassroom() < 1 || studentSubmitRequest.getClassroom() > 20) {
-            throw new ClassroomInvalidException("Classroom is invalid.");
-        }
-
-    }
 
     public StudentResponses getAllStudentsResponse() {
         List<StudentEntity> allStudentsData = studentRepository.findAll();
@@ -102,20 +90,16 @@ public class StudentsService {
         return theHomeEntity.getId();
     }
 
-    public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomewrokTypes() {
+    public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomeworkTypes() {
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
-
         Set<Integer> allHomeworkTypes = allStudentEntitiesList.stream()
                 .map(stduent -> stduent.getHomework().stream()
                         .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet()))
                 .flatMap(Collection::stream).collect(Collectors.toSet());
-
         TreeSet<Integer> treeSet = new TreeSet<>(allHomeworkTypes);
-
         StudentGroupsByHomeworkTypeResponses studentGroupsByHomeworkTypeResponses =
                 new StudentGroupsByHomeworkTypeResponses(
                         new TreeMap<>(Comparator.comparingInt(s -> Integer.parseInt(s.substring(14)))));
-
         for (Integer homeworkType : treeSet) {
             List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType = new ArrayList<>();
             for (StudentEntity studentEntity : allStudentEntitiesList) {
@@ -125,19 +109,32 @@ public class StudentsService {
                     studentEntitiesOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity));
                 }
             }
-
             List<String> studentNamelist = studentEntitiesOfTheHomeworkType.stream().map(StudentResponses.StudentResponse::getName).collect(Collectors.toList());
             studentGroupsByHomeworkTypeResponses.getHomework().put(String.format("homework_type_%d", homeworkType), studentNamelist);
         }
-
         return studentGroupsByHomeworkTypeResponses;
     }
 
-
-    public void updateHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
-
+    public void updateHomework(Integer id, HomeworkSubmitRequest updateHomeworkSubmitRequest) {
+        checkIfTheStudentExisted(id);
+        if (updateHomeworkSubmitRequest.getContent() == null) {
+            throw new HomeworkContentInvalidException("Homework content is invalid.");
+        }
     }
 
+
+    public void validateStudentData(StudentSubmitRequest studentSubmitRequest) {
+        if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
+            throw new NameInvalidException("Name is invalid.");
+        }
+        if (studentSubmitRequest.getGrade() < 1 || studentSubmitRequest.getGrade() > 9) {
+            throw new GradeInvalidException("Grade is invalid.");
+        }
+        if (studentSubmitRequest.getClassroom() < 1 || studentSubmitRequest.getClassroom() > 20) {
+            throw new ClassroomInvalidException("Classroom is invalid.");
+        }
+
+    }
 
     private void checkIfTheStudentExisted(Integer id) {
         if (!studentRepository.existsById(id)) {
