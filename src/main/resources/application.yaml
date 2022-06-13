@@ -4,10 +4,10 @@ spring:
       active-directory:
         enabled: true
         profile:
-          tenant-id: c4e7abab-c7fa-4661-8c32-afd5aaab4496
+          tenant-id: 21716e18-9a39-4436-8fdf-d670c9aaeba3
         credential:
-          client-id: 15093605-5712-4251-bc3b-14533cabd46f
-        app-id-uri: api://15093605-5712-4251-bc3b-14533cabd46f
+          client-id: 504c0fe0-0a8f-4286-850a-a5c25f27c0fd
+        app-id-uri: api://504c0fe0-0a8f-4286-850a-a5c25f27c0fd
   datasource:
     url: jdbc:postgresql://localhost:5432/students
     username: postgres
