@@ -136,6 +136,12 @@ public class StudentsService {
         studentRepository.save(studentEntity);
     }
 
+    private void checkIfHomeworkContentIsValid(HomeworkSubmitRequest updateHomeworkSubmitRequest) {
+        if (updateHomeworkSubmitRequest.getContent() == null || updateHomeworkSubmitRequest.getContent().equals("")) {
+            throw new HomeworkContentInvalidException("Homework content is invalid.");
+        }
+    }
+
 
     public void validateStudentData(StudentSubmitRequest studentSubmitRequest) {
         if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
