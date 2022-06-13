@@ -45,12 +45,10 @@ public class StudentsService {
 
     public StudentResponses getAllStudentsResponse() {
         List<StudentEntity> allStudentsData = studentRepository.findAll();
-
         List<StudentResponses.StudentResponse> studentResponsesList
                 = allStudentsData.stream()
                 .map(studentMapper::entityToStudentResponse)
                 .collect(Collectors.toList());
-
         return StudentResponses.builder().data(studentResponsesList).build();
     }
 
@@ -105,17 +103,21 @@ public class StudentsService {
                         new TreeMap<>(Comparator.comparingInt(s -> Integer.parseInt(s.substring(14)))));
         for (Integer homeworkType : allHomeworkTypes) {
             List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType = new ArrayList<>();
-            for (StudentEntity studentEntity : allStudentEntitiesList) {
-                Set<Integer> singleStudentHomeworkTypes = studentEntity.getHomework().stream()
-                        .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet());
-                if (singleStudentHomeworkTypes.contains(homeworkType)) {
-                    studentEntitiesOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity));
-                }
-            }
-            List<String> studentNamelist = studentEntitiesOfTheHomeworkType.stream().map(StudentResponses.StudentResponse::getName).collect(Collectors.toList());
-            studentGroupsByHomeworkTypeResponses.getHomework().put(String.format("homework_type_%d", homeworkType), studentNamelist);
+            getStudentsOfTheHomeworkType(allStudentEntitiesList, homeworkType, studentEntitiesOfTheHomeworkType);
+            List<String> studentNameList = studentEntitiesOfTheHomeworkType.stream().map(StudentResponses.StudentResponse::getName).collect(Collectors.toList());
+            studentGroupsByHomeworkTypeResponses.getHomework().put(String.format("homework_type_%d", homeworkType), studentNameList);
         }
         return studentGroupsByHomeworkTypeResponses;
+    }
+
+    private void getStudentsOfTheHomeworkType(List<StudentEntity> allStudentEntitiesList, Integer homeworkType, List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType) {
+        for (StudentEntity studentEntity : allStudentEntitiesList) {
+            Set<Integer> singleStudentHomeworkTypes = studentEntity.getHomework().stream()
+                    .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet());
+            if (singleStudentHomeworkTypes.contains(homeworkType)) {
+                studentEntitiesOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity));
+            }
+        }
     }
 
     public void updateHomework(Integer id, HomeworkSubmitRequest updateHomeworkSubmitRequest) {
@@ -147,7 +149,6 @@ public class StudentsService {
             throw new HomeworkContentInvalidException("Homework content is invalid.");
         }
     }
-
 
     public void validateStudentData(StudentSubmitRequest studentSubmitRequest) {
         if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
