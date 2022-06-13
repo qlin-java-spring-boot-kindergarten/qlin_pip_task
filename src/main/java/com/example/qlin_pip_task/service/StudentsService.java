@@ -123,8 +123,7 @@ public class StudentsService {
     public void updateHomework(Integer id, HomeworkSubmitRequest updateHomeworkSubmitRequest) {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
-        checkIfHomeworkContentIsValid(updateHomeworkSubmitRequest);
-        checkIfHomeworkTypeIsExisted(updateHomeworkSubmitRequest, allStudentEntitiesList);
+        checkIfTheHomeworkSubmitRequestIsValid(updateHomeworkSubmitRequest, allStudentEntitiesList);
         List<HomeworkEntity> homeworkList = studentEntity.getHomework();
         List<HomeworkEntity> list = homeworkList.stream().filter(homeworkEntity -> homeworkEntity.getHomeworkType()
                 .equals(updateHomeworkSubmitRequest.getHomeworkType())).collect(Collectors.toList());
@@ -132,6 +131,11 @@ public class StudentsService {
         homeworkEntity.setContent(updateHomeworkSubmitRequest.getContent());
         homeworkEntity.setStudentEntity(studentEntity);
         studentRepository.save(studentEntity);
+    }
+
+    private void checkIfTheHomeworkSubmitRequestIsValid(HomeworkSubmitRequest updateHomeworkSubmitRequest, List<StudentEntity> allStudentEntitiesList) {
+        checkIfHomeworkContentIsValid(updateHomeworkSubmitRequest);
+        checkIfHomeworkTypeIsExisted(updateHomeworkSubmitRequest, allStudentEntitiesList);
     }
 
     private void checkIfHomeworkTypeIsExisted(HomeworkSubmitRequest updateHomeworkSubmitRequest, List<StudentEntity> allStudentEntitiesList) {
