@@ -172,12 +172,10 @@ public class StudentsService {
     }
 
     private TreeSet<Integer> getAllHomeworkTypes(List<StudentEntity> allStudentEntitiesList) {
-        Set<Integer> allHomeworkTypes = allStudentEntitiesList.stream()
+        return allStudentEntitiesList.stream()
                 .map(stduent -> stduent.getHomework().stream()
                         .map(HomeworkEntity::getHomeworkType).collect(Collectors.toSet()))
-                .flatMap(Collection::stream).collect(Collectors.toSet());
-        TreeSet<Integer> treeSet = new TreeSet<>(allHomeworkTypes);
-        return treeSet;
+                .flatMap(Collection::stream).collect(Collectors.toCollection(TreeSet::new));
     }
 }
 
