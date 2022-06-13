@@ -4,6 +4,7 @@ import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.dto.response.StudentSavedIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
@@ -78,9 +79,10 @@ class StudentsServiceTest {
         when(studentMapper.requestToStudentEntity(studentSubmitRequest)).thenReturn(studentEntity);
         when(studentRepository.save(studentEntity))
                 .thenReturn(StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build());
-        Integer id = studentsService.save(studentSubmitRequest);
 
-        assertThat(id, is(1));
+        StudentSavedIdResponse studentSavedIdResponse = studentsService.save(studentSubmitRequest);
+
+        assertThat(studentSavedIdResponse.getId(), is(1));
         verify(studentRepository).save(studentEntity);
     }
 

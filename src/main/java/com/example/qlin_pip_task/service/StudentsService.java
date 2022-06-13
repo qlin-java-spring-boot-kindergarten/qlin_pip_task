@@ -4,6 +4,7 @@ import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.dto.response.StudentSavedIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
@@ -53,10 +54,10 @@ public class StudentsService {
                 .build();
     }
 
-    public Integer save(StudentSubmitRequest studentSubmitRequest) {
+    public StudentSavedIdResponse save(StudentSubmitRequest studentSubmitRequest) {
         StudentEntity studentEntity = studentMapper.requestToStudentEntity(studentSubmitRequest);
         StudentEntity studentData = studentRepository.save(studentEntity);
-        return studentData.getId();
+        return StudentSavedIdResponse.builder().id(studentData.getId()).build();
     }
 
     public StudentResponses.StudentResponse getTheStudentResponse(Integer id) {

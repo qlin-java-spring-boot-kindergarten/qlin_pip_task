@@ -4,6 +4,7 @@ import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.dto.response.StudentSavedIdResponse;
 import com.example.qlin_pip_task.service.StudentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,12 +34,9 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> receiveStudentRequest(@RequestBody @Validated StudentSubmitRequest studentSubmitRequest) {
+    public ResponseEntity<StudentSavedIdResponse> receiveStudentRequest(@RequestBody @Validated StudentSubmitRequest studentSubmitRequest) {
         studentsService.validateStudentData(studentSubmitRequest);
-        Integer savedStudentData = studentsService.save(studentSubmitRequest);
-        HashMap<String, Integer> map = new HashMap<>();
-        map.put("id", savedStudentData);
-        return ResponseEntity.ok(map);
+        return ResponseEntity.ok(studentsService.save(studentSubmitRequest));
     }
 
 
