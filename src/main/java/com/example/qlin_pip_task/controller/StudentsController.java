@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -44,11 +45,11 @@ public class StudentsController {
     public ResponseEntity<StudentResponses.StudentResponse> getTheStudentData(@PathVariable Integer id) {
         return ResponseEntity.ok(studentsService.getTheStudentResponse(id));
     }
-//
-//    @GetMapping(params = "name")
-//    public StudentResponses getTheStudentByName(@RequestParam Map<String, String> queryMap){
-//        return studentsService.getTheStudentResponseByName(queryMap);
-//    }
+
+    @GetMapping(params = "name")
+    public StudentResponses getTheStudentByName(@RequestParam Map<String, String> queryMap){
+        return studentsService.getTheStudentResponseByName(queryMap);
+    }
 
 
     @PostMapping("/{id}/homework")

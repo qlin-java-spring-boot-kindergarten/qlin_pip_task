@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -69,8 +70,8 @@ public class StudentsService {
         return studentMapper.entityToStudentResponse(studentEntity);
     }
 
-    public StudentResponses getTheStudentResponseByName(String name) {
-        List<StudentEntity> studentEntityList = studentRepository.findAllByName(name);
+    public StudentResponses getTheStudentResponseByName(Map<String, String> queryMap) {
+        List<StudentEntity> studentEntityList = studentRepository.findAllByName(queryMap.get("name"));
         List<StudentResponses.StudentResponse> studentResponses = studentEntityList.stream().map(studentMapper::entityToStudentResponse).collect(Collectors.toList());
         return StudentResponses.builder()
                 .data(studentResponses)
