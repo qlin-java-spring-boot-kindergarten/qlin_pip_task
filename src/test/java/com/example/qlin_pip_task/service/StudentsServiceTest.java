@@ -180,7 +180,7 @@ class StudentsServiceTest {
 
     @Test
     void should_throw_student_not_found_exception_when_student_not_exsits() {
-        when(studentRepository.existsById(1)).thenReturn(false);
+        when(studentRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(StudentNotFoundException.class,
                 () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build()));
         assertTrue(exception.getMessage().contains("Student not found."));
@@ -189,7 +189,7 @@ class StudentsServiceTest {
 
     @Test
     void should_throw_homework_already_existed_exception_when_the_student_has_the_same_homework_type_existed_in_the_table() {
-        when(studentRepository.existsById(1)).thenReturn(true);
+        when(studentRepository.findById(1)).thenReturn(Optional.empty());
         when(studentRepository.findById(1))
                 .thenReturn(Optional.of(
                         StudentEntity.builder().id(1)
@@ -202,7 +202,7 @@ class StudentsServiceTest {
 
     @Test
     void should_save_content_and_return_student_id_and_when_receive_homework_content() {
-        when(studentRepository.existsById(1)).thenReturn(true);
+        when(studentRepository.findById(1)).thenReturn(Optional.empty());
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().build();
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(99).content("test").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
@@ -253,7 +253,9 @@ class StudentsServiceTest {
 
     @Test
     void should_throw_content_invalid_exception_when_submit_update_homework_request_with_no_content_provided(){
-        when(studentRepository.existsById(1)).thenReturn(true);
+        StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
+                .homework(List.of(HomeworkEntity.builder().homeworkType(1).build())).build();
+        when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         Exception exception = assertThrows(HomeworkContentInvalidException.class,
                 () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().homeworkType(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
@@ -261,7 +263,9 @@ class StudentsServiceTest {
 
     @Test
     void should_throw_content_invalid_exception_when_submit_update_homework_request_with_content_is_empty(){
-        when(studentRepository.existsById(1)).thenReturn(true);
+        StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
+                .homework(List.of(HomeworkEntity.builder().homeworkType(1).build())).build();
+        when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         Exception exception = assertThrows(HomeworkContentInvalidException.class,
                 () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("").homeworkType(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
@@ -269,7 +273,6 @@ class StudentsServiceTest {
 
     @Test
     void should_throw_homework_type_not_exist_exception_given_homework_type_not_existed(){
-        when(studentRepository.existsById(1)).thenReturn(true);
         StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
                 .homework(List.of(
                         HomeworkEntity.builder().homeworkType(1).build(),
@@ -279,6 +282,7 @@ class StudentsServiceTest {
                 .homework(List.of(
                         HomeworkEntity.builder().homeworkType(2).build()
                 )).build();
+        when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2));
 
         Exception exception = assertThrows(HomeworkTypeNotExistedException.class,
@@ -289,12 +293,12 @@ class StudentsServiceTest {
 
     @Test
     void should_update_homework_content_when_valid_homework_update_request(){
-        when(studentRepository.existsById(1)).thenReturn(true);
         StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
                 .homework(List.of(
                         HomeworkEntity.builder().homeworkType(1).content("content").build(),
                         HomeworkEntity.builder().homeworkType(3).build()
                 )).build();
+        when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1));
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         ArgumentCaptor<StudentEntity> studentEntityArgumentCaptor = ArgumentCaptor.forClass(StudentEntity.class);
