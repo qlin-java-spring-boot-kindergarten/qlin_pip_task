@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.dto.response.StudentSavedIdResponse;
@@ -72,13 +73,14 @@ public class StudentsService {
 
     public StudentResponses getTheStudentResponseByName(Map<String, String> queryMap) {
         List<StudentEntity> studentEntityList = studentRepository.findAllByName(queryMap.get("name"));
-        List<StudentResponses.StudentResponse> studentResponses = studentEntityList.stream().map(studentMapper::entityToStudentResponse).collect(Collectors.toList());
+        List<StudentResponses.StudentResponse> studentResponses =
+                studentEntityList.stream().map(studentMapper::entityToStudentResponse).collect(Collectors.toList());
         return StudentResponses.builder()
                 .data(studentResponses)
                 .build();
     }
 
-    public Integer submitStudentHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
+    public HomeworkIdResponse submitStudentHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
         checkIfTheStudentExisted(id);
         Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
         StudentEntity studentEntity = optionalStudentEntity.get();
@@ -90,7 +92,7 @@ public class StudentsService {
         StudentEntity theStudentEntity = studentRepository.save(studentEntity);
         List<HomeworkEntity> homeworkEntityList = theStudentEntity.getHomework();
         HomeworkEntity theHomeEntity = homeworkEntityList.get(homeworkEntityList.size() - 1);
-        return theHomeEntity.getId();
+        return homeworkMapper.homeworkEntityToHomeworkIdResponse(theHomeEntity);
     }
 
     public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomeworkTypes() {

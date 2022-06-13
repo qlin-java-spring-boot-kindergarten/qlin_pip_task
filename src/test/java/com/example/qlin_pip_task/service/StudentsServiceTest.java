@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.dto.response.StudentSavedIdResponse;
@@ -208,10 +209,12 @@ class StudentsServiceTest {
         StudentEntity studentEntity = StudentEntity.builder().id(1).homework(new ArrayList<>()).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity));
         when(studentRepository.save(studentEntity)).thenReturn(studentEntity);
+        when(homeworkMapper.homeworkEntityToHomeworkIdResponse(homeworkEntity))
+                .thenReturn(HomeworkIdResponse.builder().id(99).build());
 
-        Integer id = studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build());
+        HomeworkIdResponse homeworkIdResponse = studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build());
 
-        assertThat(id, is(99));
+        assertThat(homeworkIdResponse.getId(), is(99));
     }
 
     @Test

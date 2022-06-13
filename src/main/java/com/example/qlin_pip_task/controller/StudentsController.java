@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.controller;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
+import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.dto.response.StudentSavedIdResponse;
@@ -53,7 +54,7 @@ public class StudentsController {
 
 
     @PostMapping("/{id}/homework")
-    public ResponseEntity<Integer> receiveHomeRequest(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
+    public ResponseEntity<HomeworkIdResponse> receiveHomeRequest(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
         return ResponseEntity.ok(studentsService.submitStudentHomework(id, homeworkSubmitRequest));
     }
 

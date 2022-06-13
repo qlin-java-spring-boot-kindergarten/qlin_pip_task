@@ -24,6 +24,7 @@ public class HomeworkResponses {
     @Component
     public static class HomeworkResponse {
         private Integer id;
+        private Integer homeworkType;
         private String content;
     }
 }

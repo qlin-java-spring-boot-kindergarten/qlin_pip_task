@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.mapper;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,5 +11,8 @@ public interface HomeworkMapper {
 
     @Mapping(target = "id", ignore = true)
     HomeworkEntity homeworkRequestToEntity(HomeworkSubmitRequest homeworkSubmitRequest);
+
+    HomeworkIdResponse homeworkEntityToHomeworkIdResponse(HomeworkEntity homeworkEntity);
+
 
 }
