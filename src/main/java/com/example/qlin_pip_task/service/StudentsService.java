@@ -51,9 +51,7 @@ public class StudentsService {
                 .map(studentMapper::entityToStudentResponse)
                 .collect(Collectors.toList());
 
-        return StudentResponses.builder()
-                .data(studentResponsesList)
-                .build();
+        return StudentResponses.builder().data(studentResponsesList).build();
     }
 
     public StudentSavedIdResponse save(StudentSubmitRequest studentSubmitRequest) {
