@@ -136,7 +136,8 @@ class StudentsServiceTest {
     void should_get_stduent_response_when_id_is_valid() {
         StudentEntity studentEntity = StudentEntity.builder().id(2).name("student2").classroom(2).grade(2).build();
         when(studentRepository.findById(2)).thenReturn(Optional.of(studentEntity));
-        StudentResponses.StudentResponse studentResponse = StudentResponses.StudentResponse.builder().id(2).name("student2").classroom(2).grade(2).build();
+        StudentResponses.StudentResponse studentResponse =
+                StudentResponses.StudentResponse.builder().id(2).name("student2").classroom(2).grade(2).build();
         when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(studentResponse);
 
         StudentResponses.StudentResponse theStudentResponse = studentsService.getTheStudentResponse(2);
@@ -177,7 +178,8 @@ class StudentsServiceTest {
     @Test
     void should_throw_student_not_found_exception_when_student_not_exsits() {
         when(studentRepository.existsById(1)).thenReturn(false);
-        Exception exception = assertThrows(StudentNotFoundException.class, () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build()));
+        Exception exception = assertThrows(StudentNotFoundException.class,
+                () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build()));
         assertTrue(exception.getMessage().contains("Student not found."));
     }
 
@@ -190,7 +192,8 @@ class StudentsServiceTest {
                         StudentEntity.builder().id(1)
                                 .homework(List.of(
                                         HomeworkEntity.builder().id(99).homeworkType(1).content("test").build())).build()));
-        Exception exception = assertThrows(HomeworkAlreadyExistedException.class, () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().homeworkType(1).content("test").build()));
+        Exception exception = assertThrows(HomeworkAlreadyExistedException.class,
+                () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().homeworkType(1).content("test").build()));
         assertTrue(exception.getMessage().contains("The homework already existed."));
     }
 
@@ -228,9 +231,12 @@ class StudentsServiceTest {
                 )).build();
 
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2, studentEntity3));
-        when(studentMapper.entityToStudentResponse(studentEntity1)).thenReturn(StudentResponses.StudentResponse.builder().id(1).name("student1").build());
-        when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(StudentResponses.StudentResponse.builder().id(2).name("student2").build());
-        when(studentMapper.entityToStudentResponse(studentEntity3)).thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
+        when(studentMapper.entityToStudentResponse(studentEntity1))
+                .thenReturn(StudentResponses.StudentResponse.builder().id(1).name("student1").build());
+        when(studentMapper.entityToStudentResponse(studentEntity2))
+                .thenReturn(StudentResponses.StudentResponse.builder().id(2).name("student2").build());
+        when(studentMapper.entityToStudentResponse(studentEntity3))
+                .thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
 
         StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomeworkTypes();
         Map<String, List<String>> resultGroup = result.getHomework();
@@ -268,13 +274,7 @@ class StudentsServiceTest {
                 .homework(List.of(
                         HomeworkEntity.builder().homeworkType(2).build()
                 )).build();
-        StudentEntity studentEntity3 = StudentEntity.builder().id(3).name("student3")
-                .homework(List.of(
-                        HomeworkEntity.builder().homeworkType(1).build(),
-                        HomeworkEntity.builder().homeworkType(2).build(),
-                        HomeworkEntity.builder().homeworkType(3).build()
-                )).build();
-        when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2, studentEntity3));
+        when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2));
 
         Exception exception = assertThrows(HomeworkTypeNotExistedException.class,
                 () -> studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("test_content").homeworkType(99).build()));
