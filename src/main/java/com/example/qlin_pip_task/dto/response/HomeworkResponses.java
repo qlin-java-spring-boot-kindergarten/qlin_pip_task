@@ -13,20 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class StudentResponses {
+public class HomeworkResponses {
 
-    private List<StudentResponse> data;
+    private List<HomeworkResponse> homeworkList;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Component
-    public static class StudentResponse {
+    public static class HomeworkResponse {
         private Integer id;
-        private String name;
-        private Integer grade;
-        private Integer classroom;
-        private List<HomeworkResponses.HomeworkResponse> homework;
+        private String content;
     }
 }
