@@ -124,9 +124,7 @@ public class StudentsService {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
         checkIfHomeworkContentIsValid(updateHomeworkSubmitRequest);
-        if (!getAllHomeworkTypes(allStudentEntitiesList).contains(updateHomeworkSubmitRequest.getHomeworkType())){
-            throw new HomeworkTypeNotExistedException("Homework type is in invalid.");
-        }
+        checkIfHomeworkTypeIsExisted(updateHomeworkSubmitRequest, allStudentEntitiesList);
         List<HomeworkEntity> homeworkList = studentEntity.getHomework();
         List<HomeworkEntity> list = homeworkList.stream().filter(homeworkEntity -> homeworkEntity.getHomeworkType()
                 .equals(updateHomeworkSubmitRequest.getHomeworkType())).collect(Collectors.toList());
@@ -134,6 +132,12 @@ public class StudentsService {
         homeworkEntity.setContent(updateHomeworkSubmitRequest.getContent());
         homeworkEntity.setStudentEntity(studentEntity);
         studentRepository.save(studentEntity);
+    }
+
+    private void checkIfHomeworkTypeIsExisted(HomeworkSubmitRequest updateHomeworkSubmitRequest, List<StudentEntity> allStudentEntitiesList) {
+        if (!getAllHomeworkTypes(allStudentEntitiesList).contains(updateHomeworkSubmitRequest.getHomeworkType())){
+            throw new HomeworkTypeNotExistedException("Homework type is in invalid.");
+        }
     }
 
     private void checkIfHomeworkContentIsValid(HomeworkSubmitRequest updateHomeworkSubmitRequest) {
