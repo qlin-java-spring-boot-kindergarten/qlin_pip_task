@@ -15,6 +15,7 @@ import com.example.qlin_pip_task.mapper.StudentMapper;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -280,5 +282,23 @@ class StudentsServiceTest {
         assertTrue(exception.getMessage().contains("Homework type is in invalid."));
     }
 
+    @Test
+    void should_update_homework_content_when_valid_homework_update_request(){
+        when(studentRepository.existsById(1)).thenReturn(true);
+        StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
+                .homework(List.of(
+                        HomeworkEntity.builder().homeworkType(1).content("content").build(),
+                        HomeworkEntity.builder().homeworkType(3).build()
+                )).build();
+        when(studentRepository.findAll()).thenReturn(List.of(studentEntity1));
+        when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
+        ArgumentCaptor<StudentEntity> studentEntityArgumentCaptor = ArgumentCaptor.forClass(StudentEntity.class);
+
+        studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("update_content").homeworkType(1).build());
+
+        verify(studentRepository).save(studentEntityArgumentCaptor.capture());
+        StudentEntity studentEntityArgumentCaptorValue = studentEntityArgumentCaptor.getValue();
+        assertEquals("update_content", studentEntityArgumentCaptorValue.getHomework().get(0).getContent());
+    }
 
 }

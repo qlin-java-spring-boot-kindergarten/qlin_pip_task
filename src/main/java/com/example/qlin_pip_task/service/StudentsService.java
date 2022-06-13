@@ -121,6 +121,15 @@ public class StudentsService {
         if (!getAllHomeworkTypes(allStudentEntitiesList).contains(updateHomeworkSubmitRequest.getHomeworkType())){
             throw new HomeworkTypeNotExistedException("Homework type is in invalid.");
         }
+        Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
+        StudentEntity studentEntity = optionalStudentEntity.get();
+        List<HomeworkEntity> homeworkList = studentEntity.getHomework();
+        List<HomeworkEntity> list = homeworkList.stream().filter(homeworkEntity -> homeworkEntity.getHomeworkType()
+                .equals(updateHomeworkSubmitRequest.getHomeworkType())).collect(Collectors.toList());
+        HomeworkEntity homeworkEntity = list.get(0);
+        homeworkEntity.setContent(updateHomeworkSubmitRequest.getContent());
+        homeworkEntity.setStudentEntity(studentEntity);
+        studentRepository.save(studentEntity);
     }
 
 
