@@ -213,17 +213,18 @@ class StudentsServiceTest {
 
     @Test
     void should_save_content_and_return_student_id_and_when_receive_homework_content() {
-        when(studentRepository.findById(1)).thenReturn(Optional.empty());
-        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().build();
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(99).content("test").build();
-        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
+        when(homeworkMapper.homeworkRequestToEntity(HomeworkSubmitRequest.builder().content("test").homeworkType(1).build()))
+                .thenReturn(HomeworkEntity.builder().homeworkType(1).content("test").build());
         StudentEntity studentEntity = StudentEntity.builder().id(1).homework(new ArrayList<>()).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity));
-        when(studentRepository.save(studentEntity)).thenReturn(studentEntity);
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(99).content("test").id(6).build();
+        when(studentRepository.save(studentEntity)).thenReturn(
+                StudentEntity.builder().id(1).homework(List.of(homeworkEntity)).build());
         when(homeworkMapper.homeworkEntityToHomeworkIdResponse(homeworkEntity))
                 .thenReturn(HomeworkIdResponse.builder().id(99).build());
 
-        HomeworkIdResponse homeworkIdResponse = studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build());
+        HomeworkIdResponse homeworkIdResponse =
+                studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().content("test").homeworkType(1).build());
 
         assertThat(homeworkIdResponse.getId(), is(99));
     }
