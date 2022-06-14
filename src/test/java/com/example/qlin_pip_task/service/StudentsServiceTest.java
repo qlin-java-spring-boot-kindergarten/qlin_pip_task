@@ -310,7 +310,6 @@ class StudentsServiceTest {
                         HomeworkEntity.builder().homeworkType(1).content("content").build(),
                         HomeworkEntity.builder().homeworkType(3).build()
                 )).build();
-        when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1));
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
 
