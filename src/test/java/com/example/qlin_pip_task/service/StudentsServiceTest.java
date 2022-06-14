@@ -89,9 +89,9 @@ class StudentsServiceTest {
 
     @Test
     void should_throw_invalid_parameter_exception_when_id_is_not_found() {
-        when(studentRepository.findById(anyInt())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.getTheStudentResponse(anyInt()));
-        assertTrue(exception.getMessage().contains("Data is not found."));
+        Exception exception = assertThrows(StudentNotFoundException.class,
+                () -> studentsService.getTheStudentResponse(anyInt()));
+        assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
     @Test
@@ -183,7 +183,7 @@ class StudentsServiceTest {
         when(studentRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(StudentNotFoundException.class,
                 () -> studentsService.submitStudentHomework(1, HomeworkSubmitRequest.builder().build()));
-        assertTrue(exception.getMessage().contains("Student not found."));
+        assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
 

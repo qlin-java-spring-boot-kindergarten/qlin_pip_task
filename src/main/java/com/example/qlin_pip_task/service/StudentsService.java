@@ -59,11 +59,7 @@ public class StudentsService {
     }
 
     public StudentResponses.StudentResponse getTheStudentResponse(Integer id) {
-        Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
-        if (optionalStudentEntity.isEmpty()) {
-            throw new InvalidParameterException("Data is not found.");
-        }
-        StudentEntity studentEntity = optionalStudentEntity.get();
+        StudentEntity studentEntity = getNotNullableStudentEntity(id);
         return studentMapper.entityToStudentResponse(studentEntity);
     }
 
@@ -90,7 +86,7 @@ public class StudentsService {
     private StudentEntity getNotNullableStudentEntity(Integer id) {
         Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
         if (optionalStudentEntity.isEmpty()) {
-            throw new StudentNotFoundException("Student not found.");
+            throw new StudentNotFoundException("Student is not found.");
         }
         return optionalStudentEntity.get();
     }
