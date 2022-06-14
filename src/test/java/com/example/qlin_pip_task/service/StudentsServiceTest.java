@@ -77,16 +77,16 @@ class StudentsServiceTest {
 
     @Test
     void should_save_student_and_get_id_when_receive_student_submit_request() {
-        StudentSubmitRequest studentSubmitRequest = StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build();
-        StudentEntity studentEntity = StudentEntity.builder().name("student1").classroom(1).grade(1).build();
-        when(studentMapper.requestToStudentEntity(studentSubmitRequest)).thenReturn(studentEntity);
+        StudentEntity studentEntity = StudentEntity.builder().id(1).classroom(1).grade(1).build();
+        when(studentMapper.requestToStudentEntity(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build()))
+                .thenReturn(studentEntity);
         when(studentRepository.save(studentEntity))
                 .thenReturn(StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build());
 
-        StudentSavedIdResponse studentSavedIdResponse = studentsService.save(studentSubmitRequest);
+        StudentSavedIdResponse studentSavedIdResponse =
+                studentsService.save(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build());
 
         assertThat(studentSavedIdResponse.getId(), is(1));
-        verify(studentRepository).save(studentEntity);
     }
 
     @Test
