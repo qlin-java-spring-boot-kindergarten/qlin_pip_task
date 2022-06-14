@@ -175,16 +175,18 @@ class StudentsServiceTest {
         assertThat(theStudentResponsesByName.getData().get(1).getId(), is(2));
     }
 
-//    @Test
-//    void should_get_empty_response_when_name_not_in_the_table() {
-//        StudentEntity studentEntity = StudentEntity.builder().build();
-//        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
+    @Test
+    void should_get_empty_response_when_name_not_in_the_table() {
+        StudentEntity studentEntity = mock(StudentEntity.class);
+        when(studentRepository.findAllByName("student")).thenReturn(List.of());
 //        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(null);
-//
-//        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
-//
-//        assertThat(theStudentResponseByName, is(nullValue()));
-//    }
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("name", "student");
+        StudentResponses theStudentResponseByName = studentsService.getTheStudentResponseByName(queryMap);
+
+        assertThat(theStudentResponseByName.getData(), is(List.of()));
+    }
 
 
     @Test
