@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -151,20 +153,27 @@ class StudentsServiceTest {
         assertThat(theStudentResponse.getGrade(), is(2));
     }
 
-//    @Test
-//    void should_get_student_response_when_name_can_be_found_in_the_table() {
-//        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student1").classroom(1).grade(1).build();
-//        StudentResponses.StudentResponse studentResponse = StudentResponses.StudentResponse.builder().name("student1").classroom(1).grade(1).id(1).build();
-//        when(studentRepository.findByName("student1")).thenReturn(studentEntity);
-//        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(studentResponse);
-//
-//        StudentResponses.StudentResponse theStudentResponseByName = studentsService.getTheStudentResponseByName("student1");
-//
-//        assertThat(theStudentResponseByName.getName(), is("student1"));
-//        assertThat(theStudentResponseByName.getId(), is(1));
-//        assertThat(theStudentResponseByName.getClassroom(), is(1));
-//        assertThat(theStudentResponseByName.getGrade(), is(1));
-//    }
+    @Test
+    void should_get_student_responses_when_name_can_be_found_in_the_table() {
+        StudentEntity studentEntity1 = mock(StudentEntity.class);
+        StudentEntity studentEntity2 = mock(StudentEntity.class);
+        StudentResponses.StudentResponse studentResponse1 =
+                StudentResponses.StudentResponse.builder().name("student").classroom(1).grade(1).id(1).build();
+        StudentResponses.StudentResponse studentResponse2 =
+                StudentResponses.StudentResponse.builder().name("student").classroom(2).grade(2).id(2).build();
+        when(studentRepository.findAllByName("student")).thenReturn(List.of(studentEntity1, studentEntity2));
+        when(studentMapper.entityToStudentResponse(studentEntity1)).thenReturn(studentResponse1);
+        when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(studentResponse2);
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("name", "student");
+        StudentResponses theStudentResponsesByName = studentsService.getTheStudentResponseByName(queryMap);
+
+        assertThat(theStudentResponsesByName.getData().get(0).getName(), is("student"));
+        assertThat(theStudentResponsesByName.getData().get(0).getId(), is(1));
+        assertThat(theStudentResponsesByName.getData().get(1).getName(), is("student"));
+        assertThat(theStudentResponsesByName.getData().get(1).getId(), is(2));
+    }
 
 //    @Test
 //    void should_get_empty_response_when_name_not_in_the_table() {
@@ -301,10 +310,10 @@ class StudentsServiceTest {
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1));
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
-        ArgumentCaptor<StudentEntity> studentEntityArgumentCaptor = ArgumentCaptor.forClass(StudentEntity.class);
 
         studentsService.updateHomework(1, HomeworkSubmitRequest.builder().content("update_content").homeworkType(1).build());
 
+        ArgumentCaptor<StudentEntity> studentEntityArgumentCaptor = ArgumentCaptor.forClass(StudentEntity.class);
         verify(studentRepository).save(studentEntityArgumentCaptor.capture());
         StudentEntity studentEntityArgumentCaptorValue = studentEntityArgumentCaptor.getValue();
         assertEquals("update_content", studentEntityArgumentCaptorValue.getHomework().get(0).getContent());
