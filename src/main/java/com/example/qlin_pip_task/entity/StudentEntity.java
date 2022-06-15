@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -22,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="student")
+@Table(name = "student")
 public class StudentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "student_id_generator")
@@ -30,6 +31,10 @@ public class StudentEntity {
     private Integer id;
     private String name;
 
-    @OneToMany(mappedBy="studentEntity", cascade= CascadeType.ALL)
+
+    @JoinColumn(name = "class_id")
+    private Integer classId;
+
+    @OneToMany(mappedBy = "studentEntity", cascade = CascadeType.ALL)
     private List<StudentHomeworkEntity> homework;
 }
