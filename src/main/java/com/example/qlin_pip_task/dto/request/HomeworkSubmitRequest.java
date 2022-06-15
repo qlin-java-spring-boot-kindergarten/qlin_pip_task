@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HomeworkSubmitRequest {
-
     private String content;
-    private Integer homeworkType;
+    private Integer homeworkId;
 }
