@@ -63,7 +63,7 @@ class StudentsServiceTest {
         when(studentMapper.entityToStudentResponse(studentEntity1)).thenReturn(studentResponse1);
         when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(studentResponse2);
 
-        StudentResponses result = studentsService.getAllStudentsResponse();
+        StudentResponses result = studentsService.getAllStudentsResponses();
 
         assertThat(result.getData().get(0).getId(), is(1));
         assertThat(result.getData().get(0).getName(), is("student1"));

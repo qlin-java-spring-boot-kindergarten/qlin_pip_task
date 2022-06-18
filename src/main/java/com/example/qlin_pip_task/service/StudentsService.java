@@ -39,7 +39,7 @@ public class StudentsService {
     private final StudentMapper studentMapper;
     private final HomeworkMapper homeworkMapper;
 
-    public StudentResponses getAllStudentsResponse() {
+    public StudentResponses getAllStudentsResponses() {
         List<StudentEntity> allStudentsData = studentRepository.findAll();
         List<StudentResponses.StudentResponse> studentResponsesList
                 = allStudentsData.stream()
