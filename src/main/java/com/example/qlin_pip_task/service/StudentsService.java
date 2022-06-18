@@ -147,8 +147,8 @@ public class StudentsService {
         if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
             throw new NameInvalidException("Name is invalid.");
         }
-        classService.checkIfGradeIsValid(studentSubmitRequest);
-        classService.checkIfClassroomIsValid(studentSubmitRequest);
+        classService.checkIfGradeIsValid(studentSubmitRequest.getGrade());
+        classService.checkIfClassroomIsValid(studentSubmitRequest.getClassroom());
     }
 
     private void checkIfHomeworkAlreadyExisted(List<StudentHomeworkEntity> theStudentHomeworkList, Integer requestHomeworkType) {

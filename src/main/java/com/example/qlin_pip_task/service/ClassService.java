@@ -1,6 +1,5 @@
 package com.example.qlin_pip_task.service;
 
-import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
@@ -18,6 +17,7 @@ public class ClassService {
 
 
     public Integer getClassId(Integer grade, Integer classroom) {
+        checkIfClassroomIsValid(grade);
         ClassEntity classEntity = classRepository.findClassEntityByGradeAndClassroom(grade, classroom);
         if (Objects.isNull(classEntity)) {
             ClassEntity newClassEntity = classRepository.save(ClassEntity.builder().grade(grade).classroom(classroom).build());
@@ -26,14 +26,14 @@ public class ClassService {
         return classEntity.getId();
     }
 
-    public void checkIfGradeIsValid(StudentSubmitRequest studentSubmitRequest) {
-        if (studentSubmitRequest.getGrade() < 1 || studentSubmitRequest.getGrade() > 9) {
+    public void checkIfGradeIsValid(Integer grade) {
+        if (grade < 1 || grade > 9) {
             throw new GradeInvalidException("Grade is invalid.");
         }
     }
 
-    public void checkIfClassroomIsValid(StudentSubmitRequest studentSubmitRequest) {
-        if (studentSubmitRequest.getClassroom() < 1 || studentSubmitRequest.getClassroom() > 20) {
+    public void checkIfClassroomIsValid(Integer classroom) {
+        if (classroom < 1 || classroom > 20) {
             throw new ClassroomInvalidException("Classroom is invalid.");
         }
     }

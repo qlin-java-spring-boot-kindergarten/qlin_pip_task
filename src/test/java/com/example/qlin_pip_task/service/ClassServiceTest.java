@@ -1,6 +1,5 @@
 package com.example.qlin_pip_task.service;
 
-import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.repository.ClassRepository;
 import org.junit.jupiter.api.Test;
@@ -29,29 +28,25 @@ class ClassServiceTest {
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfClassroomIsValid(
-                StudentSubmitRequest.builder().name("name").classroom(0).grade(1).build()));
+        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfClassroomIsValid(0));
         assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_larger_than_twenty() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfClassroomIsValid(
-                StudentSubmitRequest.builder().name("name").classroom(21).grade(1).build()));
+        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfClassroomIsValid(21));
         assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfGradeIsValid(
-                StudentSubmitRequest.builder().name("name").classroom(1).grade(10).build()));
+        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfGradeIsValid(10));
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfGradeIsValid(
-                StudentSubmitRequest.builder().name("name").classroom(1).grade(0).build()));
+        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfGradeIsValid(0));
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
