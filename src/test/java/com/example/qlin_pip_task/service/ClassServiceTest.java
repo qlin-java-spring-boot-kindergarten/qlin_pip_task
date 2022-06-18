@@ -74,4 +74,16 @@ class ClassServiceTest {
 
     }
 
+    @Test
+    void should_return_a_class_entity_given_class_id() {
+        when(classRepository.findById(1))
+                .thenReturn(Optional.ofNullable(ClassEntity.builder().id(1).grade(1).classroom(1).build()));
+
+        ClassEntity result = classService.getClassEntityById(1);
+
+        assertThat(result.getGrade(), is(1));
+        assertThat(result.getClassroom(), is(1));
+
+    }
+
 }
