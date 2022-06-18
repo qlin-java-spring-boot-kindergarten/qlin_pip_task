@@ -111,33 +111,6 @@ class StudentsServiceTest {
     }
 
     @Test
-    void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder().name("name").classroom(1).grade(0).build()));
-        assertTrue(exception.getMessage().contains("Grade is invalid."));
-    }
-
-    @Test
-    void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder().name("name").classroom(1).grade(10).build()));
-        assertTrue(exception.getMessage().contains("Grade is invalid."));
-    }
-
-    @Test
-    void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder().name("name").classroom(0).grade(1).build()));
-        assertTrue(exception.getMessage().contains("Classroom is invalid."));
-    }
-
-    @Test
-    void should_throw_classroom_invalid_exception_when_classroom_is_larger_than_twenty() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
-                StudentSubmitRequest.builder().name("name").classroom(21).grade(1).build()));
-        assertTrue(exception.getMessage().contains("Classroom is invalid."));
-    }
-    @Test
     void should_get_student_response_when_id_is_valid() {
         StudentEntity studentEntity = StudentEntity.builder().id(2).name("student2").build();
         when(studentRepository.findById(2)).thenReturn(Optional.of(studentEntity));

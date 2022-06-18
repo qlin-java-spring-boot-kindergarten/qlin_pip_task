@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class StudentsService {
 
     private final StudentRepository studentRepository;
-
+    private final ClassService classService;
     private final StudentMapper studentMapper;
 
     private final HomeworkMapper homeworkMapper;
@@ -148,12 +148,8 @@ public class StudentsService {
         if (studentSubmitRequest.getName() == null || studentSubmitRequest.getName().equals("")) {
             throw new NameInvalidException("Name is invalid.");
         }
-        if (studentSubmitRequest.getGrade() < 1 || studentSubmitRequest.getGrade() > 9) {
-            throw new GradeInvalidException("Grade is invalid.");
-        }
-        if (studentSubmitRequest.getClassroom() < 1 || studentSubmitRequest.getClassroom() > 20) {
-            throw new ClassroomInvalidException("Classroom is invalid.");
-        }
+        classService.checkIfGradeIsValid(studentSubmitRequest);
+        classService.checkIfClassroomIsValid(studentSubmitRequest);
     }
 
     private void checkIfHomeworkAlreadyExisted(List<StudentHomeworkEntity> theStudentHomeworkList, Integer requestHomeworkType) {
