@@ -36,4 +36,16 @@ class ClassServiceTest {
 
     }
 
+    @Test
+    void should_return_the_class_id_when_the_class_entity_exists() {
+
+        when(classRepository.findClassEntityByGradeAndClassroom(1, 9))
+                .thenReturn(ClassEntity.builder().id(2).grade(1).classroom(9).build());
+
+        Integer result = classService.getClassId(1, 9);
+
+        assertThat(result, is(2));
+
+    }
+
 }
