@@ -8,8 +8,6 @@ import com.example.qlin_pip_task.dto.response.StudentIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
-import com.example.qlin_pip_task.exception.ClassroomInvalidException;
-import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkTypeNotExistedException;
@@ -39,7 +37,6 @@ public class StudentsService {
     private final StudentRepository studentRepository;
     private final ClassService classService;
     private final StudentMapper studentMapper;
-
     private final HomeworkMapper homeworkMapper;
 
     public StudentResponses getAllStudentsResponse() {
@@ -52,8 +49,10 @@ public class StudentsService {
     }
 
     public StudentIdResponse save(StudentSubmitRequest studentSubmitRequest) {
-
-        return StudentIdResponse.builder().build();
+        Integer classId = classService.getClassId(studentSubmitRequest.getGrade(), studentSubmitRequest.getClassroom());
+        StudentEntity studentEntity = StudentEntity.builder().name(studentSubmitRequest.getName()).classId(classId).build();
+        StudentEntity newStudentEntity = studentRepository.save(studentEntity);
+        return StudentIdResponse.builder().id(newStudentEntity.getId()).build();
     }
 
     public StudentResponses.StudentResponse getTheStudentResponse(Integer id) {
