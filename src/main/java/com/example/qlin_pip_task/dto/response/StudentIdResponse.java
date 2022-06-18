@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentSavedIdResponse {
+public class StudentIdResponse {
     private Integer id;
 }

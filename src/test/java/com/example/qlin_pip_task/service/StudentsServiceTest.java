@@ -83,10 +83,10 @@ class StudentsServiceTest {
         when(studentRepository.save(studentEntity))
                 .thenReturn(StudentEntity.builder().id(1).name("student1").build());
 
-        StudentSavedIdResponse studentSavedIdResponse =
+        StudentIdResponse studentIdResponse =
                 studentsService.save(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build());
 
-        assertThat(studentSavedIdResponse.getId(), is(1));
+        assertThat(studentIdResponse.getId(), is(1));
     }
 
     @Test
