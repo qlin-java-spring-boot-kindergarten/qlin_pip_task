@@ -32,7 +32,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -78,14 +77,11 @@ class StudentsServiceTest {
 
     @Test
     void should_save_student_and_get_id_when_receive_student_submit_request() {
-        StudentSubmitRequest studentSubmitRequest = StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build();
         when(classService.getClassId(1, 1)).thenReturn(2);
-//        Note: to rewrite
-//        StudentEntity studentEntity = StudentEntity.builder().name(studentSubmitRequest.getName()).classId(2).build();
-        when(studentRepository.save(any()))
+        when(studentRepository.save(StudentEntity.builder().name("student1").classId(2).build()))
                 .thenReturn(StudentEntity.builder().id(99).name("student1").classId(2).build());
 
-        StudentIdResponse studentIdResponse = studentsService.save(studentSubmitRequest);
+        StudentIdResponse studentIdResponse = studentsService.save(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build());
 
         assertThat(studentIdResponse.getId(), is(99));
     }
