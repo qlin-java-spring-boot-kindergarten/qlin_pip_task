@@ -10,7 +10,6 @@ import com.example.qlin_pip_task.service.StudentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +34,7 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentIdResponse> receiveStudentRequest(@RequestBody @Validated StudentSubmitRequest studentSubmitRequest) {
+    public ResponseEntity<StudentIdResponse> saveNewStudent(@RequestBody StudentSubmitRequest studentSubmitRequest) {
         studentsService.validateStudentData(studentSubmitRequest);
         return ResponseEntity.ok(studentsService.save(studentSubmitRequest));
     }
