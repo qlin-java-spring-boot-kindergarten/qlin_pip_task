@@ -1,13 +1,14 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.entity.ClassEntity;
+import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.repository.ClassRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,13 +18,13 @@ public class ClassService {
 
 
     public Integer getClassId(Integer grade, Integer classroom) {
-        checkIfClassroomIsValid(grade);
-        ClassEntity classEntity = classRepository.findClassEntityByGradeAndClassroom(grade, classroom);
-        if (Objects.isNull(classEntity)) {
-            ClassEntity newClassEntity = classRepository.save(ClassEntity.builder().grade(grade).classroom(classroom).build());
-            return newClassEntity.getId();
+        checkIfGradeIsValid(grade);
+        checkIfClassroomIsValid(classroom);
+        Optional<ClassEntity> classEntity = classRepository.findByGradeAndClassroom(grade, classroom);
+        if (classEntity.isEmpty()) {
+            throw new ClassNotExistsException("The class does not exist.");
         }
-        return classEntity.getId();
+        return classEntity.get().getId();
     }
 
     public void checkIfGradeIsValid(Integer grade) {
