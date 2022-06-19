@@ -43,6 +43,9 @@ public class ClassService {
 
     public ClassEntity getClassEntityById(Integer classId) {
         Optional<ClassEntity> optionalClassEntity = classRepository.findById(classId);
+        if (optionalClassEntity.isEmpty()) {
+            throw new ClassNotExistsException("The class does not exist.");
+        }
         return optionalClassEntity.get();
     }
 }

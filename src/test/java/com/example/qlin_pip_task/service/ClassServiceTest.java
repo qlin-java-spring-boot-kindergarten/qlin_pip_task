@@ -53,37 +53,37 @@ class ClassServiceTest {
 
     @Test
     void should_throw_class_not_exists_exception_when_it_does_not_exist_in_the_table() {
-
         when(classRepository.findByGradeAndClassroom(1, 9)).thenReturn(Optional.empty());
-
         Exception exception = assertThrows(ClassNotExistsException.class, () -> classService.getClassId(1, 9));
-
         assertTrue(exception.getMessage().contains("The class does not exist."));
 
     }
 
     @Test
     void should_return_the_class_id_when_the_class_entity_exists() {
-
         when(classRepository.findByGradeAndClassroom(1, 9))
                 .thenReturn(Optional.ofNullable(ClassEntity.builder().id(2).grade(1).classroom(9).build()));
-
         Integer result = classService.getClassId(1, 9);
-
         assertThat(result, is(2));
 
     }
 
+
+    @Test
+    void should_throw_class_not_exists_exception_when_it_does_not_exist_in_the_table_by_find_by_id() {
+        when(classRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(ClassNotExistsException.class, () -> classService.getClassEntityById(1));
+        assertTrue(exception.getMessage().contains("The class does not exist."));
+
+    }
+
+
     @Test
     void should_return_a_class_entity_given_class_id() {
-        when(classRepository.findById(1))
-                .thenReturn(Optional.ofNullable(ClassEntity.builder().id(1).grade(1).classroom(1).build()));
-
+        when(classRepository.findById(1)).thenReturn(Optional.ofNullable(ClassEntity.builder().id(1).grade(1).classroom(1).build()));
         ClassEntity result = classService.getClassEntityById(1);
-
         assertThat(result.getGrade(), is(1));
         assertThat(result.getClassroom(), is(1));
-
     }
 
 }
