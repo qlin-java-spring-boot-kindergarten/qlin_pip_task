@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,14 @@ class TeachersServiceTest {
                 teachersService.save(HomeworkSubmitRequest.builder().teacherId(99).description("this is a homework").build()));
 
         assertTrue(exception.getMessage().contains("Teacher id is not found."));
+    }
+
+    @Test
+    void should_throw_description_invalid_exception_when_description_is_null() {
+        HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).description(null).build();
+        Exception exception = assertThrows(DescriptionInvalidException.class, () -> teachersService.save(request));
+
+        assertTrue(exception.getMessage().contains("Description cannot be null."));
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.qlin_pip_task.service;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.entity.TeacherEntity;
+import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,14 @@ public class TeachersService {
         if (teacherId == null) {
             throw new TeacherIdInvalidException("Teacher id is invalid.");
         }
+        String description = homeworkSubmitRequest.getDescription();
+        if (description == null) {
+            throw new DescriptionInvalidException("Description cannot be null.");
+        }
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
         if (optionalTeacherEntity.isEmpty()) {
             throw new TeacherIdInvalidException("Teacher id is not found.");
         }
-
         return HomeworkIdResponse.builder().build();
     }
 }

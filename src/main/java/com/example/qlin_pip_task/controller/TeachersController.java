@@ -17,7 +17,6 @@ public class TeachersController {
 
     private final TeachersService teachersService;
 
-
     @PostMapping("/homework")
     public ResponseEntity<HomeworkIdResponse> createNewHomework(@RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
         return ResponseEntity.ok(teachersService.save(homeworkSubmitRequest));
