@@ -60,4 +60,12 @@ class TeachersServiceTest {
         assertTrue(exception.getMessage().contains("Description cannot be empty."));
     }
 
+    @Test
+    void should_throw_description_invalid_exception_when_description_has_only_whitespace() {
+        HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).description("           ").build();
+        Exception exception = assertThrows(DescriptionInvalidException.class, () -> teachersService.save(request));
+
+        assertTrue(exception.getMessage().contains("Description cannot be empty."));
+    }
+
 }

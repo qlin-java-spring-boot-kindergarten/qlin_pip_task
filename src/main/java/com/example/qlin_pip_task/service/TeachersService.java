@@ -26,7 +26,7 @@ public class TeachersService {
         if (description == null) {
             throw new DescriptionInvalidException("Description cannot be null.");
         }
-        if (description.isEmpty()) {
+        if (description.isBlank()) {
             throw new DescriptionInvalidException("Description cannot be empty.");
         }
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
