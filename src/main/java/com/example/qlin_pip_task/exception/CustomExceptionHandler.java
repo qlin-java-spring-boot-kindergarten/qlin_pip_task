@@ -17,4 +17,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
     }
 
+    @ExceptionHandler(value = {StudentNotFoundException.class})
+    protected ResponseEntity<Object> handleStudentNotFoundException(
+            RuntimeException exception, WebRequest webRequest) {
+        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, webRequest);
+    }
+
 }
