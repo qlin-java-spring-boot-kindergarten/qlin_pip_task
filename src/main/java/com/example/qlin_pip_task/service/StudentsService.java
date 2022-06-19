@@ -43,11 +43,7 @@ public class StudentsService {
 
     public StudentResponses getAllStudentsResponses() {
         List<StudentEntity> studentEntityList = studentRepository.findAll();
-        List<Integer> classIdsList = studentEntityList.stream().map(StudentEntity::getClassId).collect(Collectors.toList());
-        List<ClassEntity> classEntityList = classIdsList.stream().map(classService::getClassEntityById).collect(Collectors.toList());
-        List<StudentResponses.StudentResponse> studentResponses = IntStream.range(0, studentEntityList.size())
-                .mapToObj(i -> studentMapper.entityToStudentResponse(studentEntityList.get(i), classEntityList.get(i)))
-                .collect(Collectors.toList());
+        List<StudentResponses.StudentResponse> studentResponses = getStudentResponseList(studentEntityList);
         return StudentResponses.builder().data(studentResponses).build();
     }
 
@@ -67,11 +63,7 @@ public class StudentsService {
 
     public StudentResponses getTheStudentResponseByName(Map<String, String> queryMap) {
         List<StudentEntity> studentEntityList = studentRepository.findAllByName(queryMap.get("name"));
-        List<Integer> classIdsList = studentEntityList.stream().map(StudentEntity::getClassId).collect(Collectors.toList());
-        List<ClassEntity> classEntityList = classIdsList.stream().map(classService::getClassEntityById).collect(Collectors.toList());
-        List<StudentResponses.StudentResponse> studentResponses = IntStream.range(0, studentEntityList.size())
-                .mapToObj(i -> studentMapper.entityToStudentResponse(studentEntityList.get(i), classEntityList.get(i)))
-                .collect(Collectors.toList());
+        List<StudentResponses.StudentResponse> studentResponses = getStudentResponseList(studentEntityList);
         return StudentResponses.builder().data(studentResponses).build();
     }
 
@@ -173,6 +165,14 @@ public class StudentsService {
                 .map(student -> student.getHomework().stream()
                         .map(StudentHomeworkEntity::getHomeworkId).collect(Collectors.toSet()))
                 .flatMap(Collection::stream).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    private List<StudentResponses.StudentResponse> getStudentResponseList(List<StudentEntity> studentEntityList) {
+        List<Integer> classIdsList = studentEntityList.stream().map(StudentEntity::getClassId).collect(Collectors.toList());
+        List<ClassEntity> classEntityList = classIdsList.stream().map(classService::getClassEntityById).collect(Collectors.toList());
+        return IntStream.range(0, studentEntityList.size())
+                .mapToObj(i -> studentMapper.entityToStudentResponse(studentEntityList.get(i), classEntityList.get(i)))
+                .collect(Collectors.toList());
     }
 }
 
