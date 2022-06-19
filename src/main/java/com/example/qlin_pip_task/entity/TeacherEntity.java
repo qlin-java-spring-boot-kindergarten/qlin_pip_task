@@ -5,16 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.List;
 
 
 @Data
@@ -33,6 +30,4 @@ public class TeacherEntity {
     @JoinColumn(name = "class_id")
     private Integer classId;
 
-    @OneToMany(mappedBy = "teacherEntity", cascade = CascadeType.ALL)
-    private List<HomeworkEntity> homework;
 }

@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.sql.Date;
@@ -34,14 +33,13 @@ public class HomeworkEntity {
     @JoinColumn(name = "class_id")
     private Integer class_id;
 
+    @JoinColumn(name = "teacher_id")
+    private Integer teacherId;
+
     @CreationTimestamp
     private Date createdAt;
 
     @UpdateTimestamp
     @Column(nullable = false, updatable = false)
     private Date updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "teacher_id")
-    private TeacherEntity teacherEntity;
 }
