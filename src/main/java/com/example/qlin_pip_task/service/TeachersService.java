@@ -21,14 +21,18 @@ public class TeachersService {
         String description = homeworkSubmitRequest.getDescription();
         checkIfHomeworkDescriptionIsValid(description);
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
-        if (teacherId == null) {
-            throw new TeacherIdInvalidException("Teacher id is invalid.");
-        }
+        checkIfTeacherIdIsNull(teacherId);
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
         if (optionalTeacherEntity.isEmpty()) {
             throw new TeacherIdInvalidException("Teacher id is not found.");
         }
         return HomeworkIdResponse.builder().build();
+    }
+
+    private void checkIfTeacherIdIsNull(Integer teacherId) {
+        if (teacherId == null) {
+            throw new TeacherIdInvalidException("Teacher id is invalid.");
+        }
     }
 
     private void checkIfHomeworkDescriptionIsValid(String description) {
