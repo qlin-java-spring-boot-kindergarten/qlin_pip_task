@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-class TeachersServiceTest {
+class HomeworkServiceTest {
 
     @Mock
     private TeacherRepository teacherRepository;
@@ -30,13 +30,13 @@ class TeachersServiceTest {
     private ClassRepository classRepository;
 
     @InjectMocks
-    private TeachersService teachersService;
+    private HomeworkService homeworkService;
 
     @Test
     void should_throw_teacher_id_invalid_when_id_is_null() {
         when(classRepository.findById(1)).thenReturn(Optional.of(ClassEntity.builder().id(1).build()));
         HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().classId(1).teacherId(null).description("this is a homework").build();
-        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> teachersService.save(request));
+        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> homeworkService.save(request));
 
         assertTrue(exception.getMessage().contains("Teacher id is invalid."));
     }
@@ -47,7 +47,7 @@ class TeachersServiceTest {
         when(teacherRepository.findById(99)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(TeacherIdInvalidException.class, () ->
-                teachersService.save(HomeworkSubmitRequest.builder().classId(1).teacherId(99).description("this is a homework").build()));
+                homeworkService.save(HomeworkSubmitRequest.builder().classId(1).teacherId(99).description("this is a homework").build()));
 
         assertTrue(exception.getMessage().contains("Teacher id is not found."));
     }
@@ -55,7 +55,7 @@ class TeachersServiceTest {
     @Test
     void should_throw_description_invalid_exception_when_description_is_null() {
         HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).description(null).build();
-        Exception exception = assertThrows(DescriptionInvalidException.class, () -> teachersService.save(request));
+        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.save(request));
 
         assertTrue(exception.getMessage().contains("Description cannot be null."));
     }
@@ -63,7 +63,7 @@ class TeachersServiceTest {
     @Test
     void should_throw_description_invalid_exception_when_description_is_empty() {
         HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).description("").build();
-        Exception exception = assertThrows(DescriptionInvalidException.class, () -> teachersService.save(request));
+        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.save(request));
 
         assertTrue(exception.getMessage().contains("Description cannot be empty."));
     }
@@ -71,7 +71,7 @@ class TeachersServiceTest {
     @Test
     void should_throw_description_invalid_exception_when_description_has_only_whitespace() {
         HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).description("           ").build();
-        Exception exception = assertThrows(DescriptionInvalidException.class, () -> teachersService.save(request));
+        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.save(request));
 
         assertTrue(exception.getMessage().contains("Description cannot be empty."));
     }
@@ -79,7 +79,7 @@ class TeachersServiceTest {
     @Test
     void should_throw_class_id_invalid_exception_when_class_id_is_null() {
         HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).classId(null).description("test").build();
-        Exception exception = assertThrows(ClassIdInvalidException.class, () -> teachersService.save(request));
+        Exception exception = assertThrows(ClassIdInvalidException.class, () -> homeworkService.save(request));
 
         assertTrue(exception.getMessage().contains("Class ID cannot be null."));
     }
@@ -88,7 +88,7 @@ class TeachersServiceTest {
     void should_throw_class_not_exists_exception_when_it_does_not_exist_in_the_table() {
         HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).classId(1).description("test").build();
         when(classRepository.findById(1)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(ClassNotExistsException.class, () -> teachersService.save(request));
+        Exception exception = assertThrows(ClassNotExistsException.class, () -> homeworkService.save(request));
         assertTrue(exception.getMessage().contains("The class does not exist."));
     }
 

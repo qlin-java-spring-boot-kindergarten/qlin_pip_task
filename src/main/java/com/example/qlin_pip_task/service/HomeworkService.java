@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class TeachersService {
+public class HomeworkService {
 
     private final TeacherRepository teacherRepository;
 

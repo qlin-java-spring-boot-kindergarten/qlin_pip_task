@@ -2,7 +2,7 @@ package com.example.qlin_pip_task.controller;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
-import com.example.qlin_pip_task.service.TeachersService;
+import com.example.qlin_pip_task.service.HomeworkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/teachers")
-public class TeachersController {
+@RequestMapping("/homework")
+public class HomeworkController {
 
-    private final TeachersService teachersService;
+    private final HomeworkService homeworkService;
 
-    @PostMapping("/homework")
+    @PostMapping
     public ResponseEntity<HomeworkIdResponse> createNewHomework(@RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
-        return ResponseEntity.ok(teachersService.save(homeworkSubmitRequest));
+        return ResponseEntity.ok(homeworkService.save(homeworkSubmitRequest));
     }
 
 
