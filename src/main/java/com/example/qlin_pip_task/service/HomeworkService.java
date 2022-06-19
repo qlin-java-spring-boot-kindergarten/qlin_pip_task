@@ -27,13 +27,7 @@ public class HomeworkService {
         String description = homeworkSubmitRequest.getDescription();
         checkIfHomeworkDescriptionIsValid(description);
         Integer classId = homeworkSubmitRequest.getClassId();
-        if (classId == null) {
-            throw new ClassIdInvalidException("Class ID cannot be null.");
-        }
-        Optional<ClassEntity> optionalClassEntity = classRepository.findById(classId);
-        if (optionalClassEntity.isEmpty()) {
-            throw new ClassNotExistsException("The class does not exist.");
-        }
+        checkIfClassIdIsValid(classId);
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
         checkIfTeacherIdIsNull(teacherId);
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
@@ -42,6 +36,16 @@ public class HomeworkService {
         }
 
         return HomeworkIdResponse.builder().build();
+    }
+
+    private void checkIfClassIdIsValid(Integer classId) {
+        if (classId == null) {
+            throw new ClassIdInvalidException("Class ID cannot be null.");
+        }
+        Optional<ClassEntity> optionalClassEntity = classRepository.findById(classId);
+        if (optionalClassEntity.isEmpty()) {
+            throw new ClassNotExistsException("The class does not exist.");
+        }
     }
 
     private void checkIfTeacherIdIsNull(Integer teacherId) {
