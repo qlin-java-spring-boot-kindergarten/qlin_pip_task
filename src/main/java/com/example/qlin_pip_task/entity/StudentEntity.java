@@ -34,5 +34,5 @@ public class StudentEntity {
     private Integer classId;
 
     @OneToMany(mappedBy = "studentEntity", cascade = CascadeType.ALL)
-    private List<StudentHomeworkEntity> homework;
+    private List<StudentHomeworkEntity> studentHomework;
 }

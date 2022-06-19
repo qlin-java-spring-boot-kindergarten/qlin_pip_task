@@ -13,16 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class HomeworkResponses {
+public class StudentHomeworkResponses {
 
-    private List<HomeworkResponse> homeworkList;
+    private List<StudentHomeworkResponse> homeworkList;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Component
-    public static class HomeworkResponse {
+    public static class StudentHomeworkResponse {
         private Integer id;
         private Integer homeworkId;
         private String content;

@@ -1,6 +1,6 @@
 package com.example.qlin_pip_task.service;
 
-import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.dto.request.StudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
@@ -67,15 +67,15 @@ public class StudentsService {
         return StudentResponses.builder().data(studentResponses).build();
     }
 
-    public HomeworkIdResponse submitStudentHomework(Integer id, HomeworkSubmitRequest homeworkSubmitRequest) {
+    public HomeworkIdResponse submitStudentHomework(Integer id, StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
-        List<StudentHomeworkEntity> theStudentHomeworkList = studentEntity.getHomework();
-        checkIfHomeworkAlreadyExisted(theStudentHomeworkList, homeworkSubmitRequest.getHomeworkId());
-        StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
+        List<StudentHomeworkEntity> theStudentHomeworkList = studentEntity.getStudentHomework();
+        checkIfHomeworkAlreadyExisted(theStudentHomeworkList, studentHomeworkSubmitRequest.getHomeworkId());
+        StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.homeworkRequestToEntity(studentHomeworkSubmitRequest);
         studentHomeworkEntity.setStudentEntity(studentEntity);
         theStudentHomeworkList.add(studentHomeworkEntity);
         StudentEntity theStudentEntity = studentRepository.save(studentEntity);
-        List<StudentHomeworkEntity> studentHomeworkEntityList = theStudentEntity.getHomework();
+        List<StudentHomeworkEntity> studentHomeworkEntityList = theStudentEntity.getStudentHomework();
         StudentHomeworkEntity theHomeEntity = studentHomeworkEntityList.get(studentHomeworkEntityList.size() - 1);
         return homeworkMapper.homeworkEntityToHomeworkIdResponse(theHomeEntity);
     }
@@ -105,7 +105,7 @@ public class StudentsService {
 
     private void getStudentsOfTheHomeworkType(List<StudentEntity> allStudentEntitiesList, Integer homeworkType, List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType) {
         for (StudentEntity studentEntity : allStudentEntitiesList) {
-            Set<Integer> singleStudentHomeworkTypes = studentEntity.getHomework().stream()
+            Set<Integer> singleStudentHomeworkTypes = studentEntity.getStudentHomework().stream()
                     .map(StudentHomeworkEntity::getHomeworkId).collect(Collectors.toSet());
             if (singleStudentHomeworkTypes.contains(homeworkType)) {
                 Integer classId = studentEntity.getClassId();
@@ -114,32 +114,32 @@ public class StudentsService {
         }
     }
 
-    public void updateHomework(Integer id, HomeworkSubmitRequest updateHomeworkSubmitRequest) {
+    public void updateHomework(Integer id, StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest) {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
-        checkIfTheHomeworkSubmitRequestIsValid(updateHomeworkSubmitRequest, allStudentEntitiesList);
-        List<StudentHomeworkEntity> homeworkList = studentEntity.getHomework();
+        checkIfTheHomeworkSubmitRequestIsValid(updateStudentHomeworkSubmitRequest, allStudentEntitiesList);
+        List<StudentHomeworkEntity> homeworkList = studentEntity.getStudentHomework();
         List<StudentHomeworkEntity> list = homeworkList.stream().filter(homeworkEntity -> homeworkEntity.getHomeworkId()
-                .equals(updateHomeworkSubmitRequest.getHomeworkId())).collect(Collectors.toList());
+                .equals(updateStudentHomeworkSubmitRequest.getHomeworkId())).collect(Collectors.toList());
         StudentHomeworkEntity studentHomeworkEntity = list.get(0);
-        studentHomeworkEntity.setContent(updateHomeworkSubmitRequest.getContent());
+        studentHomeworkEntity.setContent(updateStudentHomeworkSubmitRequest.getContent());
         studentHomeworkEntity.setStudentEntity(studentEntity);
         studentRepository.save(studentEntity);
     }
 
-    private void checkIfTheHomeworkSubmitRequestIsValid(HomeworkSubmitRequest updateHomeworkSubmitRequest, List<StudentEntity> allStudentEntitiesList) {
-        checkIfHomeworkContentIsValid(updateHomeworkSubmitRequest);
-        checkIfHomeworkTypeIsExisted(updateHomeworkSubmitRequest, allStudentEntitiesList);
+    private void checkIfTheHomeworkSubmitRequestIsValid(StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest, List<StudentEntity> allStudentEntitiesList) {
+        checkIfHomeworkContentIsValid(updateStudentHomeworkSubmitRequest);
+        checkIfHomeworkTypeIsExisted(updateStudentHomeworkSubmitRequest, allStudentEntitiesList);
     }
 
-    private void checkIfHomeworkTypeIsExisted(HomeworkSubmitRequest updateHomeworkSubmitRequest, List<StudentEntity> allStudentEntitiesList) {
-        if (!getAllHomeworkTypes(allStudentEntitiesList).contains(updateHomeworkSubmitRequest.getHomeworkId())){
+    private void checkIfHomeworkTypeIsExisted(StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest, List<StudentEntity> allStudentEntitiesList) {
+        if (!getAllHomeworkTypes(allStudentEntitiesList).contains(updateStudentHomeworkSubmitRequest.getHomeworkId())) {
             throw new HomeworkTypeNotExistedException("Homework type is in invalid.");
         }
     }
 
-    private void checkIfHomeworkContentIsValid(HomeworkSubmitRequest updateHomeworkSubmitRequest) {
-        if (updateHomeworkSubmitRequest.getContent() == null || updateHomeworkSubmitRequest.getContent().equals("")) {
+    private void checkIfHomeworkContentIsValid(StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest) {
+        if (updateStudentHomeworkSubmitRequest.getContent() == null || updateStudentHomeworkSubmitRequest.getContent().equals("")) {
             throw new HomeworkContentInvalidException("Homework content is invalid.");
         }
     }
@@ -162,7 +162,7 @@ public class StudentsService {
 
     private TreeSet<Integer> getAllHomeworkTypes(List<StudentEntity> allStudentEntitiesList) {
         return allStudentEntitiesList.stream()
-                .map(student -> student.getHomework().stream()
+                .map(student -> student.getStudentHomework().stream()
                         .map(StudentHomeworkEntity::getHomeworkId).collect(Collectors.toSet()))
                 .flatMap(Collection::stream).collect(Collectors.toCollection(TreeSet::new));
     }

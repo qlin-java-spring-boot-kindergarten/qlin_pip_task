@@ -1,6 +1,6 @@
 package com.example.qlin_pip_task.controller;
 
-import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.dto.request.StudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
@@ -52,8 +52,8 @@ public class StudentsController {
 
 
     @PostMapping("/{id}/homework")
-    public ResponseEntity<HomeworkIdResponse> receiveHomeRequest(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
-        return ResponseEntity.ok(studentsService.submitStudentHomework(id, homeworkSubmitRequest));
+    public ResponseEntity<HomeworkIdResponse> receiveHomeRequest(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
+        return ResponseEntity.ok(studentsService.submitStudentHomework(id, studentHomeworkSubmitRequest));
     }
 
     @GetMapping("/group-by-homework")
@@ -63,8 +63,8 @@ public class StudentsController {
 
 
     @PutMapping("/{id}/homework")
-    public ResponseEntity updateHomeworkContent(@PathVariable Integer id, @RequestBody HomeworkSubmitRequest homeworkSubmitRequest) {
-        studentsService.updateHomework(id, homeworkSubmitRequest);
+    public ResponseEntity updateHomeworkContent(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
+        studentsService.updateHomework(id, studentHomeworkSubmitRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }
