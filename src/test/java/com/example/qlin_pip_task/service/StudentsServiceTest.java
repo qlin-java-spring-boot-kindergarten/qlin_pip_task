@@ -13,7 +13,7 @@ import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkTypeNotExistedException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
-import com.example.qlin_pip_task.mapper.HomeworkMapper;
+import com.example.qlin_pip_task.mapper.StudentHomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class StudentsServiceTest {
     private StudentMapper studentMapper;
 
     @Mock
-    private HomeworkMapper homeworkMapper;
+    private StudentHomeworkMapper studentHomeworkMapper;
 
     @Mock
     private StudentRepository studentRepository;
@@ -192,14 +192,14 @@ class StudentsServiceTest {
 
     @Test
     void should_save_content_and_return_student_id_and_when_receive_homework_content() {
-        when(homeworkMapper.homeworkRequestToEntity(StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build()))
+        when(studentHomeworkMapper.homeworkRequestToEntity(StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build()))
                 .thenReturn(StudentHomeworkEntity.builder().homeworkId(1).content("test").build());
         StudentEntity studentEntity = StudentEntity.builder().id(1).studentHomework(new ArrayList<>()).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity));
         StudentHomeworkEntity studentHomeworkEntity = StudentHomeworkEntity.builder().id(99).content("test").id(6).build();
         when(studentRepository.save(studentEntity)).thenReturn(
                 StudentEntity.builder().id(1).studentHomework(List.of(studentHomeworkEntity)).build());
-        when(homeworkMapper.homeworkEntityToHomeworkIdResponse(studentHomeworkEntity))
+        when(studentHomeworkMapper.homeworkEntityToHomeworkIdResponse(studentHomeworkEntity))
                 .thenReturn(HomeworkIdResponse.builder().id(99).build());
 
         HomeworkIdResponse homeworkIdResponse =

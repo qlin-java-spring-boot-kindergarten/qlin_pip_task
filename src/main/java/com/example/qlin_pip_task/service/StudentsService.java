@@ -14,7 +14,7 @@ import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkTypeNotExistedException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
-import com.example.qlin_pip_task.mapper.HomeworkMapper;
+import com.example.qlin_pip_task.mapper.StudentHomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class StudentsService {
     private final StudentRepository studentRepository;
     private final ClassService classService;
     private final StudentMapper studentMapper;
-    private final HomeworkMapper homeworkMapper;
+    private final StudentHomeworkMapper studentHomeworkMapper;
 
     public StudentResponses getAllStudentsResponses() {
         List<StudentEntity> studentEntityList = studentRepository.findAll();
@@ -71,13 +71,13 @@ public class StudentsService {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         List<StudentHomeworkEntity> theStudentHomeworkList = studentEntity.getStudentHomework();
         checkIfHomeworkAlreadyExisted(theStudentHomeworkList, studentHomeworkSubmitRequest.getHomeworkId());
-        StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.homeworkRequestToEntity(studentHomeworkSubmitRequest);
+        StudentHomeworkEntity studentHomeworkEntity = studentHomeworkMapper.homeworkRequestToEntity(studentHomeworkSubmitRequest);
         studentHomeworkEntity.setStudentEntity(studentEntity);
         theStudentHomeworkList.add(studentHomeworkEntity);
         StudentEntity theStudentEntity = studentRepository.save(studentEntity);
         List<StudentHomeworkEntity> studentHomeworkEntityList = theStudentEntity.getStudentHomework();
         StudentHomeworkEntity theHomeEntity = studentHomeworkEntityList.get(studentHomeworkEntityList.size() - 1);
-        return homeworkMapper.homeworkEntityToHomeworkIdResponse(theHomeEntity);
+        return studentHomeworkMapper.homeworkEntityToHomeworkIdResponse(theHomeEntity);
     }
 
     private StudentEntity getNotNullableStudentEntity(Integer id) {
