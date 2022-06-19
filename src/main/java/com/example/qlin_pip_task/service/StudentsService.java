@@ -6,6 +6,7 @@ import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
@@ -29,6 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +42,13 @@ public class StudentsService {
     private final HomeworkMapper homeworkMapper;
 
     public StudentResponses getAllStudentsResponses() {
-        List<StudentEntity> allStudentsData = studentRepository.findAll();
-        List<StudentResponses.StudentResponse> studentResponsesList
-                = allStudentsData.stream()
-                .map(studentMapper::entityToStudentResponse)
+        List<StudentEntity> studentEntityList = studentRepository.findAll();
+        List<Integer> classIdsList = studentEntityList.stream().map(StudentEntity::getClassId).collect(Collectors.toList());
+        List<ClassEntity> classEntityList = classIdsList.stream().map(classService::getClassEntityById).collect(Collectors.toList());
+        List<StudentResponses.StudentResponse> studentResponses = IntStream.range(0, studentEntityList.size())
+                .mapToObj(i -> studentMapper.entityToStudentResponse(studentEntityList.get(i), classEntityList.get(i)))
                 .collect(Collectors.toList());
-        return StudentResponses.builder().data(studentResponsesList).build();
+        return StudentResponses.builder().data(studentResponses).build();
     }
 
     public StudentIdResponse save(StudentSubmitRequest studentSubmitRequest) {
@@ -55,15 +58,20 @@ public class StudentsService {
         return StudentIdResponse.builder().id(newStudentEntity.getId()).build();
     }
 
-    public StudentResponses.StudentResponse getTheStudentResponse(Integer id) {
+    public StudentResponses.StudentResponse getStudentResponse(Integer id) {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
-        return studentMapper.entityToStudentResponse(studentEntity);
+        Integer classId = studentEntity.getClassId();
+        ClassEntity classEntity = classService.getClassEntityById(classId);
+        return studentMapper.entityToStudentResponse(studentEntity, classEntity);
     }
 
     public StudentResponses getTheStudentResponseByName(Map<String, String> queryMap) {
         List<StudentEntity> studentEntityList = studentRepository.findAllByName(queryMap.get("name"));
-        List<StudentResponses.StudentResponse> studentResponses =
-                studentEntityList.stream().map(studentMapper::entityToStudentResponse).collect(Collectors.toList());
+        List<Integer> classIdsList = studentEntityList.stream().map(StudentEntity::getClassId).collect(Collectors.toList());
+        List<ClassEntity> classEntityList = classIdsList.stream().map(classService::getClassEntityById).collect(Collectors.toList());
+        List<StudentResponses.StudentResponse> studentResponses = IntStream.range(0, studentEntityList.size())
+                .mapToObj(i -> studentMapper.entityToStudentResponse(studentEntityList.get(i), classEntityList.get(i)))
+                .collect(Collectors.toList());
         return StudentResponses.builder().data(studentResponses).build();
     }
 
@@ -108,7 +116,8 @@ public class StudentsService {
             Set<Integer> singleStudentHomeworkTypes = studentEntity.getHomework().stream()
                     .map(StudentHomeworkEntity::getHomeworkId).collect(Collectors.toSet());
             if (singleStudentHomeworkTypes.contains(homeworkType)) {
-                studentEntitiesOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity));
+                Integer classId = studentEntity.getClassId();
+                studentEntitiesOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity, classService.getClassEntityById(classId)));
             }
         }
     }

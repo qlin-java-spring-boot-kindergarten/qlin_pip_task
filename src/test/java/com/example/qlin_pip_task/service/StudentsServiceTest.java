@@ -6,6 +6,7 @@ import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentGroupsByHomeworkTypeResponses;
 import com.example.qlin_pip_task.dto.response.StudentIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
+import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
@@ -33,7 +34,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,13 +55,17 @@ class StudentsServiceTest {
 
     @Test
     void should_return_two_students_when_there_are_two_students_in_the_table() {
-        StudentEntity studentEntity1 = StudentEntity.builder().name("student1").id(1).build();
-        StudentEntity studentEntity2 = StudentEntity.builder().name("student2").id(2).build();
+        StudentEntity studentEntity1 = StudentEntity.builder().name("student1").id(1).classId(1).build();
+        StudentEntity studentEntity2 = StudentEntity.builder().name("student2").id(2).classId(2).build();
+        ClassEntity classEntity1 = ClassEntity.builder().grade(1).classroom(1).build();
+        ClassEntity classEntity2 = ClassEntity.builder().grade(2).classroom(2).build();
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2));
         StudentResponses.StudentResponse studentResponse1 = StudentResponses.StudentResponse.builder().name("student1").classroom(1).grade(1).id(1).build();
         StudentResponses.StudentResponse studentResponse2 = StudentResponses.StudentResponse.builder().name("student2").classroom(2).grade(2).id(2).build();
-        when(studentMapper.entityToStudentResponse(studentEntity1)).thenReturn(studentResponse1);
-        when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(studentResponse2);
+        when(classService.getClassEntityById(studentEntity1.getClassId())).thenReturn(classEntity1);
+        when(classService.getClassEntityById(studentEntity2.getClassId())).thenReturn(classEntity2);
+        when(studentMapper.entityToStudentResponse(studentEntity1, classEntity1)).thenReturn(studentResponse1);
+        when(studentMapper.entityToStudentResponse(studentEntity2, classEntity2)).thenReturn(studentResponse2);
 
         StudentResponses result = studentsService.getAllStudentsResponses();
 
@@ -89,7 +93,7 @@ class StudentsServiceTest {
     @Test
     void should_throw_invalid_parameter_exception_when_id_is_not_found() {
         Exception exception = assertThrows(StudentNotFoundException.class,
-                () -> studentsService.getTheStudentResponse(anyInt()));
+                () -> studentsService.getStudentResponse(anyInt()));
         assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
@@ -109,13 +113,16 @@ class StudentsServiceTest {
 
     @Test
     void should_get_student_response_when_id_is_valid() {
-        StudentEntity studentEntity = StudentEntity.builder().id(2).name("student2").build();
+        StudentEntity studentEntity = StudentEntity.builder().id(2).name("student2").classId(2).build();
         when(studentRepository.findById(2)).thenReturn(Optional.of(studentEntity));
+        ClassEntity classEntity = ClassEntity.builder().grade(2).classroom(2).build();
+        when(classService.getClassEntityById(studentEntity.getClassId())).thenReturn(classEntity);
         StudentResponses.StudentResponse studentResponse =
                 StudentResponses.StudentResponse.builder().id(2).name("student2").classroom(2).grade(2).build();
-        when(studentMapper.entityToStudentResponse(studentEntity)).thenReturn(studentResponse);
 
-        StudentResponses.StudentResponse theStudentResponse = studentsService.getTheStudentResponse(2);
+        when(studentMapper.entityToStudentResponse(studentEntity, classEntity)).thenReturn(studentResponse);
+
+        StudentResponses.StudentResponse theStudentResponse = studentsService.getStudentResponse(2);
 
         assertThat(theStudentResponse.getName(), is("student2"));
         assertThat(theStudentResponse.getId(), is(2));
@@ -125,15 +132,19 @@ class StudentsServiceTest {
 
     @Test
     void should_get_student_responses_when_name_can_be_found_in_the_table() {
-        StudentEntity studentEntity1 = mock(StudentEntity.class);
-        StudentEntity studentEntity2 = mock(StudentEntity.class);
+        StudentEntity studentEntity1 = StudentEntity.builder().name("student1").id(1).classId(1).build();
+        StudentEntity studentEntity2 = StudentEntity.builder().name("student2").id(2).classId(2).build();
+        ClassEntity classEntity1 = ClassEntity.builder().grade(1).classroom(1).build();
+        ClassEntity classEntity2 = ClassEntity.builder().grade(2).classroom(2).build();
         StudentResponses.StudentResponse studentResponse1 =
                 StudentResponses.StudentResponse.builder().name("student").classroom(1).grade(1).id(1).build();
         StudentResponses.StudentResponse studentResponse2 =
                 StudentResponses.StudentResponse.builder().name("student").classroom(2).grade(2).id(2).build();
         when(studentRepository.findAllByName("student")).thenReturn(List.of(studentEntity1, studentEntity2));
-        when(studentMapper.entityToStudentResponse(studentEntity1)).thenReturn(studentResponse1);
-        when(studentMapper.entityToStudentResponse(studentEntity2)).thenReturn(studentResponse2);
+        when(classService.getClassEntityById(studentEntity1.getClassId())).thenReturn(classEntity1);
+        when(classService.getClassEntityById(studentEntity2.getClassId())).thenReturn(classEntity2);
+        when(studentMapper.entityToStudentResponse(studentEntity1, classEntity1)).thenReturn(studentResponse1);
+        when(studentMapper.entityToStudentResponse(studentEntity2, classEntity2)).thenReturn(studentResponse2);
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("name", "student");
@@ -199,28 +210,33 @@ class StudentsServiceTest {
 
     @Test
     void should_get_student_groups_given_homework_types() {
-        StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
+        StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1").classId(1)
                 .homework(List.of(
                         StudentHomeworkEntity.builder().homeworkId(1).build(),
                         StudentHomeworkEntity.builder().homeworkId(3).build()
                 )).build();
-        StudentEntity studentEntity2 = StudentEntity.builder().id(2).name("student2")
+        StudentEntity studentEntity2 = StudentEntity.builder().id(2).name("student2").classId(2)
                 .homework(List.of(
                         StudentHomeworkEntity.builder().homeworkId(2).build()
                 )).build();
-        StudentEntity studentEntity3 = StudentEntity.builder().id(3).name("student3")
+        StudentEntity studentEntity3 = StudentEntity.builder().id(3).name("student3").classId(3)
                 .homework(List.of(
                         StudentHomeworkEntity.builder().homeworkId(1).build(),
                         StudentHomeworkEntity.builder().homeworkId(2).build(),
                         StudentHomeworkEntity.builder().homeworkId(3).build()
                 )).build();
-
+        ClassEntity classEntity1 = ClassEntity.builder().grade(1).classroom(1).build();
+        ClassEntity classEntity2 = ClassEntity.builder().grade(2).classroom(2).build();
+        ClassEntity classEntity3 = ClassEntity.builder().grade(3).classroom(3).build();
+        when(classService.getClassEntityById(studentEntity1.getClassId())).thenReturn(classEntity1);
+        when(classService.getClassEntityById(studentEntity2.getClassId())).thenReturn(classEntity2);
+        when(classService.getClassEntityById(studentEntity3.getClassId())).thenReturn(classEntity3);
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2, studentEntity3));
-        when(studentMapper.entityToStudentResponse(studentEntity1))
+        when(studentMapper.entityToStudentResponse(studentEntity1, classEntity1))
                 .thenReturn(StudentResponses.StudentResponse.builder().id(1).name("student1").build());
-        when(studentMapper.entityToStudentResponse(studentEntity2))
+        when(studentMapper.entityToStudentResponse(studentEntity2, classEntity2))
                 .thenReturn(StudentResponses.StudentResponse.builder().id(2).name("student2").build());
-        when(studentMapper.entityToStudentResponse(studentEntity3))
+        when(studentMapper.entityToStudentResponse(studentEntity3, classEntity3))
                 .thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
 
         StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomeworkTypes();
