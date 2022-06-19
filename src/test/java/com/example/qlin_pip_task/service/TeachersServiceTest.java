@@ -9,8 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -28,6 +31,16 @@ class TeachersServiceTest {
         Exception exception = assertThrows(TeacherIdInvalidException.class, () -> teachersService.save(request));
 
         assertTrue(exception.getMessage().contains("Teacher id is invalid."));
+    }
+
+    @Test
+    void should_throw_teacher_id_invalid_when_teacher_entity_is_empty() {
+        when(teacherRepository.findById(99)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(TeacherIdInvalidException.class, () ->
+                teachersService.save(HomeworkSubmitRequest.builder().teacherId(99).description("this is a homework").build()));
+
+        assertTrue(exception.getMessage().contains("Teacher id is not found."));
     }
 
 }
