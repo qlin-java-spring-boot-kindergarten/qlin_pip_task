@@ -3,6 +3,7 @@ package com.example.qlin_pip_task.service;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.entity.TeacherEntity;
+import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.repository.TeacherRepository;
@@ -20,6 +21,11 @@ public class TeachersService {
     public HomeworkIdResponse save(HomeworkSubmitRequest homeworkSubmitRequest) {
         String description = homeworkSubmitRequest.getDescription();
         checkIfHomeworkDescriptionIsValid(description);
+        Integer classId = homeworkSubmitRequest.getClassId();
+        if (classId == null) {
+            throw new ClassIdInvalidException("Class ID cannot be null.");
+        }
+
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
         checkIfTeacherIdIsNull(teacherId);
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
