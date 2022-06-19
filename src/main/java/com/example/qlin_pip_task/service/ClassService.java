@@ -21,11 +21,15 @@ public class ClassService {
         checkIfGradeIsValid(grade);
         checkIfClassroomIsValid(classroom);
         Optional<ClassEntity> optionalClassEntity = classRepository.findByGradeAndClassroom(grade, classroom);
+        checkIfClassExists(optionalClassEntity);
+        ClassEntity classEntity = optionalClassEntity.get();
+        return classEntity.getId();
+    }
+
+    public void checkIfClassExists(Optional<ClassEntity> optionalClassEntity) {
         if (optionalClassEntity.isEmpty()) {
             throw new ClassNotExistsException("The class does not exist.");
         }
-        ClassEntity classEntity = optionalClassEntity.get();
-        return classEntity.getId();
     }
 
 
