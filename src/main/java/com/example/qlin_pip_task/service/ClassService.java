@@ -21,15 +21,11 @@ public class ClassService {
         checkIfGradeIsValid(grade);
         checkIfClassroomIsValid(classroom);
         Optional<ClassEntity> optionalClassEntity = classRepository.findByGradeAndClassroom(grade, classroom);
-        checkIfClassExists(optionalClassEntity);
-        ClassEntity classEntity = optionalClassEntity.get();
-        return classEntity.getId();
-    }
-
-    public void checkIfClassExists(Optional<ClassEntity> optionalClassEntity) {
         if (optionalClassEntity.isEmpty()) {
             throw new ClassNotExistsException("The class does not exist.");
         }
+        ClassEntity classEntity = optionalClassEntity.get();
+        return classEntity.getId();
     }
 
 
@@ -45,8 +41,6 @@ public class ClassService {
         }
     }
 
-    // Assume that all the class data in the class table has been validated when the data is recorded
-    // Therefore, no need to handle the empty Optional of ClassEntity
     public ClassEntity getClassEntityById(Integer classId) {
         Optional<ClassEntity> optionalClassEntity = classRepository.findById(classId);
         return optionalClassEntity.get();
