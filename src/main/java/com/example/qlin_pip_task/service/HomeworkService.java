@@ -3,12 +3,15 @@ package com.example.qlin_pip_task.service;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.entity.ClassEntity;
+import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
+import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.ClassRepository;
+import com.example.qlin_pip_task.repository.HomeworkRepository;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +22,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HomeworkService {
 
+    private final HomeworkRepository homeworkRepository;
+    private final HomeworkMapper homeworkMapper;
     private final TeacherRepository teacherRepository;
-
     private final ClassRepository classRepository;
 
     public HomeworkIdResponse save(HomeworkSubmitRequest homeworkSubmitRequest) {
@@ -34,8 +38,10 @@ public class HomeworkService {
         if (optionalTeacherEntity.isEmpty()) {
             throw new TeacherIdInvalidException("Teacher id is not found.");
         }
+        HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
+        HomeworkEntity savedNewHomework = homeworkRepository.save(homeworkEntity);
 
-        return HomeworkIdResponse.builder().build();
+        return HomeworkIdResponse.builder().id(savedNewHomework.getId()).build();
     }
 
     private void checkIfClassIdIsValid(Integer classId) {

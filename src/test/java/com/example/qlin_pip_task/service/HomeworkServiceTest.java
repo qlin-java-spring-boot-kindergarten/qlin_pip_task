@@ -1,12 +1,17 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.entity.ClassEntity;
+import com.example.qlin_pip_task.entity.HomeworkEntity;
+import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
+import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.ClassRepository;
+import com.example.qlin_pip_task.repository.HomeworkRepository;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,6 +35,10 @@ class HomeworkServiceTest {
     private TeacherRepository teacherRepository;
     @Mock
     private ClassRepository classRepository;
+    @Mock
+    private HomeworkMapper homeworkMapper;
+    @Mock
+    private HomeworkRepository homeworkRepository;
 
     @InjectMocks
     private HomeworkService homeworkService;
@@ -90,6 +101,25 @@ class HomeworkServiceTest {
         when(classRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(ClassNotExistsException.class, () -> homeworkService.save(request));
         assertTrue(exception.getMessage().contains("The class does not exist."));
+    }
+
+    @Test
+    void should_save_homework_and_return_homework_id_given_valid_teacher_id_and_class_id_and_description() {
+        HomeworkSubmitRequest homeworkSubmitRequest =
+                HomeworkSubmitRequest.builder().classId(1).description("test").teacherId(11).build();
+        ClassEntity classEntity = ClassEntity.builder().id(1).classroom(1).classroom(1).build();
+        when(classRepository.findById(1)).thenReturn(Optional.of(classEntity));
+        TeacherEntity teacherEntity = TeacherEntity.builder().id(11).classId(1).name("teacher_one").build();
+        when(teacherRepository.findById(11)).thenReturn(Optional.of(teacherEntity));
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherId(11).description("test").classId(1).build();
+        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest))
+                .thenReturn(homeworkEntity);
+        HomeworkEntity savedHomeworkEntity = HomeworkEntity.builder().id(99).teacherId(11).description("test").classId(1).build();
+        when(homeworkRepository.save(homeworkEntity)).thenReturn(savedHomeworkEntity);
+
+        HomeworkIdResponse result = homeworkService.save(homeworkSubmitRequest);
+
+        assertThat(result.getId(), is(99));
     }
 
 }

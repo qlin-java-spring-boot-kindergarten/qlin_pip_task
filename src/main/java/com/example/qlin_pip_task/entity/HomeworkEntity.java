@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +29,7 @@ public class HomeworkEntity {
     private String description;
 
     @JoinColumn(name = "class_id")
-    private Integer class_id;
+    private Integer classId;
 
     @JoinColumn(name = "teacher_id")
     private Integer teacherId;
@@ -39,7 +37,4 @@ public class HomeworkEntity {
     @CreationTimestamp
     private Date createdAt;
 
-    @UpdateTimestamp
-    @Column(nullable = false, updatable = false)
-    private Date updatedAt;
 }
