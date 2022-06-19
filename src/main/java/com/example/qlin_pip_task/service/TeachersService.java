@@ -18,21 +18,25 @@ public class TeachersService {
     private final TeacherRepository teacherRepository;
 
     public HomeworkIdResponse save(HomeworkSubmitRequest homeworkSubmitRequest) {
+        String description = homeworkSubmitRequest.getDescription();
+        checkIfHomeworkDescriptionIsValid(description);
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
         if (teacherId == null) {
             throw new TeacherIdInvalidException("Teacher id is invalid.");
-        }
-        String description = homeworkSubmitRequest.getDescription();
-        if (description == null) {
-            throw new DescriptionInvalidException("Description cannot be null.");
-        }
-        if (description.isBlank()) {
-            throw new DescriptionInvalidException("Description cannot be empty.");
         }
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
         if (optionalTeacherEntity.isEmpty()) {
             throw new TeacherIdInvalidException("Teacher id is not found.");
         }
         return HomeworkIdResponse.builder().build();
+    }
+
+    private void checkIfHomeworkDescriptionIsValid(String description) {
+        if (description == null) {
+            throw new DescriptionInvalidException("Description cannot be null.");
+        }
+        if (description.isBlank()) {
+            throw new DescriptionInvalidException("Description cannot be empty.");
+        }
     }
 }
