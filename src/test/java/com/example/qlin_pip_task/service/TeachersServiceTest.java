@@ -1,9 +1,12 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.exception.ClassIdInvalidException;
+import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
+import com.example.qlin_pip_task.repository.ClassRepository;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +26,15 @@ class TeachersServiceTest {
 
     @Mock
     private TeacherRepository teacherRepository;
+    @Mock
+    private ClassRepository classRepository;
 
     @InjectMocks
     private TeachersService teachersService;
 
     @Test
     void should_throw_teacher_id_invalid_when_id_is_null() {
+        when(classRepository.findById(1)).thenReturn(Optional.of(ClassEntity.builder().id(1).build()));
         HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().classId(1).teacherId(null).description("this is a homework").build();
         Exception exception = assertThrows(TeacherIdInvalidException.class, () -> teachersService.save(request));
 
@@ -37,6 +43,7 @@ class TeachersServiceTest {
 
     @Test
     void should_throw_teacher_id_invalid_when_teacher_entity_is_empty() {
+        when(classRepository.findById(1)).thenReturn(Optional.of(ClassEntity.builder().id(1).build()));
         when(teacherRepository.findById(99)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(TeacherIdInvalidException.class, () ->
@@ -77,5 +84,12 @@ class TeachersServiceTest {
         assertTrue(exception.getMessage().contains("Class ID cannot be null."));
     }
 
+    @Test
+    void should_throw_class_not_exists_exception_when_it_does_not_exist_in_the_table() {
+        HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().teacherId(1).classId(1).description("test").build();
+        when(classRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(ClassNotExistsException.class, () -> teachersService.save(request));
+        assertTrue(exception.getMessage().contains("The class does not exist."));
+    }
 
 }

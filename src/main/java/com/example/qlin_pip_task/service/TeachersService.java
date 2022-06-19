@@ -2,10 +2,13 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
+import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ClassIdInvalidException;
+import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
+import com.example.qlin_pip_task.repository.ClassRepository;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ public class TeachersService {
 
     private final TeacherRepository teacherRepository;
 
+    private final ClassRepository classRepository;
+
     public HomeworkIdResponse save(HomeworkSubmitRequest homeworkSubmitRequest) {
         String description = homeworkSubmitRequest.getDescription();
         checkIfHomeworkDescriptionIsValid(description);
@@ -25,13 +30,17 @@ public class TeachersService {
         if (classId == null) {
             throw new ClassIdInvalidException("Class ID cannot be null.");
         }
-
+        Optional<ClassEntity> optionalClassEntity = classRepository.findById(classId);
+        if (optionalClassEntity.isEmpty()) {
+            throw new ClassNotExistsException("The class does not exist.");
+        }
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
         checkIfTeacherIdIsNull(teacherId);
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
         if (optionalTeacherEntity.isEmpty()) {
             throw new TeacherIdInvalidException("Teacher id is not found.");
         }
+
         return HomeworkIdResponse.builder().build();
     }
 
