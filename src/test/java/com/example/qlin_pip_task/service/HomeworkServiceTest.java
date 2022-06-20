@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.dto.request.NewStudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
@@ -8,6 +9,7 @@ import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
+import com.example.qlin_pip_task.exception.HomeworkIdNotFoundException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.ClassRepository;
@@ -120,6 +122,16 @@ class HomeworkServiceTest {
         HomeworkIdResponse result = homeworkService.save(homeworkSubmitRequest);
 
         assertThat(result.getId(), is(99));
+    }
+
+    @Test
+    void should_throw_homework_id_invalid_exception_when_homework_id_is_not_found() {
+        NewStudentHomeworkSubmitRequest request =
+                NewStudentHomeworkSubmitRequest.builder().studentId(1).classId(1).content("test").build();
+        when(homeworkRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(HomeworkIdNotFoundException.class,
+                () -> homeworkService.getStudentHomeworkIdResponse(1, request));
+        assertTrue(exception.getMessage().contains("The homework id is not found."));
     }
 
 }
