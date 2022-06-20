@@ -1,7 +1,7 @@
 package com.example.qlin_pip_task.controller;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
-import com.example.qlin_pip_task.dto.request.StudentHomeworkSubmitRequest;
+import com.example.qlin_pip_task.dto.request.NewStudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.service.HomeworkService;
@@ -28,8 +28,8 @@ public class HomeworkController {
 
     @PostMapping("/{id}/submit")
     public ResponseEntity<StudentHomeworkIdResponse> getStudentData(@PathVariable Integer id,
-                                                                    @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
-        return ResponseEntity.ok(homeworkService.getStudentHomeworkIdResponse(id, studentHomeworkSubmitRequest));
+                                                                    @RequestBody NewStudentHomeworkSubmitRequest newStudentHomeworkSubmitRequest) {
+        return ResponseEntity.ok(homeworkService.getStudentHomeworkIdResponse(id, newStudentHomeworkSubmitRequest));
     }
 
 }
