@@ -11,7 +11,6 @@ import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
-import com.example.qlin_pip_task.exception.StudentIdInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.ClassRepository;
@@ -30,6 +29,7 @@ public class HomeworkService {
     private final HomeworkMapper homeworkMapper;
     private final TeacherRepository teacherRepository;
     private final ClassRepository classRepository;
+    private StudentsService studentsService;
 
     public HomeworkIdResponse save(HomeworkSubmitRequest homeworkSubmitRequest) {
         String description = homeworkSubmitRequest.getDescription();
@@ -54,9 +54,7 @@ public class HomeworkService {
             throw new HomeworkIdInvalidException("The homework id is not found.");
         }
         Integer studentId = newStudentHomeworkSubmitRequest.getStudentId();
-        if (studentId == null) {
-            throw new StudentIdInvalidException("The student id is null.");
-        }
+        StudentsService.checkIfStudentIdIsNull(studentId);
         return StudentHomeworkIdResponse.builder().id(999).build();
     }
 

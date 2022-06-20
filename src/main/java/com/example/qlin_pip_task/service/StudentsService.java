@@ -13,6 +13,7 @@ import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
+import com.example.qlin_pip_task.exception.StudentIdInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.StudentHomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -80,12 +81,10 @@ public class StudentsService {
         return studentHomeworkMapper.homeworkEntityToHomeworkIdResponse(theHomeEntity);
     }
 
-    private StudentEntity getNotNullableStudentEntity(Integer id) {
-        Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
-        if (optionalStudentEntity.isEmpty()) {
-            throw new StudentNotFoundException("Student is not found.");
+    public static void checkIfStudentIdIsNull(Integer studentId) {
+        if (studentId == null) {
+            throw new StudentIdInvalidException("The student id is null.");
         }
-        return optionalStudentEntity.get();
     }
 
     public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomeworkTypes() {
@@ -101,6 +100,14 @@ public class StudentsService {
             studentGroupsByHomeworkTypeResponses.getHomework().put(String.format("homework_type_%d", homeworkType), studentNameList);
         }
         return studentGroupsByHomeworkTypeResponses;
+    }
+
+    public StudentEntity getNotNullableStudentEntity(Integer id) {
+        Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
+        if (optionalStudentEntity.isEmpty()) {
+            throw new StudentNotFoundException("Student is not found.");
+        }
+        return optionalStudentEntity.get();
     }
 
     private void getStudentsOfTheHomeworkType(List<StudentEntity> allStudentEntitiesList, Integer homeworkType, List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType) {
