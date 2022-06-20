@@ -1,7 +1,9 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
+import com.example.qlin_pip_task.dto.request.StudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
+import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
@@ -42,6 +44,10 @@ public class HomeworkService {
         HomeworkEntity savedNewHomework = homeworkRepository.save(homeworkEntity);
 
         return HomeworkIdResponse.builder().id(savedNewHomework.getId()).build();
+    }
+
+    public StudentHomeworkIdResponse getStudentHomeworkIdResponse(Integer homeworkId, StudentHomeworkSubmitRequest homeworkSubmitRequest) {
+        return StudentHomeworkIdResponse.builder().id(999).build();
     }
 
     private void checkIfClassIdIsValid(Integer classId) {
