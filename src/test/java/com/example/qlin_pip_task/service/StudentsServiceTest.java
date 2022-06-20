@@ -11,7 +11,7 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
-import com.example.qlin_pip_task.exception.HomeworkIdNotFoundException;
+import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.StudentHomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -281,7 +281,7 @@ class StudentsServiceTest {
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2));
 
-        Exception exception = assertThrows(HomeworkIdNotFoundException.class,
+        Exception exception = assertThrows(HomeworkIdInvalidException.class,
                 () -> studentsService.updateHomework(1, StudentHomeworkSubmitRequest.builder().content("test_content").homeworkId(99).build()));
 
         assertTrue(exception.getMessage().contains("Homework type is in invalid."));
