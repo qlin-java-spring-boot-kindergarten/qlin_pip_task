@@ -12,7 +12,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Component
 public class StudentResponses {
 
     private List<StudentResponse> data;
