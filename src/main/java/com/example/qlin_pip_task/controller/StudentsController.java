@@ -46,13 +46,13 @@ public class StudentsController {
     }
 
     @GetMapping(params = "name")
-    public StudentResponses getTheStudentByName(@RequestParam Map<String, String> queryMap){
+    public StudentResponses getStudentByName(@RequestParam Map<String, String> queryMap) {
         return studentsService.getTheStudentResponseByName(queryMap);
     }
 
 
     @PostMapping("/{id}/homework")
-    public ResponseEntity<HomeworkIdResponse> receiveHomeRequest(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
+    public ResponseEntity<HomeworkIdResponse> saveNewStudentHomework(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
         return ResponseEntity.ok(studentsService.submitStudentHomework(id, studentHomeworkSubmitRequest));
     }
 
