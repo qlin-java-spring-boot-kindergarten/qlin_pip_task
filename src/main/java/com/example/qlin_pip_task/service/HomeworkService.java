@@ -7,7 +7,6 @@ import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
-import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
@@ -58,9 +57,8 @@ public class HomeworkService {
                 newStudentHomeworkMapper.homeworkRequestToEntity(newStudentHomeworkSubmitRequest);
         Integer classId = newStudentHomeworkSubmitRequest.getClassId();
         classService.checkIfClassIdIsValid(classId);
-        if (!studentHomeworkEntity.getStudentEntity().getClassId().equals(classId)) {
-            throw new ClassIdInvalidException("The class id does not match the student id provided.");
-        }
+        classService.checkIfClassIsTheSame(studentHomeworkEntity, classId);
+
         return StudentHomeworkIdResponse.builder().id(999).build();
     }
 

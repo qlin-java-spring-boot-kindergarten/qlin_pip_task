@@ -4,10 +4,7 @@ import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.NewStudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
-import com.example.qlin_pip_task.entity.StudentEntity;
-import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
-import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
@@ -28,7 +25,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 
@@ -97,29 +93,6 @@ class HomeworkServiceTest {
 
         assertTrue(exception.getMessage().contains("Description cannot be empty."));
     }
-
-    @Test
-    void should_throw_class_id_invalid_exception_when_class_id_does_not_match_the_student_id_provided_by_the_student_id() {
-        NewStudentHomeworkSubmitRequest request =
-                NewStudentHomeworkSubmitRequest.builder().studentId(11).content("this is an answer").classId(2).build();
-        HomeworkEntity homeworkEntity =
-                HomeworkEntity.builder().id(3).description("this is a homework.").id(1).build();
-        when(homeworkRepository.findById(3)).thenReturn(Optional.of(homeworkEntity));
-        doNothing().when(studentsService).checkIfStudentIdIsNull(11);
-        StudentHomeworkEntity studentHomeworkEntity =
-                StudentHomeworkEntity.builder()
-                        .homeworkId(3)
-                        .studentEntity(StudentEntity.builder().id(11).classId(2222).build())
-                        .build();
-        when(newStudentHomeworkMapper.homeworkRequestToEntity(request)).thenReturn(studentHomeworkEntity);
-        doNothing().when(classService).checkIfClassIdIsValid(2);
-
-        Exception exception = assertThrows(ClassIdInvalidException.class,
-                () -> homeworkService.getStudentHomeworkIdResponse(3, request));
-
-        assertTrue(exception.getMessage().contains("The class id does not match the student id provided."));
-    }
-
 
     @Test
     void should_save_homework_and_return_homework_id_given_valid_teacher_id_and_class_id_and_description() {

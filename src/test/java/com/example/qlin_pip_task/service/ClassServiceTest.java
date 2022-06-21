@@ -1,6 +1,8 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.entity.ClassEntity;
+import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.repository.ClassRepository;
@@ -102,5 +104,19 @@ class ClassServiceTest {
         Exception exception = assertThrows(ClassNotExistsException.class, () -> classService.checkIfClassIdIsValid(1));
         assertTrue(exception.getMessage().contains("The class does not exist."));
     }
+
+
+    @Test
+    void should_throw_class_id_invalid_exception_when_class_id_does_not_match_the_student_id_provided_by_the_student_id() {
+
+        StudentHomeworkEntity studentHomeworkEntity =
+                StudentHomeworkEntity.builder().homeworkId(3).studentEntity(StudentEntity.builder().id(11).classId(2222).build()).build();
+
+        Exception exception = assertThrows(ClassIdInvalidException.class,
+                () -> classService.checkIfClassIsTheSame(studentHomeworkEntity, 2));
+
+        assertTrue(exception.getMessage().contains("The class id does not match the student id provided."));
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.entity.ClassEntity;
+import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
@@ -57,6 +58,12 @@ public class ClassService {
         Optional<ClassEntity> optionalClassEntity = classRepository.findById(classId);
         if (optionalClassEntity.isEmpty()) {
             throw new ClassNotExistsException("The class does not exist.");
+        }
+    }
+
+    public void checkIfClassIsTheSame(StudentHomeworkEntity studentHomeworkEntity, Integer classId) {
+        if (!studentHomeworkEntity.getStudentEntity().getClassId().equals(classId)) {
+            throw new ClassIdInvalidException("The class id does not match the student id provided.");
         }
     }
 }
