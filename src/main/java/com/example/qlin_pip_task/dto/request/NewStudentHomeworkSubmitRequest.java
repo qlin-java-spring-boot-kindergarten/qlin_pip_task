@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NewStudentHomeworkSubmitRequest {
     private String content;
+    private Integer classId;
     private Integer studentId;
 }
