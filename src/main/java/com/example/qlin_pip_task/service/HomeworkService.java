@@ -5,6 +5,7 @@ import com.example.qlin_pip_task.dto.request.NewStudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
+import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
@@ -13,10 +14,12 @@ import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.NewStudentHomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
+import com.example.qlin_pip_task.repository.StudentRepository;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +30,8 @@ public class HomeworkService {
     private final HomeworkMapper homeworkMapper;
     private final TeacherRepository teacherRepository;
     private final StudentsService studentsService;
+
+    private final StudentRepository studentRepository;
     private final ClassService classService;
     private final NewStudentHomeworkMapper newStudentHomeworkMapper;
 
@@ -53,13 +58,20 @@ public class HomeworkService {
         }
         Integer studentId = newStudentHomeworkSubmitRequest.getStudentId();
         studentsService.checkIfStudentIdIsNull(studentId);
+        StudentEntity studentEntity = studentsService.getNotNullableStudentEntity(studentId);
         StudentHomeworkEntity studentHomeworkEntity =
                 newStudentHomeworkMapper.homeworkRequestToEntity(newStudentHomeworkSubmitRequest);
+        studentHomeworkEntity.setHomeworkId(homeworkId);
         Integer classId = newStudentHomeworkSubmitRequest.getClassId();
+        studentHomeworkEntity.setStudentEntity(studentEntity);
         classService.checkIfClassIdIsValid(classId);
         classService.checkIfClassIsTheSame(studentHomeworkEntity, classId);
+        List<StudentHomeworkEntity> homeworkEntityList = studentEntity.getStudentHomework();
+        homeworkEntityList.add(studentHomeworkEntity);
+        StudentEntity savedStudentEntity = studentRepository.save(studentEntity);
+        Integer id = savedStudentEntity.getStudentHomework().get(homeworkEntityList.size() - 1).getId();
+        return StudentHomeworkIdResponse.builder().id(id).build();
 
-        return StudentHomeworkIdResponse.builder().id(999).build();
     }
 
     private void checkIfTeacherIdIsNull(Integer teacherId) {

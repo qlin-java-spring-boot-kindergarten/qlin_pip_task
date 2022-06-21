@@ -3,15 +3,18 @@ package com.example.qlin_pip_task.service;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.NewStudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
+import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
+import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.NewStudentHomeworkMapper;
-import com.example.qlin_pip_task.repository.ClassRepository;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
+import com.example.qlin_pip_task.repository.StudentRepository;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,12 +22,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 
@@ -34,7 +40,7 @@ class HomeworkServiceTest {
     @Mock
     private TeacherRepository teacherRepository;
     @Mock
-    private ClassRepository classRepository;
+    private StudentRepository studentRepository;
     @Mock
     private HomeworkMapper homeworkMapper;
     @Mock
@@ -111,6 +117,7 @@ class HomeworkServiceTest {
         assertThat(result.getId(), is(99));
     }
 
+
     @Test
     void should_throw_homework_id_invalid_exception_when_homework_id_is_not_found() {
         NewStudentHomeworkSubmitRequest request =
@@ -122,4 +129,29 @@ class HomeworkServiceTest {
     }
 
 
+    @Test
+    void should_save_homework_and_return_homework_id_given_valid_student_id_and_class_id_and_description() {
+        NewStudentHomeworkSubmitRequest newStudentHomeworkSubmitRequest =
+                NewStudentHomeworkSubmitRequest.builder().studentId(1).classId(1).content("homework").build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(4).build();
+        when(homeworkRepository.findById(4)).thenReturn(Optional.of(homeworkEntity));
+        doNothing().when(studentsService).checkIfStudentIdIsNull(1);
+        StudentHomeworkEntity studentHomeworkEntity =
+                StudentHomeworkEntity.builder().homeworkId(4).classId(1).content("homework").build();
+        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student").classId(1)
+                .studentHomework(new ArrayList<>()).build();
+        when(studentsService.getNotNullableStudentEntity(1)).thenReturn(studentEntity);
+        when(newStudentHomeworkMapper.homeworkRequestToEntity(newStudentHomeworkSubmitRequest)).thenReturn(studentHomeworkEntity);
+        doNothing().when(classService).checkIfClassIdIsValid(1);
+        doNothing().when(classService).checkIfClassIsTheSame(studentHomeworkEntity, 1);
+        when(studentRepository.save(studentEntity)).thenReturn(StudentEntity.builder().id(1).name("student").classId(1)
+                .studentHomework(List.of(
+                        StudentHomeworkEntity.builder().homeworkId(4).id(99).content("homework").build()))
+                .build());
+
+        StudentHomeworkIdResponse result =
+                homeworkService.getStudentHomeworkIdResponse(4, newStudentHomeworkSubmitRequest);
+
+        assertThat(result.getId(), is(99));
+    }
 }
