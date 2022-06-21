@@ -128,7 +128,7 @@ class HomeworkServiceTest {
     @Test
     void should_throw_homework_id_invalid_exception_when_homework_id_is_not_found() {
         NewStudentHomeworkSubmitRequest request =
-                NewStudentHomeworkSubmitRequest.builder().studentId(1).classId(1).content("test").build();
+                NewStudentHomeworkSubmitRequest.builder().studentId(1).content("test").build();
         when(homeworkRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(HomeworkIdInvalidException.class,
                 () -> homeworkService.getStudentHomeworkIdResponse(1, request));
@@ -138,7 +138,7 @@ class HomeworkServiceTest {
     @Test
     void should_throw_student_id_invalid_exception_when_student_id_is_null() {
         NewStudentHomeworkSubmitRequest request =
-                NewStudentHomeworkSubmitRequest.builder().studentId(null).classId(1).content("test").build();
+                NewStudentHomeworkSubmitRequest.builder().studentId(null).content("test").build();
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().description("this is a homework").build();
         when(homeworkRepository.findById(1)).thenReturn(Optional.of(homeworkEntity));
         Exception exception = assertThrows(StudentIdInvalidException.class,
