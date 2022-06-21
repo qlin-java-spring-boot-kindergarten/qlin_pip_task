@@ -38,4 +38,7 @@ public class StudentHomeworkEntity {
     @JoinColumn(name = "student_id")
     private StudentEntity studentEntity;
 
+    @JoinColumn(name = "class_id")
+    private Integer classId;
+
 }
