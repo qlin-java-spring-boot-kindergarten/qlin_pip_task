@@ -64,11 +64,12 @@ class HomeworkServiceTest {
 
     @Test
     void should_throw_teacher_id_invalid_when_teacher_entity_is_empty() {
-        when(classRepository.findById(1)).thenReturn(Optional.of(ClassEntity.builder().id(1).build()));
         when(teacherRepository.findById(99)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(TeacherIdInvalidException.class, () ->
-                homeworkService.save(HomeworkSubmitRequest.builder().classId(1).teacherId(99).description("this is a homework").build()));
+        HomeworkSubmitRequest request =
+                HomeworkSubmitRequest.builder().classId(1).teacherId(99).description("this is a homework").build();
+
+        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> homeworkService.save(request));
 
         assertTrue(exception.getMessage().contains("Teacher id is not found."));
     }

@@ -81,7 +81,7 @@ public class StudentsService {
         return studentHomeworkMapper.homeworkEntityToHomeworkIdResponse(theHomeEntity);
     }
 
-    public static void checkIfStudentIdIsNull(Integer studentId) {
+    public void checkIfStudentIdIsNull(Integer studentId) {
         if (studentId == null) {
             throw new StudentIdInvalidException("The student id is null.");
         }

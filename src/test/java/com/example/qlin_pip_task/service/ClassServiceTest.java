@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.entity.ClassEntity;
+import com.example.qlin_pip_task.exception.ClassIdInvalidException;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
 import com.example.qlin_pip_task.repository.ClassRepository;
 import org.junit.jupiter.api.Test;
@@ -84,6 +85,22 @@ class ClassServiceTest {
         ClassEntity result = classService.getClassEntityById(1);
         assertThat(result.getGrade(), is(1));
         assertThat(result.getClassroom(), is(1));
+    }
+
+
+    @Test
+    void should_throw_class_id_invalid_exception_when_class_id_is_null() {
+        Exception exception = assertThrows(ClassIdInvalidException.class, () -> classService.checkIfClassIdIsValid(null));
+
+        assertTrue(exception.getMessage().contains("Class ID cannot be null."));
+    }
+
+
+    @Test
+    void should_throw_class_not_exists_exception_given_class_id_when_it_does_not_exist_in_the_table() {
+        when(classRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(ClassNotExistsException.class, () -> classService.checkIfClassIdIsValid(1));
+        assertTrue(exception.getMessage().contains("The class does not exist."));
     }
 
 }

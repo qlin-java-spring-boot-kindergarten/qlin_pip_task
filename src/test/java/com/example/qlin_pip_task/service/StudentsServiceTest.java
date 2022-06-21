@@ -12,6 +12,7 @@ import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
+import com.example.qlin_pip_task.exception.StudentIdInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.StudentHomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -299,6 +300,13 @@ class StudentsServiceTest {
 
         studentsService.updateHomework(1, StudentHomeworkSubmitRequest.builder().content("update_content").homeworkId(1).build());
 
+    }
+
+    @Test
+    void should_throw_student_id_invalid_exception_when_student_id_is_null() {
+        Exception exception = assertThrows(StudentIdInvalidException.class,
+                () -> studentsService.checkIfStudentIdIsNull(null));
+        assertTrue(exception.getMessage().contains("The student id is null."));
     }
 
 }
