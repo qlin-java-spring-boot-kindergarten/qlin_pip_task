@@ -7,7 +7,6 @@ import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
-import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
@@ -15,7 +14,6 @@ import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.NewStudentHomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
 import com.example.qlin_pip_task.repository.StudentRepository;
-import com.example.qlin_pip_task.repository.TeacherRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,9 +34,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class HomeworkServiceTest {
-
-    @Mock
-    private TeacherRepository teacherRepository;
     @Mock
     private StudentRepository studentRepository;
     @Mock
@@ -47,9 +42,10 @@ class HomeworkServiceTest {
     private HomeworkRepository homeworkRepository;
     @Mock
     private NewStudentHomeworkMapper newStudentHomeworkMapper;
-
     @Mock
     private StudentsService studentsService;
+    @Mock
+    private TeacherService teacherService;
     @Mock
     private ClassService classService;
 
@@ -64,17 +60,6 @@ class HomeworkServiceTest {
         assertTrue(exception.getMessage().contains("Teacher id is invalid."));
     }
 
-    @Test
-    void should_throw_teacher_id_invalid_when_teacher_entity_is_empty() {
-        when(teacherRepository.findById(99)).thenReturn(Optional.empty());
-
-        HomeworkSubmitRequest request =
-                HomeworkSubmitRequest.builder().classId(1).teacherId(99).description("this is a homework").build();
-
-        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> homeworkService.save(request));
-
-        assertTrue(exception.getMessage().contains("Teacher id is not found."));
-    }
 
     @Test
     void should_throw_description_invalid_exception_when_description_is_null() {
@@ -104,8 +89,7 @@ class HomeworkServiceTest {
     void should_save_homework_and_return_homework_id_given_valid_teacher_id_and_class_id_and_description() {
         HomeworkSubmitRequest homeworkSubmitRequest =
                 HomeworkSubmitRequest.builder().classId(1).description("test").teacherId(11).build();
-        TeacherEntity teacherEntity = TeacherEntity.builder().id(11).classId(1).name("teacher_one").build();
-        when(teacherRepository.findById(11)).thenReturn(Optional.of(teacherEntity));
+        doNothing().when(teacherService).checkIfTeacherEntityExists(11);
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherId(11).description("test").classId(1).build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest))
                 .thenReturn(homeworkEntity);

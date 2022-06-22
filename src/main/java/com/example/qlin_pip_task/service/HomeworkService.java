@@ -7,7 +7,6 @@ import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
-import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
@@ -15,7 +14,6 @@ import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.NewStudentHomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
 import com.example.qlin_pip_task.repository.StudentRepository;
-import com.example.qlin_pip_task.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +26,8 @@ public class HomeworkService {
 
     private final HomeworkRepository homeworkRepository;
     private final HomeworkMapper homeworkMapper;
-    private final TeacherRepository teacherRepository;
+
+    private final TeacherService teacherService;
     private final StudentsService studentsService;
 
     private final StudentRepository studentRepository;
@@ -42,10 +41,7 @@ public class HomeworkService {
         classService.checkIfClassIdIsValid(classId);
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
         checkIfTeacherIdIsNull(teacherId);
-        Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
-        if (optionalTeacherEntity.isEmpty()) {
-            throw new TeacherIdInvalidException("Teacher id is not found.");
-        }
+        teacherService.checkIfTeacherEntityExists(teacherId);
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
         HomeworkEntity savedNewHomework = homeworkRepository.save(homeworkEntity);
         return HomeworkIdResponse.builder().id(savedNewHomework.getId()).build();
