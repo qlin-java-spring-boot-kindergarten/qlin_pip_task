@@ -23,13 +23,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class HomeworkService {
-
     private final HomeworkRepository homeworkRepository;
     private final HomeworkMapper homeworkMapper;
-
     private final TeacherService teacherService;
     private final StudentsService studentsService;
-
     private final StudentRepository studentRepository;
     private final ClassService classService;
     private final NewStudentHomeworkMapper newStudentHomeworkMapper;
