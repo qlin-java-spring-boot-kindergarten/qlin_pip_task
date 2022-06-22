@@ -34,7 +34,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -93,8 +92,10 @@ class StudentsServiceTest {
 
     @Test
     void should_throw_invalid_parameter_exception_when_id_is_not_found() {
+        when(studentRepository.findById(1)).thenReturn(Optional.empty());
+
         Exception exception = assertThrows(StudentNotFoundException.class,
-                () -> studentsService.getStudentResponse(anyInt()));
+                () -> studentsService.getStudentResponse(1));
         assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
