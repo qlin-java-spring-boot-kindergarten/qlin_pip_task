@@ -9,7 +9,6 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
-import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.NewStudentHomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
@@ -37,7 +36,7 @@ public class HomeworkService {
         Integer classId = homeworkSubmitRequest.getClassId();
         classService.checkIfClassIdIsValid(classId);
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
-        checkIfTeacherIdIsNull(teacherId);
+        teacherService.checkIfTeacherIdIsNull(teacherId);
         teacherService.checkIfTeacherEntityExists(teacherId);
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
         HomeworkEntity savedNewHomework = homeworkRepository.save(homeworkEntity);
@@ -65,12 +64,6 @@ public class HomeworkService {
         Integer id = savedStudentEntity.getStudentHomework().get(homeworkEntityList.size() - 1).getId();
         return StudentHomeworkIdResponse.builder().id(id).build();
 
-    }
-
-    private void checkIfTeacherIdIsNull(Integer teacherId) {
-        if (teacherId == null) {
-            throw new TeacherIdInvalidException("Teacher id is invalid.");
-        }
     }
 
     private void checkIfHomeworkDescriptionIsValid(String description) {

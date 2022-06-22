@@ -1,6 +1,5 @@
 package com.example.qlin_pip_task.service;
 
-
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.repository.TeacherRepository;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,14 @@ class TeacherServiceTest {
 
     @InjectMocks
     private TeacherService teacherService;
+
+
+    @Test
+    void should_throw_teacher_id_invalid_when_id_is_null() {
+        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> teacherService.checkIfTeacherIdIsNull(null));
+        assertTrue(exception.getMessage().contains("Teacher id is invalid."));
+    }
+
 
     @Test
     void should_throw_teacher_id_invalid_when_teacher_entity_is_empty() {

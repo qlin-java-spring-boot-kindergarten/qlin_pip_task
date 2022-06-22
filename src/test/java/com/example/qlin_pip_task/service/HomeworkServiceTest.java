@@ -9,7 +9,6 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
-import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.NewStudentHomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
@@ -51,15 +50,6 @@ class HomeworkServiceTest {
 
     @InjectMocks
     private HomeworkService homeworkService;
-
-    @Test
-    void should_throw_teacher_id_invalid_when_id_is_null() {
-        HomeworkSubmitRequest request = HomeworkSubmitRequest.builder().classId(1).teacherId(null).description("this is a homework").build();
-        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> homeworkService.save(request));
-
-        assertTrue(exception.getMessage().contains("Teacher id is invalid."));
-    }
-
 
     @Test
     void should_throw_description_invalid_exception_when_description_is_null() {

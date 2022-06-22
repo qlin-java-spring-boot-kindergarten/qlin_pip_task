@@ -14,6 +14,12 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
 
+    public void checkIfTeacherIdIsNull(Integer teacherId) {
+        if (teacherId == null) {
+            throw new TeacherIdInvalidException("Teacher id is invalid.");
+        }
+    }
+
     public void checkIfTeacherEntityExists(Integer teacherId) {
         Optional<TeacherEntity> optionalTeacherEntity = teacherRepository.findById(teacherId);
         if (optionalTeacherEntity.isEmpty()) {
