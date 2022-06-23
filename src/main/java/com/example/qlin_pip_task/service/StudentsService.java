@@ -114,7 +114,7 @@ public class StudentsService {
         }
     }
 
-    public void updateHomework(Integer id, StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest) {
+    public void updateStudentHomework(Integer id, StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest) {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
         checkIfTheHomeworkSubmitRequestIsValid(updateStudentHomeworkSubmitRequest, allStudentEntitiesList);

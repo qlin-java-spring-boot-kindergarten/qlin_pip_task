@@ -8,7 +8,6 @@ import com.example.qlin_pip_task.dto.response.StudentIdResponse;
 import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.service.StudentsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,9 +62,9 @@ public class StudentsController {
 
 
     @PutMapping("/{id}/homework")
-    public ResponseEntity updateHomeworkContent(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
-        studentsService.updateHomework(id, studentHomeworkSubmitRequest);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> updateStudentHomework(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
+        studentsService.updateStudentHomework(id, studentHomeworkSubmitRequest);
+        return ResponseEntity.noContent().build();
     }
 }
 

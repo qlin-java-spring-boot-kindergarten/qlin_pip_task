@@ -253,7 +253,7 @@ class StudentsServiceTest {
                 .studentHomework(List.of(StudentHomeworkEntity.builder().homeworkId(1).build())).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         Exception exception = assertThrows(HomeworkContentInvalidException.class,
-                () -> studentsService.updateHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).build()));
+                () -> studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }
 
@@ -263,7 +263,7 @@ class StudentsServiceTest {
                 .studentHomework(List.of(StudentHomeworkEntity.builder().homeworkId(1).build())).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         Exception exception = assertThrows(HomeworkContentInvalidException.class,
-                () -> studentsService.updateHomework(1, StudentHomeworkSubmitRequest.builder().content("").homeworkId(1).build()));
+                () -> studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("").homeworkId(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }
 
@@ -282,7 +282,7 @@ class StudentsServiceTest {
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2));
 
         Exception exception = assertThrows(HomeworkTypeNotExistedException.class,
-                () -> studentsService.updateHomework(1, StudentHomeworkSubmitRequest.builder().content("test_content").homeworkId(99).build()));
+                () -> studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("test_content").homeworkId(99).build()));
 
         assertTrue(exception.getMessage().contains("Homework type is in invalid."));
     }
@@ -297,7 +297,7 @@ class StudentsServiceTest {
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1));
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
 
-        studentsService.updateHomework(1, StudentHomeworkSubmitRequest.builder().content("update_content").homeworkId(1).build());
+        studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("update_content").homeworkId(1).build());
 
     }
 
