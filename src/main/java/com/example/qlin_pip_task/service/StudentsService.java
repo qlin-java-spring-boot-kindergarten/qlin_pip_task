@@ -61,7 +61,7 @@ public class StudentsService {
         return studentMapper.entityToStudentResponse(studentEntity, classEntity);
     }
 
-    public StudentResponses getTheStudentResponseByName(Map<String, String> queryMap) {
+    public StudentResponses getStudentByName(Map<String, String> queryMap) {
         List<StudentEntity> studentEntityList = studentRepository.findAllByName(queryMap.get("name"));
         List<StudentResponses.StudentResponse> studentResponses = getStudentResponseList(studentEntityList);
         return StudentResponses.builder().data(studentResponses).build();

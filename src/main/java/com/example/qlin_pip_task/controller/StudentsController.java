@@ -46,8 +46,8 @@ public class StudentsController {
     }
 
     @GetMapping(params = "name")
-    public StudentResponses getTheStudentByName(@RequestParam Map<String, String> queryMap){
-        return studentsService.getTheStudentResponseByName(queryMap);
+    public ResponseEntity<StudentResponses> getStudentByName(@RequestParam Map<String, String> queryMap) {
+        return ResponseEntity.ok(studentsService.getStudentByName(queryMap));
     }
 
 

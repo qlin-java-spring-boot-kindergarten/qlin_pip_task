@@ -148,7 +148,7 @@ class StudentsServiceTest {
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("name", "student");
-        StudentResponses theStudentResponsesByName = studentsService.getTheStudentResponseByName(queryMap);
+        StudentResponses theStudentResponsesByName = studentsService.getStudentByName(queryMap);
 
         assertThat(theStudentResponsesByName.getData().get(0).getName(), is("student"));
         assertThat(theStudentResponsesByName.getData().get(0).getId(), is(1));
@@ -162,7 +162,7 @@ class StudentsServiceTest {
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("name", "student");
-        StudentResponses theStudentResponseByName = studentsService.getTheStudentResponseByName(queryMap);
+        StudentResponses theStudentResponseByName = studentsService.getStudentByName(queryMap);
 
         assertThat(theStudentResponseByName.getData(), is(List.of()));
     }
