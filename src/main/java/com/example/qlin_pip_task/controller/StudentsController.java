@@ -29,8 +29,8 @@ public class StudentsController {
     private final StudentsService studentsService;
 
     @GetMapping
-    public ResponseEntity<StudentResponses> getAllStudentsData() {
-        return ResponseEntity.ok(studentsService.getAllStudentsResponses());
+    public ResponseEntity<StudentResponses> getStudents() {
+        return ResponseEntity.ok(studentsService.getStudents());
     }
 
     @PostMapping

@@ -41,7 +41,7 @@ public class StudentsService {
     private final StudentMapper studentMapper;
     private final HomeworkMapper homeworkMapper;
 
-    public StudentResponses getAllStudentsResponses() {
+    public StudentResponses getStudents() {
         List<StudentEntity> studentEntityList = studentRepository.findAll();
         List<StudentResponses.StudentResponse> studentResponses = getStudentResponseList(studentEntityList);
         return StudentResponses.builder().data(studentResponses).build();
