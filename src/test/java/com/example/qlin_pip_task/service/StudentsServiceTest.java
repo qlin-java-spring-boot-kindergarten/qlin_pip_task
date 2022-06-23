@@ -93,7 +93,7 @@ class StudentsServiceTest {
     @Test
     void should_throw_invalid_parameter_exception_when_id_is_not_found() {
         Exception exception = assertThrows(StudentNotFoundException.class,
-                () -> studentsService.getStudentResponse(anyInt()));
+                () -> studentsService.getStudentById(anyInt()));
         assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
@@ -122,7 +122,7 @@ class StudentsServiceTest {
 
         when(studentMapper.entityToStudentResponse(studentEntity, classEntity)).thenReturn(studentResponse);
 
-        StudentResponses.StudentResponse theStudentResponse = studentsService.getStudentResponse(2);
+        StudentResponses.StudentResponse theStudentResponse = studentsService.getStudentById(2);
 
         assertThat(theStudentResponse.getName(), is("student2"));
         assertThat(theStudentResponse.getId(), is(2));

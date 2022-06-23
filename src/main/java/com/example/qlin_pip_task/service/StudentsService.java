@@ -54,7 +54,7 @@ public class StudentsService {
         return StudentIdResponse.builder().id(newStudentEntity.getId()).build();
     }
 
-    public StudentResponses.StudentResponse getStudentResponse(Integer id) {
+    public StudentResponses.StudentResponse getStudentById(Integer id) {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         Integer classId = studentEntity.getClassId();
         ClassEntity classEntity = classService.getClassEntityById(classId);

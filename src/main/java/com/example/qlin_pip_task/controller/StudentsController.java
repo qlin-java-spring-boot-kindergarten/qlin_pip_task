@@ -41,8 +41,8 @@ public class StudentsController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentResponses.StudentResponse> getStudentData(@PathVariable Integer id) {
-        return ResponseEntity.ok(studentsService.getStudentResponse(id));
+    public ResponseEntity<StudentResponses.StudentResponse> getStudentById(@PathVariable Integer id) {
+        return ResponseEntity.ok(studentsService.getStudentById(id));
     }
 
     @GetMapping(params = "name")
