@@ -47,7 +47,7 @@ public class StudentsService {
         return StudentResponses.builder().data(studentResponses).build();
     }
 
-    public StudentIdResponse save(StudentSubmitRequest studentSubmitRequest) {
+    public StudentIdResponse createStudent(StudentSubmitRequest studentSubmitRequest) {
         Integer classId = classService.getClassId(studentSubmitRequest.getGrade(), studentSubmitRequest.getClassroom());
         StudentEntity studentEntity = StudentEntity.builder().name(studentSubmitRequest.getName()).classId(classId).build();
         StudentEntity newStudentEntity = studentRepository.save(studentEntity);

@@ -34,9 +34,9 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentIdResponse> saveNewStudent(@RequestBody StudentSubmitRequest studentSubmitRequest) {
+    public ResponseEntity<StudentIdResponse> createStudent(@RequestBody StudentSubmitRequest studentSubmitRequest) {
         studentsService.validateStudentData(studentSubmitRequest);
-        return ResponseEntity.ok(studentsService.save(studentSubmitRequest));
+        return ResponseEntity.ok(studentsService.createStudent(studentSubmitRequest));
     }
 
 

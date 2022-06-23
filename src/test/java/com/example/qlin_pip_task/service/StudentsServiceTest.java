@@ -85,7 +85,7 @@ class StudentsServiceTest {
         when(studentRepository.save(StudentEntity.builder().name("student1").classId(2).build()))
                 .thenReturn(StudentEntity.builder().id(99).name("student1").classId(2).build());
 
-        StudentIdResponse studentIdResponse = studentsService.save(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build());
+        StudentIdResponse studentIdResponse = studentsService.createStudent(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build());
 
         assertThat(studentIdResponse.getId(), is(99));
     }
