@@ -88,7 +88,7 @@ public class StudentsService {
         return optionalStudentEntity.get();
     }
 
-    public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomeworkTypes() {
+    public StudentGroupsByHomeworkTypeResponses getStudentGroupsByHomework() {
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
         TreeSet<Integer> allHomeworkTypes = getAllHomeworkTypes(allStudentEntitiesList);
         StudentGroupsByHomeworkTypeResponses studentGroupsByHomeworkTypeResponses =

@@ -239,7 +239,7 @@ class StudentsServiceTest {
         when(studentMapper.entityToStudentResponse(studentEntity3, classEntity3))
                 .thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
 
-        StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomeworkTypes();
+        StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomework();
         Map<String, List<String>> resultGroup = result.getHomework();
         assertThat(resultGroup.size(), is(3));
         assertThat(resultGroup.get("homework_type_1"), is(List.of("student1", "student3")));

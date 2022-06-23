@@ -57,8 +57,8 @@ public class StudentsController {
     }
 
     @GetMapping("/group-by-homework")
-    public ResponseEntity<StudentGroupsByHomeworkTypeResponses> getHomeworkGroup() {
-        return ResponseEntity.ok(studentsService.getStudentGroupsByHomeworkTypes());
+    public ResponseEntity<StudentGroupsByHomeworkTypeResponses> getStudentGroupsByHomework() {
+        return ResponseEntity.ok(studentsService.getStudentGroupsByHomework());
     }
 
 
