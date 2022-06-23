@@ -172,7 +172,7 @@ class StudentsServiceTest {
     void should_throw_student_not_found_exception_when_student_not_exists() {
         when(studentRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(StudentNotFoundException.class,
-                () -> studentsService.submitStudentHomework(1, StudentHomeworkSubmitRequest.builder().build()));
+                () -> studentsService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().build()));
         assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
@@ -186,7 +186,7 @@ class StudentsServiceTest {
                                 .studentHomework(List.of(
                                         StudentHomeworkEntity.builder().id(99).homeworkId(1).content("test").build())).build()));
         Exception exception = assertThrows(HomeworkAlreadyExistedException.class,
-                () -> studentsService.submitStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).content("test").build()));
+                () -> studentsService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).content("test").build()));
         assertTrue(exception.getMessage().contains("The homework already existed."));
     }
 
@@ -203,7 +203,7 @@ class StudentsServiceTest {
                 .thenReturn(HomeworkIdResponse.builder().id(99).build());
 
         HomeworkIdResponse homeworkIdResponse =
-                studentsService.submitStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build());
+                studentsService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build());
 
         assertThat(homeworkIdResponse.getId(), is(99));
     }

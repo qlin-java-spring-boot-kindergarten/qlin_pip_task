@@ -67,7 +67,7 @@ public class StudentsService {
         return StudentResponses.builder().data(studentResponses).build();
     }
 
-    public HomeworkIdResponse submitStudentHomework(Integer id, StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
+    public HomeworkIdResponse createStudentHomework(Integer id, StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         List<StudentHomeworkEntity> theStudentHomeworkList = studentEntity.getStudentHomework();
         checkIfHomeworkAlreadyExisted(theStudentHomeworkList, studentHomeworkSubmitRequest.getHomeworkId());

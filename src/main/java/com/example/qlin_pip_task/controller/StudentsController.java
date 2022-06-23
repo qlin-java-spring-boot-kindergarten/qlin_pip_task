@@ -52,8 +52,8 @@ public class StudentsController {
 
 
     @PostMapping("/{id}/homework")
-    public ResponseEntity<HomeworkIdResponse> receiveHomeRequest(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
-        return ResponseEntity.ok(studentsService.submitStudentHomework(id, studentHomeworkSubmitRequest));
+    public ResponseEntity<HomeworkIdResponse> createStudentHomework(@PathVariable Integer id, @RequestBody StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
+        return ResponseEntity.ok(studentsService.createStudentHomework(id, studentHomeworkSubmitRequest));
     }
 
     @GetMapping("/group-by-homework")
