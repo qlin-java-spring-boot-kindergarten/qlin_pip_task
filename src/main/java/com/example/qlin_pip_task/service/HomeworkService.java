@@ -28,6 +28,12 @@ public class HomeworkService {
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
         homeworkEntity.setTeacherEntity(teacherEntity);
         String description = homeworkSubmitRequest.getDescription();
+        checkIfDescriptionIsValid(description);
+        HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
+        return HomeworkIdResponse.builder().id(savedHomeworkEntity.getId()).build();
+    }
+
+    private void checkIfDescriptionIsValid(String description) {
         if (Objects.isNull(description)) {
             throw new DescriptionInvalidException("Description is null");
         }
@@ -37,7 +43,5 @@ public class HomeworkService {
         if (homeworkRepository.existsByDescription(description)) {
             throw new DescriptionInvalidException("Description is duplicated.");
         }
-        HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
-        return HomeworkIdResponse.builder().id(savedHomeworkEntity.getId()).build();
     }
 }
