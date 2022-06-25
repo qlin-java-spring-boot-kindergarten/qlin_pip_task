@@ -17,8 +17,11 @@ public class HomeworkService {
 
     private final HomeworkRepository homeworkRepository;
 
+    private final TeacherService teacherService;
+
     public HomeworkIdResponse createHomework(HomeworkSubmitRequest homeworkSubmitRequest) {
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
+        teacherService.checkIfTeacherIdIsValid(teacherId);
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
         homeworkEntity.setTeacherEntity(TeacherEntity.builder().id(teacherId).build());
         HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
