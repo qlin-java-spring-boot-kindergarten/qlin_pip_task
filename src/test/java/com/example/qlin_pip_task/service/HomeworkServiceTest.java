@@ -67,7 +67,6 @@ class HomeworkServiceTest {
         Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
         assertThat(exception.getMessage(), is("Description is empty."));
     }
-
     @Test
     void should_throw_description_invalid_exception_given_whitespace_only_description() {
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("     ").build();
@@ -79,5 +78,17 @@ class HomeworkServiceTest {
         assertThat(exception.getMessage(), is("Description is empty."));
     }
 
+    @Test
+    void should_throw_description_invalid_exception_given_duplicated_description() {
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("a homework").build();
+        TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
+        when(teacherService.getNonNullTeacherEntity(1)).thenReturn(teacherEntity);
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("a homework").build();
+        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
+        when(homeworkRepository.existsByDescription("a homework")).thenReturn(true);
+
+        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
+        assertThat(exception.getMessage(), is("Description is duplicated."));
+    }
 
 }

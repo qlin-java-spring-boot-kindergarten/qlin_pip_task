@@ -34,6 +34,9 @@ public class HomeworkService {
         if (description.isBlank()) {
             throw new DescriptionInvalidException("Description is empty.");
         }
+        if (homeworkRepository.existsByDescription(description)) {
+            throw new DescriptionInvalidException("Description is duplicated.");
+        }
         HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
         return HomeworkIdResponse.builder().id(savedHomeworkEntity.getId()).build();
     }
