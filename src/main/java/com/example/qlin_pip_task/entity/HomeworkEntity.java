@@ -31,8 +31,7 @@ public class HomeworkEntity {
     private Integer id;
     private String description;
 
-    @JoinColumn(name = "class_id")
-    private Integer class_id;
+    private Integer classId;
 
     @CreationTimestamp
     private Date createdAt;
