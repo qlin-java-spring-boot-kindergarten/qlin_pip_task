@@ -31,7 +31,7 @@ public class HomeworkService {
         if (Objects.isNull(description)) {
             throw new DescriptionInvalidException("Description is null");
         }
-        if (description.isEmpty()) {
+        if (description.isBlank()) {
             throw new DescriptionInvalidException("Description is empty.");
         }
         HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
