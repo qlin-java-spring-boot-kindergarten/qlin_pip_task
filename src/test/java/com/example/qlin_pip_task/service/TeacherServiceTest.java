@@ -1,6 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 
+import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.TeacherIdInvalidException;
 import com.example.qlin_pip_task.exception.TeacherNoFoundException;
@@ -43,12 +44,12 @@ class TeacherServiceTest {
 
     @Test
     void should_return_teacher_entity_given_valid_id() {
-        TeacherEntity teacherEntity = TeacherEntity.builder().id(1).name("teacher").classId(1).build();
+        TeacherEntity teacherEntity = TeacherEntity.builder().id(1).name("teacher").classId(ClassEntity.builder().id(1).build()).build();
         when(teacherRepository.findById(1)).thenReturn(Optional.of(teacherEntity));
         TeacherEntity result = teacherService.getNonNullTeacherEntity(1);
         assertThat(result.getId(), is(1));
         assertThat(result.getName(), is("teacher"));
-        assertThat(result.getClassId(), is(1));
+        assertThat(result.getClassId().getId(), is(1));
     }
 
 }

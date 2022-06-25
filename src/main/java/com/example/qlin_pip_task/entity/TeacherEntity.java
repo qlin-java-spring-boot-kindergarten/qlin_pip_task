@@ -10,7 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.List;
@@ -29,7 +31,9 @@ public class TeacherEntity {
     private Integer id;
     private String name;
 
-    private Integer classId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "class_id")
+    private ClassEntity classId;
 
     @OneToMany(mappedBy = "teacherEntity", cascade = CascadeType.ALL)
     private List<HomeworkEntity> homework;

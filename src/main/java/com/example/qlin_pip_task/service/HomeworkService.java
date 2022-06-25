@@ -21,9 +21,9 @@ public class HomeworkService {
 
     public HomeworkIdResponse createHomework(HomeworkSubmitRequest homeworkSubmitRequest) {
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
-        teacherService.getNonNullTeacherEntity(teacherId);
+        TeacherEntity teacherEntity = teacherService.getNonNullTeacherEntity(teacherId);
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
-        homeworkEntity.setTeacherEntity(TeacherEntity.builder().id(teacherId).build());
+        homeworkEntity.setTeacherEntity(teacherEntity);
         HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
         return HomeworkIdResponse.builder().id(savedHomeworkEntity.getId()).build();
     }
