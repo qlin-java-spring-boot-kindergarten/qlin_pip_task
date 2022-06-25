@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
-public class StudentsService {
+public class StudentService {
 
     private final StudentRepository studentRepository;
     private final ClassService classService;

@@ -37,7 +37,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class StudentsServiceTest {
+class StudentServiceTest {
     @Mock
     private StudentMapper studentMapper;
 
@@ -51,7 +51,7 @@ class StudentsServiceTest {
     private ClassService classService;
 
     @InjectMocks
-    private StudentsService studentsService;
+    private StudentService studentService;
 
     @Test
     void should_return_two_students_when_there_are_two_students_in_the_table() {
@@ -67,7 +67,7 @@ class StudentsServiceTest {
         when(studentMapper.entityToStudentResponse(studentEntity1, classEntity1)).thenReturn(studentResponse1);
         when(studentMapper.entityToStudentResponse(studentEntity2, classEntity2)).thenReturn(studentResponse2);
 
-        StudentResponses result = studentsService.getStudents();
+        StudentResponses result = studentService.getStudents();
 
         assertThat(result.getData().get(0).getId(), is(1));
         assertThat(result.getData().get(0).getName(), is("student1"));
@@ -85,7 +85,7 @@ class StudentsServiceTest {
         when(studentRepository.save(StudentEntity.builder().name("student1").classId(2).build()))
                 .thenReturn(StudentEntity.builder().id(99).name("student1").classId(2).build());
 
-        StudentIdResponse studentIdResponse = studentsService.createStudent(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build());
+        StudentIdResponse studentIdResponse = studentService.createStudent(StudentSubmitRequest.builder().name("student1").classroom(1).grade(1).build());
 
         assertThat(studentIdResponse.getId(), is(99));
     }
@@ -93,20 +93,20 @@ class StudentsServiceTest {
     @Test
     void should_throw_invalid_parameter_exception_when_id_is_not_found() {
         Exception exception = assertThrows(StudentNotFoundException.class,
-                () -> studentsService.getStudentById(anyInt()));
+                () -> studentService.getStudentById(anyInt()));
         assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
     @Test
     void should_throw_name_invalid_exception_when_name_is_null() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentService.validateStudentData(
                 StudentSubmitRequest.builder().name(null).classroom(1).grade(1).build()));
         assertTrue(exception.getMessage().contains("Name is invalid."));
     }
 
     @Test
     void should_throw_name_invalid_exception_when_name_is_empty() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> studentsService.validateStudentData(
+        Exception exception = assertThrows(InvalidParameterException.class, () -> studentService.validateStudentData(
                 StudentSubmitRequest.builder().name("").classroom(1).grade(1).build()));
         assertTrue(exception.getMessage().contains("Name is invalid."));
     }
@@ -122,7 +122,7 @@ class StudentsServiceTest {
 
         when(studentMapper.entityToStudentResponse(studentEntity, classEntity)).thenReturn(studentResponse);
 
-        StudentResponses.StudentResponse theStudentResponse = studentsService.getStudentById(2);
+        StudentResponses.StudentResponse theStudentResponse = studentService.getStudentById(2);
 
         assertThat(theStudentResponse.getName(), is("student2"));
         assertThat(theStudentResponse.getId(), is(2));
@@ -148,7 +148,7 @@ class StudentsServiceTest {
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("name", "student");
-        StudentResponses theStudentResponsesByName = studentsService.getStudentByName(queryMap);
+        StudentResponses theStudentResponsesByName = studentService.getStudentByName(queryMap);
 
         assertThat(theStudentResponsesByName.getData().get(0).getName(), is("student"));
         assertThat(theStudentResponsesByName.getData().get(0).getId(), is(1));
@@ -162,7 +162,7 @@ class StudentsServiceTest {
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("name", "student");
-        StudentResponses theStudentResponseByName = studentsService.getStudentByName(queryMap);
+        StudentResponses theStudentResponseByName = studentService.getStudentByName(queryMap);
 
         assertThat(theStudentResponseByName.getData(), is(List.of()));
     }
@@ -172,7 +172,7 @@ class StudentsServiceTest {
     void should_throw_student_not_found_exception_when_student_not_exists() {
         when(studentRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(StudentNotFoundException.class,
-                () -> studentsService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().build()));
+                () -> studentService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().build()));
         assertTrue(exception.getMessage().contains("Student is not found."));
     }
 
@@ -186,7 +186,7 @@ class StudentsServiceTest {
                                 .studentHomework(List.of(
                                         StudentHomeworkEntity.builder().id(99).homeworkId(1).content("test").build())).build()));
         Exception exception = assertThrows(HomeworkAlreadyExistedException.class,
-                () -> studentsService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).content("test").build()));
+                () -> studentService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).content("test").build()));
         assertTrue(exception.getMessage().contains("The homework already existed."));
     }
 
@@ -203,7 +203,7 @@ class StudentsServiceTest {
                 .thenReturn(HomeworkIdResponse.builder().id(99).build());
 
         HomeworkIdResponse homeworkIdResponse =
-                studentsService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build());
+                studentService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build());
 
         assertThat(homeworkIdResponse.getId(), is(99));
     }
@@ -239,7 +239,7 @@ class StudentsServiceTest {
         when(studentMapper.entityToStudentResponse(studentEntity3, classEntity3))
                 .thenReturn(StudentResponses.StudentResponse.builder().id(3).name("student3").build());
 
-        StudentGroupsByHomeworkTypeResponses result = studentsService.getStudentGroupsByHomework();
+        StudentGroupsByHomeworkTypeResponses result = studentService.getStudentGroupsByHomework();
         Map<String, List<String>> resultGroup = result.getHomework();
         assertThat(resultGroup.size(), is(3));
         assertThat(resultGroup.get("homework_type_1"), is(List.of("student1", "student3")));
@@ -253,7 +253,7 @@ class StudentsServiceTest {
                 .studentHomework(List.of(StudentHomeworkEntity.builder().homeworkId(1).build())).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         Exception exception = assertThrows(HomeworkContentInvalidException.class,
-                () -> studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).build()));
+                () -> studentService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }
 
@@ -263,7 +263,7 @@ class StudentsServiceTest {
                 .studentHomework(List.of(StudentHomeworkEntity.builder().homeworkId(1).build())).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
         Exception exception = assertThrows(HomeworkContentInvalidException.class,
-                () -> studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("").homeworkId(1).build()));
+                () -> studentService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("").homeworkId(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }
 
@@ -282,7 +282,7 @@ class StudentsServiceTest {
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1, studentEntity2));
 
         Exception exception = assertThrows(HomeworkTypeNotExistsException.class,
-                () -> studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("test_content").homeworkId(99).build()));
+                () -> studentService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("test_content").homeworkId(99).build()));
 
         assertTrue(exception.getMessage().contains("Homework type is in invalid."));
     }
@@ -297,7 +297,7 @@ class StudentsServiceTest {
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1));
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
 
-        studentsService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("update_content").homeworkId(1).build());
+        studentService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("update_content").homeworkId(1).build());
 
     }
 
