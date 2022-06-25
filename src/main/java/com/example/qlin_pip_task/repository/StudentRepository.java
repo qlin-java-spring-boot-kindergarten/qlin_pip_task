@@ -2,7 +2,6 @@ package com.example.qlin_pip_task.repository;
 
 import com.example.qlin_pip_task.entity.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
