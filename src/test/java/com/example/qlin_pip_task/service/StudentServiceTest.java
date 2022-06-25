@@ -18,6 +18,7 @@ import com.example.qlin_pip_task.mapper.StudentMapper;
 import com.example.qlin_pip_task.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,6 +35,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -297,8 +299,12 @@ class StudentServiceTest {
         when(studentRepository.findAll()).thenReturn(List.of(studentEntity1));
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
 
-        studentService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("update_content").homeworkId(1).build());
+        StudentHomeworkSubmitRequest request = StudentHomeworkSubmitRequest.builder().content("update_content").homeworkId(1).build();
+        ArgumentCaptor<StudentEntity> argumentCaptor = ArgumentCaptor.forClass(StudentEntity.class);
+        studentService.updateStudentHomework(1, request);
 
+        verify(studentRepository).save(argumentCaptor.capture());
+        assertThat(argumentCaptor.getValue().getStudentHomework().get(0).getContent(), is("update_content"));
     }
 
 }
