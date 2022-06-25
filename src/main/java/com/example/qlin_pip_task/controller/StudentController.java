@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/students")
-public class StudentsController {
+public class StudentController {
 
     private final StudentService studentService;
 
