@@ -16,7 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -34,11 +34,11 @@ public class HomeworkEntity {
     private Integer classId;
 
     @CreationTimestamp
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @UpdateTimestamp
     @Column(nullable = false, updatable = false)
-    private Date updatedAt;
+    private LocalDate updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
