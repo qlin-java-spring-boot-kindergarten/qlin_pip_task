@@ -23,7 +23,8 @@ class HomeworkServiceTest {
     private HomeworkMapper homeworkMapper;
     @Mock
     private HomeworkRepository homeworkRepository;
-
+    @Mock
+    private TeacherService teacherService;
 
     @InjectMocks
     private HomeworkService homeworkService;
@@ -31,9 +32,9 @@ class HomeworkServiceTest {
 
     @Test
     void should_return_homeworkId_when_create_new_homework_successfully() {
-
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("a homework").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
+        when(teacherService.getNonNullTeacherEntity(1)).thenReturn(teacherEntity);
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("a homework").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
         HomeworkEntity savedHomeworkEntity = HomeworkEntity.builder().id(99).teacherEntity(teacherEntity).description("a homework").build();
