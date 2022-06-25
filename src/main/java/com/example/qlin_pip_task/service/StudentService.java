@@ -106,7 +106,7 @@ public class StudentService {
     private void getStudentsOfTheHomeworkType(List<StudentEntity> allStudentEntitiesList, Integer homeworkType, List<StudentResponses.StudentResponse> studentEntitiesOfTheHomeworkType) {
         for (StudentEntity studentEntity : allStudentEntitiesList) {
             Set<Integer> singleStudentHomeworkTypes = studentEntity.getStudentHomework().stream()
-                    .map(StudentHomeworkEntity::getHomeworkId).collect(Collectors.toSet());
+                    .map(studentHomeworkEntity -> studentHomeworkEntity.getHomeworkEntity().getId()).collect(Collectors.toSet());
             if (singleStudentHomeworkTypes.contains(homeworkType)) {
                 Integer classId = studentEntity.getClassId();
                 studentEntitiesOfTheHomeworkType.add(studentMapper.entityToStudentResponse(studentEntity, classService.getClassEntityById(classId)));
@@ -119,7 +119,7 @@ public class StudentService {
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
         checkIfTheHomeworkSubmitRequestIsValid(updateStudentHomeworkSubmitRequest, allStudentEntitiesList);
         List<StudentHomeworkEntity> homeworkList = studentEntity.getStudentHomework();
-        List<StudentHomeworkEntity> list = homeworkList.stream().filter(homeworkEntity -> homeworkEntity.getHomeworkId()
+        List<StudentHomeworkEntity> list = homeworkList.stream().filter(studentHomeworkEntity -> studentHomeworkEntity.getHomeworkEntity().getId()
                 .equals(updateStudentHomeworkSubmitRequest.getHomeworkId())).collect(Collectors.toList());
         StudentHomeworkEntity studentHomeworkEntity = list.get(0);
         studentHomeworkEntity.setContent(updateStudentHomeworkSubmitRequest.getContent());
@@ -154,7 +154,7 @@ public class StudentService {
 
     private void checkIfHomeworkAlreadyExisted(List<StudentHomeworkEntity> theStudentHomeworkList, Integer requestHomeworkType) {
         for (StudentHomeworkEntity entity : theStudentHomeworkList) {
-            if (entity.getHomeworkId().equals(requestHomeworkType)) {
+            if (entity.getHomeworkEntity().getId().equals(requestHomeworkType)) {
                 throw new HomeworkAlreadyExistedException("The homework already existed.");
             }
         }
@@ -163,7 +163,7 @@ public class StudentService {
     private TreeSet<Integer> getAllHomeworkTypes(List<StudentEntity> allStudentEntitiesList) {
         return allStudentEntitiesList.stream()
                 .map(student -> student.getStudentHomework().stream()
-                        .map(StudentHomeworkEntity::getHomeworkId).collect(Collectors.toSet()))
+                        .map(studentHomeworkEntity -> studentHomeworkEntity.getHomeworkEntity().getId()).collect(Collectors.toSet()))
                 .flatMap(Collection::stream).collect(Collectors.toCollection(TreeSet::new));
     }
 

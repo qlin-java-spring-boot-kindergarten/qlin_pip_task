@@ -22,14 +22,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="student_homework")
+@Table(name = "student_homework")
 public class StudentHomeworkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "student_homework_id_generator")
     @SequenceGenerator(name = "student_homework_id_generator", sequenceName = "student_homework_id_seq", allocationSize = 1)
     private Integer id;
     private String content;
-    private Integer homeworkId;
+
+    @ManyToOne
+    @JoinColumn(name = "homework_id")
+    private HomeworkEntity homeworkEntity;
 
     @CreationTimestamp
     private LocalDate createdAt;
