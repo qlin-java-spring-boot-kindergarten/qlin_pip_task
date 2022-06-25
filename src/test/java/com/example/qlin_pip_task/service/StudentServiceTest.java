@@ -194,7 +194,7 @@ class StudentServiceTest {
 
     @Test
     void should_save_content_and_return_student_id_and_when_receive_homework_content() {
-        when(homeworkMapper.homeworkRequestToEntity(StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build()))
+        when(homeworkMapper.studentHomeworkRequestToEntity(StudentHomeworkSubmitRequest.builder().content("test").homeworkId(1).build()))
                 .thenReturn(StudentHomeworkEntity.builder().homeworkId(1).content("test").build());
         StudentEntity studentEntity = StudentEntity.builder().id(1).studentHomework(new ArrayList<>()).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity));

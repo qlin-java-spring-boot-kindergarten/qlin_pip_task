@@ -71,7 +71,7 @@ public class StudentService {
         StudentEntity studentEntity = getNotNullableStudentEntity(id);
         List<StudentHomeworkEntity> theStudentHomeworkList = studentEntity.getStudentHomework();
         checkIfHomeworkAlreadyExisted(theStudentHomeworkList, studentHomeworkSubmitRequest.getHomeworkId());
-        StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.homeworkRequestToEntity(studentHomeworkSubmitRequest);
+        StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.studentHomeworkRequestToEntity(studentHomeworkSubmitRequest);
         studentHomeworkEntity.setStudentEntity(studentEntity);
         theStudentHomeworkList.add(studentHomeworkEntity);
         StudentEntity theStudentEntity = studentRepository.save(studentEntity);
