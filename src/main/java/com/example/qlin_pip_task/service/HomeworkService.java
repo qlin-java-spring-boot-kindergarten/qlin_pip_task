@@ -9,7 +9,6 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ContentInvalidException;
-import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
@@ -37,8 +36,8 @@ public class HomeworkService {
         TeacherEntity teacherEntity = teacherService.getNotNullTeacherEntity(teacherId);
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
         homeworkEntity.setTeacherEntity(teacherEntity);
-        String description = homeworkSubmitRequest.getDescription();
-        checkIfDescriptionIsValid(description);
+        String content = homeworkSubmitRequest.getContent();
+        checkIfContentIsValid(content);
         HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
         return HomeworkIdResponse.builder().id(savedHomeworkEntity.getId()).build();
     }
@@ -78,15 +77,15 @@ public class HomeworkService {
         return optionalHomeworkEntity.get();
     }
 
-    private void checkIfDescriptionIsValid(String description) {
-        if (Objects.isNull(description)) {
-            throw new DescriptionInvalidException("Description is null");
+    private void checkIfContentIsValid(String content) {
+        if (Objects.isNull(content)) {
+            throw new ContentInvalidException("Content is null.");
         }
-        if (description.isBlank()) {
-            throw new DescriptionInvalidException("Description is empty.");
+        if (content.isBlank()) {
+            throw new ContentInvalidException("Content is empty.");
         }
-        if (homeworkRepository.existsByDescription(description)) {
-            throw new DescriptionInvalidException("Description is duplicated.");
+        if (homeworkRepository.existsByContent(content)) {
+            throw new ContentInvalidException("Content is duplicated.");
         }
     }
 }

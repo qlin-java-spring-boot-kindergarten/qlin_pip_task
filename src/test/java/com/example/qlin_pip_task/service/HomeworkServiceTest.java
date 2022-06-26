@@ -10,7 +10,6 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ContentInvalidException;
-import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
@@ -46,12 +45,12 @@ class HomeworkServiceTest {
 
     @Test
     void should_return_homeworkId_when_create_new_homework_successfully() {
-        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("a homework").build();
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).content("a homework").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
         when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("a homework").build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).content("a homework").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
-        HomeworkEntity savedHomeworkEntity = HomeworkEntity.builder().id(99).teacherEntity(teacherEntity).description("a homework").build();
+        HomeworkEntity savedHomeworkEntity = HomeworkEntity.builder().id(99).teacherEntity(teacherEntity).content("a homework").build();
         when(homeworkRepository.save(homeworkEntity)).thenReturn(savedHomeworkEntity);
 
         HomeworkIdResponse result = homeworkService.createHomework(homeworkSubmitRequest);
@@ -59,48 +58,49 @@ class HomeworkServiceTest {
     }
 
     @Test
-    void should_throw_description_invalid_exception_given_null_description() {
-        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description(null).build();
+    void should_throw_content_invalid_exception_given_null_content() {
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).content(null).build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
         when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description(null).build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).content(null).build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
-        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
-        assertThat(exception.getMessage(), is("Description is null"));
+        Exception exception = assertThrows(ContentInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
+        assertThat(exception.getMessage(), is("Content is null."));
     }
 
     @Test
-    void should_throw_description_invalid_exception_given_empty_description() {
-        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("").build();
+    void should_throw_content_invalid_exception_given_empty_content() {
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).content("").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
         when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("").build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).content("").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
-        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
-        assertThat(exception.getMessage(), is("Description is empty."));
-    }
-    @Test
-    void should_throw_description_invalid_exception_given_whitespace_only_description() {
-        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("     ").build();
-        TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
-        when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("      ").build();
-        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
-        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
-        assertThat(exception.getMessage(), is("Description is empty."));
+        Exception exception = assertThrows(ContentInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
+        assertThat(exception.getMessage(), is("Content is empty."));
     }
 
     @Test
-    void should_throw_description_invalid_exception_given_duplicated_description() {
-        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("a homework").build();
+    void should_throw_content_invalid_exception_given_whitespace_only_content() {
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).content("     ").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
         when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("a homework").build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).content("      ").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
-        when(homeworkRepository.existsByDescription("a homework")).thenReturn(true);
+        Exception exception = assertThrows(ContentInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
+        assertThat(exception.getMessage(), is("Content is empty."));
+    }
 
-        Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
-        assertThat(exception.getMessage(), is("Description is duplicated."));
+    @Test
+    void should_throw_content_invalid_exception_given_duplicated_content() {
+        HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).content("a homework").build();
+        TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
+        when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).content("a homework").build();
+        when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
+        when(homeworkRepository.existsByContent("a homework")).thenReturn(true);
+
+        Exception exception = assertThrows(ContentInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
+        assertThat(exception.getMessage(), is("Content is duplicated."));
     }
 
     @Test
@@ -132,39 +132,6 @@ class HomeworkServiceTest {
         Exception exception = assertThrows(HomeworkNotFoundException.class,
                 () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
         assertThat(exception.getMessage(), is("Homework is not found."));
-    }
-
-    @Test
-    void should_throw_content_invalid_exception_given_null_content() {
-        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
-                HomeworkAnswerSubmitRequest.builder().content(null).studentId(1).build();
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(9).build();
-        when(homeworkRepository.findById(9)).thenReturn(Optional.of(homeworkEntity));
-        Exception exception = assertThrows(ContentInvalidException.class,
-                () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
-        assertThat(exception.getMessage(), is("Content is null."));
-    }
-
-    @Test
-    void should_throw_content_invalid_exception_given_empty_content() {
-        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
-                HomeworkAnswerSubmitRequest.builder().content("").studentId(1).build();
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(9).build();
-        when(homeworkRepository.findById(9)).thenReturn(Optional.of(homeworkEntity));
-        Exception exception = assertThrows(ContentInvalidException.class,
-                () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
-        assertThat(exception.getMessage(), is("Content is empty."));
-    }
-
-    @Test
-    void should_throw_content_invalid_exception_given_all_whitespace_content() {
-        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
-                HomeworkAnswerSubmitRequest.builder().content("        ").studentId(1).build();
-        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(9).build();
-        when(homeworkRepository.findById(9)).thenReturn(Optional.of(homeworkEntity));
-        Exception exception = assertThrows(ContentInvalidException.class,
-                () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
-        assertThat(exception.getMessage(), is("Content is empty."));
     }
 
 }

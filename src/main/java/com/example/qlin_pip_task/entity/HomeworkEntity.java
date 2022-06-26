@@ -31,7 +31,7 @@ public class HomeworkEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "homework_id_generator")
     @SequenceGenerator(name = "homework_id_generator", sequenceName = "homework_id_seq", allocationSize = 1)
     private Integer id;
-    private String description;
+    private String content;
 
     @CreationTimestamp
     private LocalDate createdAt;

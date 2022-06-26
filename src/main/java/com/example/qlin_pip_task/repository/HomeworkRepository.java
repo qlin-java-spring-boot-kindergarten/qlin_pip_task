@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HomeworkRepository extends JpaRepository<HomeworkEntity, Integer> {
 
-    boolean existsByDescription(String description);
+    boolean existsByContent(String content);
 
 }

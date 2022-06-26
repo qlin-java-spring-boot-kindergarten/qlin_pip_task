@@ -9,5 +9,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class HomeworkSubmitRequest {
     private Integer teacherId;
-    private String description;
+    private String content;
 }
