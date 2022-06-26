@@ -4,6 +4,7 @@ import com.example.qlin_pip_task.dto.request.HomeworkAnswerSubmitRequest;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.request.StudentHomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
+import com.example.qlin_pip_task.dto.response.StudentHomeworkGroupByIdAndDateAndClassResponses;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import org.mapstruct.Mapper;
@@ -21,5 +22,6 @@ public interface HomeworkMapper {
 
     StudentHomeworkEntity homeworkAnswerRequestToEntity(HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest);
 
-
+    StudentHomeworkGroupByIdAndDateAndClassResponses.StudentHomeworkResponse
+    homeworkEntityToGroupedStudentHomeworkResponse(StudentHomeworkEntity studentHomeworkEntity);
 }

@@ -3,6 +3,7 @@ package com.example.qlin_pip_task.service;
 import com.example.qlin_pip_task.dto.request.HomeworkAnswerSubmitRequest;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
+import com.example.qlin_pip_task.dto.response.StudentHomeworkGroupByIdAndDateAndClassResponses;
 import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
@@ -15,19 +16,29 @@ import com.example.qlin_pip_task.repository.HomeworkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class HomeworkService {
 
+    public static final String GRADE = "grade";
+    public static final String CLASSROOM = "classroom";
+    public static final String CREATED_AT = "created_at";
+    public static final String HOMEWORK_ID = "homework_id";
     private final HomeworkMapper homeworkMapper;
 
     private final HomeworkRepository homeworkRepository;
 
     private final StudentService studentService;
+
+    private final ClassService classService;
 
     private final TeacherService teacherService;
 
@@ -61,6 +72,43 @@ public class HomeworkService {
         List<StudentHomeworkEntity> studentHomeworkEntities = savedHomeworkEntity.getStudentHomework();
         Integer id = studentHomeworkEntities.get(studentHomeworkEntities.size() - 1).getId();
         return StudentHomeworkIdResponse.builder().id(id).build();
+    }
+
+    public StudentHomeworkGroupByIdAndDateAndClassResponses getStudentHomeworkByHomeworkIdAndClassIdAndDate(Map<String, String> queryMap) {
+        String gradeStr = queryMap.get(GRADE);
+
+        Integer grade = Integer.valueOf(gradeStr);
+        String classroomStr = queryMap.get(CLASSROOM);
+        Integer classroom = Integer.valueOf(classroomStr);
+        Integer classId = classService.getClassId(grade, classroom);
+        String createdAt = queryMap.get(CREATED_AT);
+        LocalDate createdDate = LocalDate.parse(createdAt);
+        String homeworkIdStr = queryMap.get(HOMEWORK_ID);
+        Integer homeworkId = Integer.valueOf(homeworkIdStr);
+        Optional<HomeworkEntity> optionalHomeworkEntity = homeworkRepository.findById(homeworkId);
+        if (optionalHomeworkEntity.isEmpty()) {
+            throw new HomeworkNotFoundException("Homework is not found");
+        }
+        HomeworkEntity homeworkEntity = optionalHomeworkEntity.get();
+        List<StudentHomeworkEntity> studentHomeworkEntityList = homeworkEntity.getStudentHomework();
+        List<StudentHomeworkEntity> list = studentHomeworkEntityList.stream().filter(studentHomeworkEntity ->
+                studentHomeworkEntity.getClassId().equals(classId)
+                        && studentHomeworkEntity.getCreatedAt().equals(createdDate)).collect(Collectors.toList());
+        List<StudentHomeworkGroupByIdAndDateAndClassResponses.StudentHomeworkResponse> responses = new ArrayList<>();
+        list.forEach(studentHomeworkEntity -> {
+            StudentHomeworkGroupByIdAndDateAndClassResponses.StudentHomeworkResponse studentHomeworkResponse =
+                    homeworkMapper.homeworkEntityToGroupedStudentHomeworkResponse(studentHomeworkEntity);
+            studentHomeworkResponse.setStudentId(studentHomeworkEntity.getStudentEntity().getId());
+            responses.add(studentHomeworkResponse);
+        });
+
+        return StudentHomeworkGroupByIdAndDateAndClassResponses.builder()
+                .homeworkId(homeworkId)
+                .grade(grade)
+                .classroom(classroom)
+                .createdAt(createdAt)
+                .studentHomeworkList(responses)
+                .build();
     }
 
     private void checkIfStudentHomeworkContentIsDuplicated(List<StudentHomeworkEntity> studentHomeworkEntityList, String content, Integer studentId) {

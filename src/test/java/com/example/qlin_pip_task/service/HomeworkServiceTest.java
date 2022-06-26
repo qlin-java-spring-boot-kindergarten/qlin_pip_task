@@ -4,6 +4,7 @@ package com.example.qlin_pip_task.service;
 import com.example.qlin_pip_task.dto.request.HomeworkAnswerSubmitRequest;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
+import com.example.qlin_pip_task.dto.response.StudentHomeworkGroupByIdAndDateAndClassResponses;
 import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
@@ -19,8 +20,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -38,6 +42,8 @@ class HomeworkServiceTest {
     private TeacherService teacherService;
     @Mock
     private StudentService studentService;
+    @Mock
+    private ClassService classService;
 
     @InjectMocks
     private HomeworkService homeworkService;
@@ -102,6 +108,7 @@ class HomeworkServiceTest {
         Exception exception = assertThrows(ContentInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
         assertThat(exception.getMessage(), is("Content is duplicated."));
     }
+
     @Test
     void should_save_student_homework_and_return_its_id_given_valid_student_id_and_homework_content() {
         HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
@@ -147,5 +154,38 @@ class HomeworkServiceTest {
                 () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
         assertThat(exception.getMessage(), is("Content is duplicated."));
     }
+
+
+    @Test
+    void should_return_grouped_student_homework_by_date_and_class_id_and_homework_id() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("homework_id", "1");
+        queryMap.put("grade", "2");
+        queryMap.put("classroom", "3");
+        queryMap.put("created_at", "2022-06-25");
+        when(classService.getClassId(2, 3)).thenReturn(4);
+        StudentHomeworkEntity studentHomeworkEntity = StudentHomeworkEntity.builder()
+                .createdAt(LocalDate.parse("2022-06-25"))
+                .classId(4)
+                .content("homework content")
+                .studentEntity(StudentEntity.builder().id(99).build()).build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(1).studentHomework(List.of(studentHomeworkEntity)).build();
+        when(homeworkRepository.findById(1)).thenReturn(Optional.of(homeworkEntity));
+        StudentHomeworkGroupByIdAndDateAndClassResponses.StudentHomeworkResponse studentHomeworkResponse =
+                StudentHomeworkGroupByIdAndDateAndClassResponses.StudentHomeworkResponse.builder()
+                        .studentId(99)
+                        .content("homework content")
+                        .build();
+        when(homeworkMapper.homeworkEntityToGroupedStudentHomeworkResponse(studentHomeworkEntity)).thenReturn(studentHomeworkResponse);
+
+        StudentHomeworkGroupByIdAndDateAndClassResponses studentHomeworkByHomeworkIdAndClassIdAndDate =
+                homeworkService.getStudentHomeworkByHomeworkIdAndClassIdAndDate(queryMap);
+
+        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getHomeworkId(), is(1));
+        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getGrade(), is(2));
+        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getClassroom(), is(3));
+        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getCreatedAt(), is("2022-06-25"));
+    }
+
 
 }
