@@ -13,6 +13,7 @@ import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkTypeNotExistsException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
+import com.example.qlin_pip_task.exception.StudentInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.mapper.StudentMapper;
@@ -25,6 +26,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -81,6 +83,9 @@ public class StudentService {
     }
 
     public StudentEntity getNotNullStudentEntity(Integer studentId) {
+        if (Objects.isNull(studentId)) {
+            throw new StudentInvalidException("Student id is null.");
+        }
         Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(studentId);
         if (optionalStudentEntity.isEmpty()) {
             throw new StudentNotFoundException("Student is not found.");
