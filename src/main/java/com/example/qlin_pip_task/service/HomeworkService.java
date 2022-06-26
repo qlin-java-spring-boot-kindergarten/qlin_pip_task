@@ -8,6 +8,7 @@ import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
+import com.example.qlin_pip_task.exception.ContentInvalidException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
@@ -46,6 +47,12 @@ public class HomeworkService {
         HomeworkEntity homeworkEntity = getNotNullHomeworkEntity(homeworkId);
         Integer studentId = homeworkAnswerSubmitRequest.getStudentId();
         StudentEntity studentEntity = studentService.getNotNullStudentEntity(studentId);
+
+        String content = homeworkAnswerSubmitRequest.getContent();
+        if (Objects.isNull(content)) {
+            throw new ContentInvalidException("Content is null.");
+        }
+
         studentEntity.setId(studentId);
         Integer classId = studentEntity.getClassId();
         StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.homeworkAnswerRequestToEntity(homeworkAnswerSubmitRequest);

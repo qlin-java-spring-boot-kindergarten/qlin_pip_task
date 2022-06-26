@@ -10,8 +10,8 @@ import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
+import com.example.qlin_pip_task.exception.ContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
-import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkTypeNotExistsException;
 import com.example.qlin_pip_task.exception.StudentInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
@@ -259,7 +259,7 @@ class StudentServiceTest {
         StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
                 .studentHomework(List.of(StudentHomeworkEntity.builder().homeworkEntity(HomeworkEntity.builder().id(1).build()).build())).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
-        Exception exception = assertThrows(HomeworkContentInvalidException.class,
+        Exception exception = assertThrows(ContentInvalidException.class,
                 () -> studentService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }
@@ -269,7 +269,7 @@ class StudentServiceTest {
         StudentEntity studentEntity1 = StudentEntity.builder().id(1).name("student1")
                 .studentHomework(List.of(StudentHomeworkEntity.builder().homeworkEntity(HomeworkEntity.builder().id(1).build()).build())).build();
         when(studentRepository.findById(1)).thenReturn(Optional.of(studentEntity1));
-        Exception exception = assertThrows(HomeworkContentInvalidException.class,
+        Exception exception = assertThrows(ContentInvalidException.class,
                 () -> studentService.updateStudentHomework(1, StudentHomeworkSubmitRequest.builder().content("").homeworkId(1).build()));
         assertTrue(exception.getMessage().contains("Homework content is invalid."));
     }

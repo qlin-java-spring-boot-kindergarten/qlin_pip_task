@@ -9,8 +9,8 @@ import com.example.qlin_pip_task.dto.response.StudentResponses;
 import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
+import com.example.qlin_pip_task.exception.ContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
-import com.example.qlin_pip_task.exception.HomeworkContentInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkTypeNotExistsException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
 import com.example.qlin_pip_task.exception.StudentInvalidException;
@@ -145,7 +145,7 @@ public class StudentService {
 
     private void checkIfHomeworkContentIsValid(StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest) {
         if (updateStudentHomeworkSubmitRequest.getContent() == null || updateStudentHomeworkSubmitRequest.getContent().equals("")) {
-            throw new HomeworkContentInvalidException("Homework content is invalid.");
+            throw new ContentInvalidException("Homework content is invalid.");
         }
     }
 

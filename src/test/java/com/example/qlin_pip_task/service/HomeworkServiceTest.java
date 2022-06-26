@@ -9,6 +9,7 @@ import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
+import com.example.qlin_pip_task.exception.ContentInvalidException;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
@@ -131,6 +132,17 @@ class HomeworkServiceTest {
         Exception exception = assertThrows(HomeworkNotFoundException.class,
                 () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
         assertThat(exception.getMessage(), is("Homework is not found."));
+    }
+
+    @Test
+    void should_throw_content_invalid_exception_given_null_content() {
+        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
+                HomeworkAnswerSubmitRequest.builder().content(null).studentId(1).build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(9).build();
+        when(homeworkRepository.findById(9)).thenReturn(Optional.of(homeworkEntity));
+        Exception exception = assertThrows(ContentInvalidException.class,
+                () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
+        assertThat(exception.getMessage(), is("Content is null."));
     }
 
 }
