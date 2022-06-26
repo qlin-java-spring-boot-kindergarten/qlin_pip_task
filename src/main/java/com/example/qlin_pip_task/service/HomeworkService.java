@@ -54,8 +54,8 @@ public class HomeworkService {
         studentHomeworkEntity.setClassId(classId);
         studentHomeworkEntityList.add(studentHomeworkEntity);
         HomeworkEntity savedHomeworkEntity = homeworkRepository.save(homeworkEntity);
-        List<StudentHomeworkEntity> homeworkEntityList = savedHomeworkEntity.getStudentHomework();
-        Integer id = homeworkEntityList.get(homeworkEntityList.size() - 1).getId();
+        List<StudentHomeworkEntity> studentHomeworkEntities = savedHomeworkEntity.getStudentHomework();
+        Integer id = studentHomeworkEntities.get(studentHomeworkEntities.size() - 1).getId();
         return StudentHomeworkIdResponse.builder().id(id).build();
     }
 
