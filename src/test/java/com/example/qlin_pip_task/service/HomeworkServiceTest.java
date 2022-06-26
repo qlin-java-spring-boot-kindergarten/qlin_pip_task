@@ -102,7 +102,6 @@ class HomeworkServiceTest {
         Exception exception = assertThrows(ContentInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
         assertThat(exception.getMessage(), is("Content is duplicated."));
     }
-
     @Test
     void should_save_student_homework_and_return_its_id_given_valid_student_id_and_homework_content() {
         HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
@@ -132,6 +131,21 @@ class HomeworkServiceTest {
         Exception exception = assertThrows(HomeworkNotFoundException.class,
                 () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
         assertThat(exception.getMessage(), is("Homework is not found."));
+    }
+
+    @Test
+    void should_throw_content_invalid_exception_given_a_student_submit_a_duplicated_student_homework_content() {
+        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
+                HomeworkAnswerSubmitRequest.builder().content("content").studentId(1).build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(9)
+                .studentHomework(List.of(
+                        StudentHomeworkEntity.builder()
+                                .studentEntity(
+                                        StudentEntity.builder().id(1).build()).content("content").build())).build();
+        when(homeworkRepository.findById(9)).thenReturn(Optional.of(homeworkEntity));
+        Exception exception = assertThrows(ContentInvalidException.class,
+                () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
+        assertThat(exception.getMessage(), is("Content is duplicated."));
     }
 
 }

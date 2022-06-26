@@ -44,21 +44,15 @@ public class HomeworkService {
 
     public StudentHomeworkIdResponse createStudentHomework(Integer homeworkId, HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest) {
         HomeworkEntity homeworkEntity = getNotNullHomeworkEntity(homeworkId);
+        List<StudentHomeworkEntity> studentHomeworkEntityList = homeworkEntity.getStudentHomework();
         Integer studentId = homeworkAnswerSubmitRequest.getStudentId();
-        StudentEntity studentEntity = studentService.getNotNullStudentEntity(studentId);
-
         String content = homeworkAnswerSubmitRequest.getContent();
-        if (Objects.isNull(content)) {
-            throw new ContentInvalidException("Content is null.");
-        }
-        if (content.isBlank()) {
-            throw new ContentInvalidException("Content is empty.");
-        }
-
+        checkIfContentIsValid(content);
+        checkIfStudentHomeworkContentIsDuplicated(studentHomeworkEntityList, content, studentId);
+        StudentEntity studentEntity = studentService.getNotNullStudentEntity(studentId);
         studentEntity.setId(studentId);
         Integer classId = studentEntity.getClassId();
         StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.homeworkAnswerRequestToEntity(homeworkAnswerSubmitRequest);
-        List<StudentHomeworkEntity> studentHomeworkEntityList = homeworkEntity.getStudentHomework();
         studentHomeworkEntity.setHomeworkEntity(homeworkEntity);
         studentHomeworkEntity.setStudentEntity(studentEntity);
         studentHomeworkEntity.setClassId(classId);
@@ -67,6 +61,15 @@ public class HomeworkService {
         List<StudentHomeworkEntity> studentHomeworkEntities = savedHomeworkEntity.getStudentHomework();
         Integer id = studentHomeworkEntities.get(studentHomeworkEntities.size() - 1).getId();
         return StudentHomeworkIdResponse.builder().id(id).build();
+    }
+
+    private void checkIfStudentHomeworkContentIsDuplicated(List<StudentHomeworkEntity> studentHomeworkEntityList, String content, Integer studentId) {
+        for (StudentHomeworkEntity studentHomeworkEntity : studentHomeworkEntityList) {
+            if (studentHomeworkEntity.getContent().equals(content)
+                    && studentHomeworkEntity.getStudentEntity().getId().equals(studentId)) {
+                throw new ContentInvalidException("Content is duplicated.");
+            }
+        }
     }
 
     private HomeworkEntity getNotNullHomeworkEntity(Integer homeworkId) {
