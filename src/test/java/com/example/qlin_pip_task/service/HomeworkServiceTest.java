@@ -1,9 +1,13 @@
 package com.example.qlin_pip_task.service;
 
 
+import com.example.qlin_pip_task.dto.request.HomeworkAnswerSubmitRequest;
 import com.example.qlin_pip_task.dto.request.HomeworkSubmitRequest;
 import com.example.qlin_pip_task.dto.response.HomeworkIdResponse;
+import com.example.qlin_pip_task.dto.response.StudentHomeworkIdResponse;
 import com.example.qlin_pip_task.entity.HomeworkEntity;
+import com.example.qlin_pip_task.entity.StudentEntity;
+import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
@@ -13,6 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -27,6 +35,8 @@ class HomeworkServiceTest {
     private HomeworkRepository homeworkRepository;
     @Mock
     private TeacherService teacherService;
+    @Mock
+    private StudentService studentService;
 
     @InjectMocks
     private HomeworkService homeworkService;
@@ -89,6 +99,28 @@ class HomeworkServiceTest {
 
         Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
         assertThat(exception.getMessage(), is("Description is duplicated."));
+    }
+
+    @Test
+    void should_save_student_homework_and_return_its_id_given_valid_student_id_and_homework_content() {
+        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
+                HomeworkAnswerSubmitRequest.builder().studentId(1).content("this is an answer").build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(3).studentHomework(new ArrayList<>()).build();
+        when(homeworkRepository.findById(9)).thenReturn(Optional.of(homeworkEntity));
+        StudentEntity studentEntity = StudentEntity.builder().id(1).name("student").classId(2).build();
+        when(studentService.getNotNullStudentEntity(1)).thenReturn(studentEntity);
+        StudentHomeworkEntity studentHomeworkEntity =
+                StudentHomeworkEntity.builder().content("this is an answer").studentEntity(studentEntity).build();
+        when(homeworkMapper.homeworkAnswerRequestToEntity(homeworkAnswerSubmitRequest)).thenReturn(studentHomeworkEntity);
+        StudentHomeworkEntity savedStudentHomeworkEntity = StudentHomeworkEntity.builder().id(100)
+                .studentEntity(StudentEntity.builder().id(1).classId(2).studentHomework(List.of(studentHomeworkEntity)).build()).build();
+        HomeworkEntity savedHomeworkEntity = HomeworkEntity.builder().id(3).studentHomework(List.of(savedStudentHomeworkEntity)).build();
+        when(homeworkRepository.save(homeworkEntity)).thenReturn(savedHomeworkEntity);
+
+        StudentHomeworkIdResponse result = homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest);
+
+        assertThat(result.getId(), is(100));
+
     }
 
 }

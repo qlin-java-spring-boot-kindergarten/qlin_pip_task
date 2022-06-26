@@ -55,7 +55,7 @@ public class StudentService {
     }
 
     public StudentResponses.StudentResponse getStudentById(Integer id) {
-        StudentEntity studentEntity = getNotNullableStudentEntity(id);
+        StudentEntity studentEntity = getNotNullStudentEntity(id);
         Integer classId = studentEntity.getClassId();
         ClassEntity classEntity = classService.getClassEntityById(classId);
         return studentMapper.entityToStudentResponse(studentEntity, classEntity);
@@ -68,7 +68,7 @@ public class StudentService {
     }
 
     public HomeworkIdResponse createStudentHomework(Integer id, StudentHomeworkSubmitRequest studentHomeworkSubmitRequest) {
-        StudentEntity studentEntity = getNotNullableStudentEntity(id);
+        StudentEntity studentEntity = getNotNullStudentEntity(id);
         List<StudentHomeworkEntity> theStudentHomeworkList = studentEntity.getStudentHomework();
         checkIfHomeworkAlreadyExisted(theStudentHomeworkList, studentHomeworkSubmitRequest.getHomeworkId());
         StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.studentHomeworkRequestToEntity(studentHomeworkSubmitRequest);
@@ -80,8 +80,8 @@ public class StudentService {
         return homeworkMapper.homeworkEntityToHomeworkIdResponse(theHomeEntity);
     }
 
-    private StudentEntity getNotNullableStudentEntity(Integer id) {
-        Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(id);
+    public StudentEntity getNotNullStudentEntity(Integer studentId) {
+        Optional<StudentEntity> optionalStudentEntity = studentRepository.findById(studentId);
         if (optionalStudentEntity.isEmpty()) {
             throw new StudentNotFoundException("Student is not found.");
         }
@@ -115,7 +115,7 @@ public class StudentService {
     }
 
     public void updateStudentHomework(Integer id, StudentHomeworkSubmitRequest updateStudentHomeworkSubmitRequest) {
-        StudentEntity studentEntity = getNotNullableStudentEntity(id);
+        StudentEntity studentEntity = getNotNullStudentEntity(id);
         List<StudentEntity> allStudentEntitiesList = studentRepository.findAll();
         checkIfTheHomeworkSubmitRequestIsValid(updateStudentHomeworkSubmitRequest, allStudentEntitiesList);
         List<StudentHomeworkEntity> homeworkList = studentEntity.getStudentHomework();

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -36,5 +37,6 @@ public class TeacherEntity {
     private ClassEntity classId;
 
     @OneToMany(mappedBy = "teacherEntity", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<HomeworkEntity> homework;
 }
