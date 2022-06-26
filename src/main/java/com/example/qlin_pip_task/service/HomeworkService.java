@@ -52,6 +52,9 @@ public class HomeworkService {
         if (Objects.isNull(content)) {
             throw new ContentInvalidException("Content is null.");
         }
+        if (content.isEmpty()) {
+            throw new ContentInvalidException("Content is empty.");
+        }
 
         studentEntity.setId(studentId);
         Integer classId = studentEntity.getClassId();
