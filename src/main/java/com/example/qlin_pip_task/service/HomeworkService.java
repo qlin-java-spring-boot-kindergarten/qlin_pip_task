@@ -32,7 +32,7 @@ public class HomeworkService {
 
     public HomeworkIdResponse createHomework(HomeworkSubmitRequest homeworkSubmitRequest) {
         Integer teacherId = homeworkSubmitRequest.getTeacherId();
-        TeacherEntity teacherEntity = teacherService.getNonNullTeacherEntity(teacherId);
+        TeacherEntity teacherEntity = teacherService.getNotNullTeacherEntity(teacherId);
         HomeworkEntity homeworkEntity = homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest);
         homeworkEntity.setTeacherEntity(teacherEntity);
         String description = homeworkSubmitRequest.getDescription();

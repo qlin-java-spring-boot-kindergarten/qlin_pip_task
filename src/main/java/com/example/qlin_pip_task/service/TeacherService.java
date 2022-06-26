@@ -16,7 +16,7 @@ public class TeacherService {
 
     private final TeacherRepository teacherRepository;
 
-    public TeacherEntity getNonNullTeacherEntity(Integer teacherId) {
+    public TeacherEntity getNotNullTeacherEntity(Integer teacherId) {
         if (Objects.isNull(teacherId)) {
             throw new TeacherIdInvalidException("Teacher id is invalid.");
         }

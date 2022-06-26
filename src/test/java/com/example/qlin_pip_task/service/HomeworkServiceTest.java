@@ -46,7 +46,7 @@ class HomeworkServiceTest {
     void should_return_homeworkId_when_create_new_homework_successfully() {
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("a homework").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
-        when(teacherService.getNonNullTeacherEntity(1)).thenReturn(teacherEntity);
+        when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("a homework").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
         HomeworkEntity savedHomeworkEntity = HomeworkEntity.builder().id(99).teacherEntity(teacherEntity).description("a homework").build();
@@ -60,7 +60,7 @@ class HomeworkServiceTest {
     void should_throw_description_invalid_exception_given_null_description() {
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description(null).build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
-        when(teacherService.getNonNullTeacherEntity(1)).thenReturn(teacherEntity);
+        when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description(null).build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
         Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
@@ -71,7 +71,7 @@ class HomeworkServiceTest {
     void should_throw_description_invalid_exception_given_empty_description() {
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
-        when(teacherService.getNonNullTeacherEntity(1)).thenReturn(teacherEntity);
+        when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
         Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
@@ -81,7 +81,7 @@ class HomeworkServiceTest {
     void should_throw_description_invalid_exception_given_whitespace_only_description() {
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("     ").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
-        when(teacherService.getNonNullTeacherEntity(1)).thenReturn(teacherEntity);
+        when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("      ").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
         Exception exception = assertThrows(DescriptionInvalidException.class, () -> homeworkService.createHomework(homeworkSubmitRequest));
@@ -92,7 +92,7 @@ class HomeworkServiceTest {
     void should_throw_description_invalid_exception_given_duplicated_description() {
         HomeworkSubmitRequest homeworkSubmitRequest = HomeworkSubmitRequest.builder().teacherId(1).description("a homework").build();
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).build();
-        when(teacherService.getNonNullTeacherEntity(1)).thenReturn(teacherEntity);
+        when(teacherService.getNotNullTeacherEntity(1)).thenReturn(teacherEntity);
         HomeworkEntity homeworkEntity = HomeworkEntity.builder().teacherEntity(teacherEntity).description("a homework").build();
         when(homeworkMapper.homeworkRequestToEntity(homeworkSubmitRequest)).thenReturn(homeworkEntity);
         when(homeworkRepository.existsByDescription("a homework")).thenReturn(true);

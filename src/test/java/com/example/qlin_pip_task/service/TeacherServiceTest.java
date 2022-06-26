@@ -31,14 +31,14 @@ class TeacherServiceTest {
 
     @Test
     void should_throw_teacher_id_invalid_exception_given_null_teacher_id() {
-        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> teacherService.getNonNullTeacherEntity(null));
+        Exception exception = assertThrows(TeacherIdInvalidException.class, () -> teacherService.getNotNullTeacherEntity(null));
         assertThat(exception.getMessage(), is("Teacher id is invalid."));
     }
 
     @Test
     void should_throw_teacher_not_found_exception_given_teacher_id() {
         when(teacherRepository.findById(1)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(TeacherNoFoundException.class, () -> teacherService.getNonNullTeacherEntity(1));
+        Exception exception = assertThrows(TeacherNoFoundException.class, () -> teacherService.getNotNullTeacherEntity(1));
         assertThat(exception.getMessage(), is("Teacher does not exist."));
     }
 
@@ -46,7 +46,7 @@ class TeacherServiceTest {
     void should_return_teacher_entity_given_valid_id() {
         TeacherEntity teacherEntity = TeacherEntity.builder().id(1).name("teacher").classId(ClassEntity.builder().id(1).build()).build();
         when(teacherRepository.findById(1)).thenReturn(Optional.of(teacherEntity));
-        TeacherEntity result = teacherService.getNonNullTeacherEntity(1);
+        TeacherEntity result = teacherService.getNotNullTeacherEntity(1);
         assertThat(result.getId(), is(1));
         assertThat(result.getName(), is("teacher"));
         assertThat(result.getClassId().getId(), is(1));
