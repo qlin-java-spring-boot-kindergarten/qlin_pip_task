@@ -10,6 +10,7 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
+import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
 import org.junit.jupiter.api.Test;
@@ -120,7 +121,16 @@ class HomeworkServiceTest {
         StudentHomeworkIdResponse result = homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest);
 
         assertThat(result.getId(), is(100));
+    }
 
+    @Test
+    void should_throw_homework_not_found_exception_when_optional_homework_entity_is_empty_given_homework_id() {
+        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
+                HomeworkAnswerSubmitRequest.builder().content("answer").studentId(1).build();
+        when(homeworkRepository.findById(9)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(HomeworkNotFoundException.class,
+                () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
+        assertThat(exception.getMessage(), is("Homework is not found."));
     }
 
 }

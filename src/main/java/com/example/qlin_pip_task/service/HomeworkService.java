@@ -9,6 +9,7 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.DescriptionInvalidException;
+import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,9 @@ public class HomeworkService {
 
     private HomeworkEntity getNotNullHomeworkEntity(Integer homeworkId) {
         Optional<HomeworkEntity> optionalHomeworkEntity = homeworkRepository.findById(homeworkId);
+        if (optionalHomeworkEntity.isEmpty()) {
+            throw new HomeworkNotFoundException("Homework is not found.");
+        }
         return optionalHomeworkEntity.get();
     }
 
