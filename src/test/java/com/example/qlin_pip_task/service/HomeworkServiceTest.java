@@ -156,4 +156,15 @@ class HomeworkServiceTest {
         assertThat(exception.getMessage(), is("Content is empty."));
     }
 
+    @Test
+    void should_throw_content_invalid_exception_given_all_whitespace_content() {
+        HomeworkAnswerSubmitRequest homeworkAnswerSubmitRequest =
+                HomeworkAnswerSubmitRequest.builder().content("        ").studentId(1).build();
+        HomeworkEntity homeworkEntity = HomeworkEntity.builder().id(9).build();
+        when(homeworkRepository.findById(9)).thenReturn(Optional.of(homeworkEntity));
+        Exception exception = assertThrows(ContentInvalidException.class,
+                () -> homeworkService.createStudentHomework(9, homeworkAnswerSubmitRequest));
+        assertThat(exception.getMessage(), is("Content is empty."));
+    }
+
 }

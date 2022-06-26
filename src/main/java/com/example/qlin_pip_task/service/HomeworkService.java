@@ -52,7 +52,7 @@ public class HomeworkService {
         if (Objects.isNull(content)) {
             throw new ContentInvalidException("Content is null.");
         }
-        if (content.isEmpty()) {
+        if (content.isBlank()) {
             throw new ContentInvalidException("Content is empty.");
         }
 
