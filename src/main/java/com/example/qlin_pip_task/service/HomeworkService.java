@@ -82,6 +82,7 @@ public class HomeworkService {
         String classroomStr = queryMap.get(CLASSROOM);
         classService.checkIfClassroomStrIsValid(classroomStr);
         Integer classroom = Integer.valueOf(classroomStr);
+        classService.checkIfClassroomIsValid(classroom);
         Integer classId = classService.getClassId(grade, classroom);
         String createdAt = queryMap.get(CREATED_AT);
         LocalDate createdDate = LocalDate.parse(createdAt);

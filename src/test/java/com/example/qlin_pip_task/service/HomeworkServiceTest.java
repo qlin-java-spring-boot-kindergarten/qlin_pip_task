@@ -167,6 +167,7 @@ class HomeworkServiceTest {
         doNothing().when(classService).checkIfGradeStrIsValid("2");
         doNothing().when(classService).checkIfGradeIsValid(2);
         doNothing().when(classService).checkIfClassroomStrIsValid("3");
+        doNothing().when(classService).checkIfClassroomIsValid(3);
         when(classService.getClassId(2, 3)).thenReturn(4);
         StudentHomeworkEntity studentHomeworkEntity = StudentHomeworkEntity.builder()
                 .createdAt(LocalDate.parse("2022-06-25"))
