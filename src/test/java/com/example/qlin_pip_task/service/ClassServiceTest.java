@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
+import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.repository.ClassRepository;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.security.InvalidParameterException;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,25 +30,25 @@ class ClassServiceTest {
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_smaller_than_one() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfClassroomIsValid(0));
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> classService.checkIfClassroomIsValid(0));
         assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
 
     @Test
     void should_throw_classroom_invalid_exception_when_classroom_is_larger_than_twenty() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfClassroomIsValid(21));
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> classService.checkIfClassroomIsValid(21));
         assertTrue(exception.getMessage().contains("Classroom is invalid."));
     }
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_larger_than_nine() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfGradeIsValid(10));
+        Exception exception = assertThrows(GradeInvalidException.class, () -> classService.checkIfGradeIsValid(10));
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
     @Test
     void should_throw_grade_invalid_exception_when_grade_is_smaller_than_one() {
-        Exception exception = assertThrows(InvalidParameterException.class, () -> classService.checkIfGradeIsValid(0));
+        Exception exception = assertThrows(GradeInvalidException.class, () -> classService.checkIfGradeIsValid(0));
         assertTrue(exception.getMessage().contains("Grade is invalid."));
     }
 
