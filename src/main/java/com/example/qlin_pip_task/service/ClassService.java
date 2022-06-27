@@ -21,6 +21,11 @@ public class ClassService {
         if (Objects.isNull(gradeStr)) {
             throw new GradeInvalidException("Grade is null.");
         }
+        try {
+            Integer.parseInt(gradeStr);
+        } catch (NumberFormatException e) {
+            throw new GradeInvalidException("Grade is invalid.");
+        }
     }
 
 

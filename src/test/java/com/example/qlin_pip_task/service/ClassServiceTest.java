@@ -91,4 +91,10 @@ class ClassServiceTest {
         assertThat(exception.getMessage(), is("Grade is null."));
     }
 
+    @Test
+    void should_throw_grade_invalid_exception_given_non_numeric_grade_string() {
+        Exception exception = assertThrows(GradeInvalidException.class, () -> classService.checkIfGradeStrIsValid("not a integer"));
+        assertThat(exception.getMessage(), is("Grade is invalid."));
+    }
+
 }

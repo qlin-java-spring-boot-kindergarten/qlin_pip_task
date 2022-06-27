@@ -30,6 +30,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -163,6 +164,7 @@ class HomeworkServiceTest {
         queryMap.put("grade", "2");
         queryMap.put("classroom", "3");
         queryMap.put("created_at", "2022-06-25");
+        doNothing().when(classService).checkIfGradeStrIsValid("2");
         when(classService.getClassId(2, 3)).thenReturn(4);
         StudentHomeworkEntity studentHomeworkEntity = StudentHomeworkEntity.builder()
                 .createdAt(LocalDate.parse("2022-06-25"))
