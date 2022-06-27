@@ -76,7 +76,7 @@ public class HomeworkService {
 
     public StudentHomeworkGroupByIdAndDateAndClassResponses getStudentHomeworkByHomeworkIdAndClassIdAndDate(Map<String, String> queryMap) {
         String gradeStr = queryMap.get(GRADE);
-
+        classService.checkIfGradeStrIsValid(gradeStr);
         Integer grade = Integer.valueOf(gradeStr);
         String classroomStr = queryMap.get(CLASSROOM);
         Integer classroom = Integer.valueOf(classroomStr);

@@ -8,6 +8,7 @@ import com.example.qlin_pip_task.repository.ClassRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -15,6 +16,12 @@ import java.util.Optional;
 public class ClassService {
 
     private final ClassRepository classRepository;
+
+    public void checkIfGradeStrIsValid(String gradeStr) {
+        if (Objects.isNull(gradeStr)) {
+            throw new GradeInvalidException("Grade is null.");
+        }
+    }
 
 
     public Integer getClassId(Integer grade, Integer classroom) {

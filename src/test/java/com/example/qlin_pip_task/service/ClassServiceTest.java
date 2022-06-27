@@ -2,6 +2,7 @@ package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.exception.ClassNotExistsException;
+import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.repository.ClassRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,6 +85,12 @@ class ClassServiceTest {
         assertThat(result.getGrade(), is(1));
         assertThat(result.getClassroom(), is(1));
 
+    }
+
+    @Test
+    void should_throw_grade_invalid_exception_given_null_grade_string() {
+        Exception exception = assertThrows(GradeInvalidException.class, () -> classService.checkIfGradeStrIsValid(null));
+        assertThat(exception.getMessage(), is("Grade is null."));
     }
 
 }
