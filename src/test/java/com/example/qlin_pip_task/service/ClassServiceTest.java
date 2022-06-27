@@ -103,4 +103,10 @@ class ClassServiceTest {
         assertThat(exception.getMessage(), is("Classroom is null."));
     }
 
+    @Test
+    void should_throw_classroom_invalid_exception_given_non_numeric_classroom_string() {
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> classService.checkIfClassroomStrIsValid("int"));
+        assertThat(exception.getMessage(), is("Classroom is invalid."));
+    }
+
 }
