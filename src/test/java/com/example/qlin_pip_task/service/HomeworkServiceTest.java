@@ -11,6 +11,7 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ContentInvalidException;
+import com.example.qlin_pip_task.exception.DateInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
@@ -187,5 +188,16 @@ class HomeworkServiceTest {
         assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getCreatedAt(), is("2022-06-25"));
     }
 
+    @Test
+    void should_throw_date_invalid_exception_given_null_date() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("homework_id", "1");
+        queryMap.put("grade", "2");
+        queryMap.put("classroom", "3");
+        queryMap.put("created_at", null);
+        when(classService.getValidClassId("2", "3")).thenReturn(4);
+        Exception exception = assertThrows(DateInvalidException.class, () -> homeworkService.getStudentHomeworkByHomeworkIdAndClassIdAndDate(queryMap));
+        assertThat(exception.getMessage(), is("Date is null."));
+    }
 
 }

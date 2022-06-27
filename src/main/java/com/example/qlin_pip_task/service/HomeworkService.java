@@ -10,6 +10,7 @@ import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.entity.TeacherEntity;
 import com.example.qlin_pip_task.exception.ContentInvalidException;
+import com.example.qlin_pip_task.exception.DateInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
@@ -79,6 +80,9 @@ public class HomeworkService {
         String classroomStr = queryMap.get(CLASSROOM);
         Integer classId = classService.getValidClassId(gradeStr, classroomStr);
         String createdAt = queryMap.get(CREATED_AT);
+        if (Objects.isNull(createdAt)) {
+            throw new DateInvalidException("Date is null.");
+        }
         LocalDate createdDate = LocalDate.parse(createdAt);
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);
         Integer homeworkId = Integer.valueOf(homeworkIdStr);
