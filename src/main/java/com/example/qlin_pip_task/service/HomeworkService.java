@@ -78,6 +78,7 @@ public class HomeworkService {
         String gradeStr = queryMap.get(GRADE);
         classService.checkIfGradeStrIsValid(gradeStr);
         Integer grade = Integer.valueOf(gradeStr);
+        classService.checkIfGradeIsValid(grade);
         String classroomStr = queryMap.get(CLASSROOM);
         Integer classroom = Integer.valueOf(classroomStr);
         Integer classId = classService.getClassId(grade, classroom);

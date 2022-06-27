@@ -165,6 +165,7 @@ class HomeworkServiceTest {
         queryMap.put("classroom", "3");
         queryMap.put("created_at", "2022-06-25");
         doNothing().when(classService).checkIfGradeStrIsValid("2");
+        doNothing().when(classService).checkIfGradeIsValid(2);
         when(classService.getClassId(2, 3)).thenReturn(4);
         StudentHomeworkEntity studentHomeworkEntity = StudentHomeworkEntity.builder()
                 .createdAt(LocalDate.parse("2022-06-25"))
