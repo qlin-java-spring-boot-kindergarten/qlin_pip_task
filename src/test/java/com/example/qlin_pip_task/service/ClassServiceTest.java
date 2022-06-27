@@ -97,4 +97,10 @@ class ClassServiceTest {
         assertThat(exception.getMessage(), is("Grade is invalid."));
     }
 
+    @Test
+    void should_throw_classroom_invalid_exception_given_null_classroom_string() {
+        Exception exception = assertThrows(ClassroomInvalidException.class, () -> classService.checkIfClassroomStrIsValid(null));
+        assertThat(exception.getMessage(), is("Classroom is null."));
+    }
+
 }

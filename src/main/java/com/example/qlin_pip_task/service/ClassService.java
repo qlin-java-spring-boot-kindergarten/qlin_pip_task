@@ -17,6 +17,12 @@ public class ClassService {
 
     private final ClassRepository classRepository;
 
+    public void checkIfClassroomStrIsValid(String classroomStr) {
+        if (Objects.isNull(classroomStr)) {
+            throw new ClassroomInvalidException("Classroom is null.");
+        }
+    }
+
     public void checkIfGradeStrIsValid(String gradeStr) {
         if (Objects.isNull(gradeStr)) {
             throw new GradeInvalidException("Grade is null.");
@@ -52,9 +58,9 @@ public class ClassService {
             throw new ClassroomInvalidException("Classroom is invalid.");
         }
     }
-
     // Assume that all the class data in the class table has been validated when the data is recorded
     // Therefore, no need to handle the empty Optional of ClassEntity
+
     public ClassEntity getClassEntityById(Integer classId) {
         Optional<ClassEntity> optionalClassEntity = classRepository.findById(classId);
         return optionalClassEntity.get();
