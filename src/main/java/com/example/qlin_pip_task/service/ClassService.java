@@ -17,6 +17,16 @@ public class ClassService {
 
     private final ClassRepository classRepository;
 
+    public Integer getValidClassId(String gradeStr, String classroomStr) {
+        checkIfGradeStrIsValid(gradeStr);
+        Integer grade = Integer.valueOf(gradeStr);
+        checkIfGradeIsValid(grade);
+        checkIfClassroomStrIsValid(classroomStr);
+        Integer classroom = Integer.valueOf(classroomStr);
+        checkIfClassroomIsValid(classroom);
+        return getClassId(grade, classroom);
+    }
+
     public void checkIfClassroomStrIsValid(String classroomStr) {
         if (Objects.isNull(classroomStr)) {
             throw new ClassroomInvalidException("Classroom is null.");

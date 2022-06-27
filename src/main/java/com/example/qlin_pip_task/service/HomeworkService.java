@@ -76,14 +76,8 @@ public class HomeworkService {
 
     public StudentHomeworkGroupByIdAndDateAndClassResponses getStudentHomeworkByHomeworkIdAndClassIdAndDate(Map<String, String> queryMap) {
         String gradeStr = queryMap.get(GRADE);
-        classService.checkIfGradeStrIsValid(gradeStr);
-        Integer grade = Integer.valueOf(gradeStr);
-        classService.checkIfGradeIsValid(grade);
         String classroomStr = queryMap.get(CLASSROOM);
-        classService.checkIfClassroomStrIsValid(classroomStr);
-        Integer classroom = Integer.valueOf(classroomStr);
-        classService.checkIfClassroomIsValid(classroom);
-        Integer classId = classService.getClassId(grade, classroom);
+        Integer classId = classService.getValidClassId(gradeStr, classroomStr);
         String createdAt = queryMap.get(CREATED_AT);
         LocalDate createdDate = LocalDate.parse(createdAt);
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);
@@ -107,8 +101,8 @@ public class HomeworkService {
 
         return StudentHomeworkGroupByIdAndDateAndClassResponses.builder()
                 .homeworkId(homeworkId)
-                .grade(grade)
-                .classroom(classroom)
+                .grade(Integer.parseInt(gradeStr))
+                .classroom(Integer.parseInt(classroomStr))
                 .createdAt(createdAt)
                 .studentHomeworkList(responses)
                 .build();
