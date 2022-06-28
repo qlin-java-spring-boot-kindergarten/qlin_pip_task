@@ -81,14 +81,7 @@ public class HomeworkService {
         String classroomStr = queryMap.get(CLASSROOM);
         Integer classId = classService.getValidClassId(gradeStr, classroomStr);
         String dateStr = queryMap.get(CREATED_AT);
-        if (Objects.isNull(dateStr)) {
-            throw new DateInvalidException("Date is null.");
-        }
-        try {
-            LocalDate.parse(dateStr);
-        } catch (DateTimeParseException e) {
-            throw new DateInvalidException("Date is invalid.");
-        }
+        checkIfDateStrIsValid(dateStr);
         LocalDate date = LocalDate.parse(dateStr);
         if (!homeworkRepository.existsByStudentHomeworkCreatedAt(date)) {
             throw new DateInvalidException("Date is invalid.");
@@ -119,6 +112,17 @@ public class HomeworkService {
                 .createdAt(dateStr)
                 .studentHomeworkList(responses)
                 .build();
+    }
+
+    private void checkIfDateStrIsValid(String dateStr) {
+        if (Objects.isNull(dateStr)) {
+            throw new DateInvalidException("Date is null.");
+        }
+        try {
+            LocalDate.parse(dateStr);
+        } catch (DateTimeParseException e) {
+            throw new DateInvalidException("Date is invalid.");
+        }
     }
 
     private void checkIfStudentHomeworkContentIsDuplicated(List<StudentHomeworkEntity> studentHomeworkEntityList, String content, Integer studentId) {
