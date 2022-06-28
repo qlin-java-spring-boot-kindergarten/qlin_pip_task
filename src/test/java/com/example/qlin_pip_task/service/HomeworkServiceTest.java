@@ -240,4 +240,17 @@ class HomeworkServiceTest {
         assertThat(exception.getMessage(), is("Homework id is invalid."));
     }
 
+    @Test
+    void should_throw_homework_id_invalid_exception_given_non_numeric_homework_id_string() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("homework_id", "id");
+        queryMap.put("grade", "2");
+        queryMap.put("classroom", "3");
+        queryMap.put("created_at", "2022-06-25");
+        when(classService.getValidClassId("2", "3")).thenReturn(4);
+        when(homeworkRepository.existsByStudentHomeworkCreatedAt(LocalDate.parse("2022-06-25"))).thenReturn(true);
+        Exception exception = assertThrows(HomeworkIdInvalidException.class, () -> homeworkService.getStudentHomeworkByHomeworkIdAndClassIdAndDate(queryMap));
+        assertThat(exception.getMessage(), is("Homework id is invalid."));
+    }
+
 }

@@ -87,6 +87,11 @@ public class HomeworkService {
         if (Objects.isNull(homeworkIdStr)) {
             throw new HomeworkIdInvalidException("Homework id is invalid.");
         }
+        try {
+            Integer.parseInt(homeworkIdStr);
+        } catch (NumberFormatException e) {
+            throw new HomeworkIdInvalidException("Homework id is invalid.");
+        }
         Integer homeworkId = Integer.valueOf(homeworkIdStr);
         Optional<HomeworkEntity> optionalHomeworkEntity = homeworkRepository.findById(homeworkId);
         if (optionalHomeworkEntity.isEmpty()) {
