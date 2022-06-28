@@ -11,8 +11,8 @@ import com.example.qlin_pip_task.entity.HomeworkEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.ContentInvalidException;
-import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
+import com.example.qlin_pip_task.exception.StudentHomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.StudentInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
@@ -191,7 +191,7 @@ class StudentServiceTest {
                                         StudentHomeworkEntity.builder().id(99)
                                                 .homeworkEntity(HomeworkEntity.builder().id(1).build()).content("test")
                                                 .build())).build()));
-        Exception exception = assertThrows(HomeworkAlreadyExistedException.class,
+        Exception exception = assertThrows(StudentHomeworkAlreadyExistedException.class,
                 () -> studentService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().homeworkId(1).content("test").build()));
         assertTrue(exception.getMessage().contains("The homework already existed."));
     }

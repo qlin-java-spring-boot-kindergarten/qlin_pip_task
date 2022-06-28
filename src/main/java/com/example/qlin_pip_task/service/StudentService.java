@@ -10,9 +10,9 @@ import com.example.qlin_pip_task.entity.ClassEntity;
 import com.example.qlin_pip_task.entity.StudentEntity;
 import com.example.qlin_pip_task.entity.StudentHomeworkEntity;
 import com.example.qlin_pip_task.exception.ContentInvalidException;
-import com.example.qlin_pip_task.exception.HomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.NameInvalidException;
+import com.example.qlin_pip_task.exception.StudentHomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.exception.StudentInvalidException;
 import com.example.qlin_pip_task.exception.StudentNotFoundException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
@@ -160,7 +160,7 @@ public class StudentService {
     private void checkIfHomeworkAlreadyExisted(List<StudentHomeworkEntity> theStudentHomeworkList, Integer requestHomeworkType) {
         for (StudentHomeworkEntity entity : theStudentHomeworkList) {
             if (entity.getHomeworkEntity().getId().equals(requestHomeworkType)) {
-                throw new HomeworkAlreadyExistedException("The homework already existed.");
+                throw new StudentHomeworkAlreadyExistedException("The homework already existed.");
             }
         }
     }

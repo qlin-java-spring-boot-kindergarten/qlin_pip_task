@@ -13,6 +13,7 @@ import com.example.qlin_pip_task.exception.ContentInvalidException;
 import com.example.qlin_pip_task.exception.DateInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkIdInvalidException;
 import com.example.qlin_pip_task.exception.HomeworkNotFoundException;
+import com.example.qlin_pip_task.exception.StudentHomeworkAlreadyExistedException;
 import com.example.qlin_pip_task.mapper.HomeworkMapper;
 import com.example.qlin_pip_task.repository.HomeworkRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +63,7 @@ public class HomeworkService {
         Integer studentId = homeworkAnswerSubmitRequest.getStudentId();
         String content = homeworkAnswerSubmitRequest.getContent();
         checkIfContentIsValid(content);
-        checkIfStudentHomeworkContentIsDuplicated(studentHomeworkEntityList, content, studentId);
+        checkIfStudentHomeworkIsDuplicated(studentHomeworkEntityList, homeworkId, studentId);
         StudentEntity studentEntity = studentService.getNotNullStudentEntity(studentId);
         studentEntity.setId(studentId);
         Integer classId = studentEntity.getClassId();
@@ -147,11 +148,11 @@ public class HomeworkService {
         }
     }
 
-    private void checkIfStudentHomeworkContentIsDuplicated(List<StudentHomeworkEntity> studentHomeworkEntityList, String content, Integer studentId) {
+    private void checkIfStudentHomeworkIsDuplicated(List<StudentHomeworkEntity> studentHomeworkEntityList, Integer homeworkId, Integer studentId) {
         for (StudentHomeworkEntity studentHomeworkEntity : studentHomeworkEntityList) {
-            if (studentHomeworkEntity.getContent().equals(content)
+            if (studentHomeworkEntity.getHomeworkEntity().getId().equals(homeworkId)
                     && studentHomeworkEntity.getStudentEntity().getId().equals(studentId)) {
-                throw new ContentInvalidException("Content is duplicated.");
+                throw new StudentHomeworkAlreadyExistedException("Student homework is existed.");
             }
         }
     }
