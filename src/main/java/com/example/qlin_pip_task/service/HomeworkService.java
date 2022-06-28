@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,11 @@ public class HomeworkService {
         String createdAt = queryMap.get(CREATED_AT);
         if (Objects.isNull(createdAt)) {
             throw new DateInvalidException("Date is null.");
+        }
+        try {
+            LocalDate.parse(createdAt);
+        } catch (DateTimeParseException e) {
+            throw new DateInvalidException("Date is invalid.");
         }
         LocalDate createdDate = LocalDate.parse(createdAt);
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);

@@ -200,4 +200,16 @@ class HomeworkServiceTest {
         assertThat(exception.getMessage(), is("Date is null."));
     }
 
+    @Test
+    void should_throw_date_invalid_exception_given_non_date_string() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("homework_id", "1");
+        queryMap.put("grade", "2");
+        queryMap.put("classroom", "3");
+        queryMap.put("created_at", "date");
+        when(classService.getValidClassId("2", "3")).thenReturn(4);
+        Exception exception = assertThrows(DateInvalidException.class, () -> homeworkService.getStudentHomeworkByHomeworkIdAndClassIdAndDate(queryMap));
+        assertThat(exception.getMessage(), is("Date is invalid."));
+    }
+
 }
