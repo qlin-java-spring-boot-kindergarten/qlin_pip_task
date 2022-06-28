@@ -84,13 +84,7 @@ public class HomeworkService {
         String dateStr = queryMap.get(CREATED_AT);
         LocalDate date = getValidLocalDate(dateStr);
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);
-        checkIfHomeworkStrIsValid(homeworkIdStr);
-        Integer homeworkId = Integer.valueOf(homeworkIdStr);
-        Optional<HomeworkEntity> optionalHomeworkEntity = homeworkRepository.findById(homeworkId);
-        if (optionalHomeworkEntity.isEmpty()) {
-            throw new HomeworkNotFoundException("Homework is not found");
-        }
-        HomeworkEntity homeworkEntity = optionalHomeworkEntity.get();
+        HomeworkEntity homeworkEntity = getValidHomeworkEntity(homeworkIdStr);
         List<StudentHomeworkEntity> studentHomeworkEntityList = homeworkEntity.getStudentHomework();
         List<StudentHomeworkEntity> list = studentHomeworkEntityList.stream().filter(studentHomeworkEntity ->
                 studentHomeworkEntity.getClassId().equals(classId)
@@ -104,12 +98,18 @@ public class HomeworkService {
         });
 
         return StudentHomeworkGroupByIdAndDateAndClassResponses.builder()
-                .homeworkId(homeworkId)
+                .homeworkId(Integer.parseInt(homeworkIdStr))
                 .grade(Integer.parseInt(gradeStr))
                 .classroom(Integer.parseInt(classroomStr))
                 .createdAt(dateStr)
                 .studentHomeworkList(responses)
                 .build();
+    }
+
+    private HomeworkEntity getValidHomeworkEntity(String homeworkIdStr) {
+        checkIfHomeworkStrIsValid(homeworkIdStr);
+        Integer homeworkId = Integer.valueOf(homeworkIdStr);
+        return getNotNullHomeworkEntity(homeworkId);
     }
 
     private void checkIfHomeworkStrIsValid(String homeworkIdStr) {
