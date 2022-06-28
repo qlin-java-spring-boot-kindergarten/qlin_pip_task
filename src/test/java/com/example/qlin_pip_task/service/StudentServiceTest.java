@@ -177,7 +177,7 @@ class StudentServiceTest {
         when(studentRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(StudentNotFoundException.class,
                 () -> studentService.createStudentHomework(1, StudentHomeworkSubmitRequest.builder().build()));
-        assertTrue(exception.getMessage().contains("Student is not found."));
+        assertThat(exception.getMessage(), is("Student is not found."));
     }
 
 
