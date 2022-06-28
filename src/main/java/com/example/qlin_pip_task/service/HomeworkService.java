@@ -84,14 +84,7 @@ public class HomeworkService {
         String dateStr = queryMap.get(CREATED_AT);
         LocalDate date = getValidLocalDate(dateStr);
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);
-        if (Objects.isNull(homeworkIdStr)) {
-            throw new HomeworkIdInvalidException("Homework id is invalid.");
-        }
-        try {
-            Integer.parseInt(homeworkIdStr);
-        } catch (NumberFormatException e) {
-            throw new HomeworkIdInvalidException("Homework id is invalid.");
-        }
+        checkIfHomeworkStrIsValid(homeworkIdStr);
         Integer homeworkId = Integer.valueOf(homeworkIdStr);
         Optional<HomeworkEntity> optionalHomeworkEntity = homeworkRepository.findById(homeworkId);
         if (optionalHomeworkEntity.isEmpty()) {
@@ -117,6 +110,17 @@ public class HomeworkService {
                 .createdAt(dateStr)
                 .studentHomeworkList(responses)
                 .build();
+    }
+
+    private void checkIfHomeworkStrIsValid(String homeworkIdStr) {
+        if (Objects.isNull(homeworkIdStr)) {
+            throw new HomeworkIdInvalidException("Homework id is invalid.");
+        }
+        try {
+            Integer.parseInt(homeworkIdStr);
+        } catch (NumberFormatException e) {
+            throw new HomeworkIdInvalidException("Homework id is invalid.");
+        }
     }
 
     private LocalDate getValidLocalDate(String dateStr) {
