@@ -98,9 +98,9 @@ public class HomeworkService {
         });
 
         return StudentHomeworkGroupByIdAndDateAndClassResponses.builder()
-                .homeworkId(Integer.parseInt(homeworkIdStr))
-                .grade(Integer.parseInt(gradeStr))
-                .classroom(Integer.parseInt(classroomStr))
+                .homeworkId(homeworkIdStr)
+                .grade(gradeStr)
+                .classroom(classroomStr)
                 .createdAt(dateStr)
                 .studentHomeworkList(responses)
                 .build();

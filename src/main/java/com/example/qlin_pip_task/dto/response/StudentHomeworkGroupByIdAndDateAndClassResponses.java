@@ -10,9 +10,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class StudentHomeworkGroupByIdAndDateAndClassResponses {
-    private Integer homeworkId;
-    private Integer grade;
-    private Integer classroom;
+    private String homeworkId;
+    private String grade;
+    private String classroom;
     private String createdAt;
     private List<StudentHomeworkResponse> studentHomeworkList;
 

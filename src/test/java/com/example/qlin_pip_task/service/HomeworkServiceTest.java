@@ -184,9 +184,9 @@ class HomeworkServiceTest {
         StudentHomeworkGroupByIdAndDateAndClassResponses studentHomeworkByHomeworkIdAndClassIdAndDate =
                 homeworkService.getStudentHomeworkByHomeworkIdAndClassIdAndDate(queryMap);
 
-        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getHomeworkId(), is(1));
-        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getGrade(), is(2));
-        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getClassroom(), is(3));
+        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getHomeworkId(), is("1"));
+        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getGrade(), is("2"));
+        assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getClassroom(), is("3"));
         assertThat(studentHomeworkByHomeworkIdAndClassIdAndDate.getCreatedAt(), is("2022-06-25"));
     }
 
