@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,8 +27,7 @@ import java.util.List;
 @Table(name = "homework")
 public class HomeworkEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "homework_id_generator")
-    @SequenceGenerator(name = "homework_id_generator", sequenceName = "homework_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
 
