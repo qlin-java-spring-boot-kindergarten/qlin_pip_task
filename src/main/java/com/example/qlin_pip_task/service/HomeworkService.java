@@ -81,9 +81,7 @@ public class HomeworkService {
         String classroomStr = queryMap.get(CLASSROOM);
         Integer classId = classService.getValidClassId(gradeStr, classroomStr);
         String dateStr = queryMap.get(CREATED_AT);
-        checkIfDateStrIsValid(dateStr);
-        LocalDate date = LocalDate.parse(dateStr);
-        checkIfDateExists(date);
+        LocalDate date = getValidLocalDate(dateStr);
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);
         Integer homeworkId = Integer.valueOf(homeworkIdStr);
         Optional<HomeworkEntity> optionalHomeworkEntity = homeworkRepository.findById(homeworkId);
@@ -110,6 +108,13 @@ public class HomeworkService {
                 .createdAt(dateStr)
                 .studentHomeworkList(responses)
                 .build();
+    }
+
+    private LocalDate getValidLocalDate(String dateStr) {
+        checkIfDateStrIsValid(dateStr);
+        LocalDate date = LocalDate.parse(dateStr);
+        checkIfDateExists(date);
+        return date;
     }
 
     private void checkIfDateExists(LocalDate date) {
