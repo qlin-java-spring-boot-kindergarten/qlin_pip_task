@@ -1,7 +1,7 @@
 package com.example.qlin_pip_task.service;
 
 import com.example.qlin_pip_task.entity.ClassEntity;
-import com.example.qlin_pip_task.exception.ClassNotExistsException;
+import com.example.qlin_pip_task.exception.ClassNotFoundException;
 import com.example.qlin_pip_task.exception.ClassroomInvalidException;
 import com.example.qlin_pip_task.exception.GradeInvalidException;
 import com.example.qlin_pip_task.repository.ClassRepository;
@@ -56,9 +56,9 @@ class ClassServiceTest {
 
         when(classRepository.findByGradeAndClassroom(1, 9)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ClassNotExistsException.class, () -> classService.getClassId(1, 9));
+        Exception exception = assertThrows(ClassNotFoundException.class, () -> classService.getClassId(1, 9));
 
-        assertThat(exception.getMessage(), is("The class does not exist."));
+        assertThat(exception.getMessage(), is("The class is not found."));
 
     }
 
