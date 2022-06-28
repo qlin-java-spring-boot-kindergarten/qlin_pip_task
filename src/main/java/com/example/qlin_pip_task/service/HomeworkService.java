@@ -90,6 +90,9 @@ public class HomeworkService {
             throw new DateInvalidException("Date is invalid.");
         }
         LocalDate createdDate = LocalDate.parse(createdAt);
+        if (!homeworkRepository.existsByStudentHomeworkCreatedAt(createdDate)) {
+            throw new DateInvalidException("Date is invalid.");
+        }
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);
         Integer homeworkId = Integer.valueOf(homeworkIdStr);
         Optional<HomeworkEntity> optionalHomeworkEntity = homeworkRepository.findById(homeworkId);

@@ -165,6 +165,7 @@ class HomeworkServiceTest {
         queryMap.put("classroom", "3");
         queryMap.put("created_at", "2022-06-25");
         when(classService.getValidClassId("2", "3")).thenReturn(4);
+        when(homeworkRepository.existsByStudentHomeworkCreatedAt(LocalDate.parse("2022-06-25"))).thenReturn(true);
         StudentHomeworkEntity studentHomeworkEntity = StudentHomeworkEntity.builder()
                 .createdAt(LocalDate.parse("2022-06-25"))
                 .classId(4)
@@ -208,6 +209,19 @@ class HomeworkServiceTest {
         queryMap.put("classroom", "3");
         queryMap.put("created_at", "date");
         when(classService.getValidClassId("2", "3")).thenReturn(4);
+        Exception exception = assertThrows(DateInvalidException.class, () -> homeworkService.getStudentHomeworkByHomeworkIdAndClassIdAndDate(queryMap));
+        assertThat(exception.getMessage(), is("Date is invalid."));
+    }
+
+    @Test
+    void should_throw_date_invalid_exception_given_not_existing_date() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("homework_id", "1");
+        queryMap.put("grade", "2");
+        queryMap.put("classroom", "3");
+        queryMap.put("created_at", "2022-06-25");
+        when(classService.getValidClassId("2", "3")).thenReturn(4);
+        when(homeworkRepository.existsByStudentHomeworkCreatedAt(LocalDate.parse("2022-06-25"))).thenReturn(false);
         Exception exception = assertThrows(DateInvalidException.class, () -> homeworkService.getStudentHomeworkByHomeworkIdAndClassIdAndDate(queryMap));
         assertThat(exception.getMessage(), is("Date is invalid."));
     }
