@@ -105,7 +105,7 @@ class StudentServiceTest {
     void should_throw_name_invalid_exception_when_name_is_null() {
         Exception exception = assertThrows(InvalidParameterException.class, () -> studentService.validateStudentData(
                 StudentSubmitRequest.builder().name(null).classroom(1).grade(1).build()));
-        assertTrue(exception.getMessage().contains("Name is invalid."));
+        assertThat(exception.getMessage(), is("Name is invalid."));
     }
 
     @Test
