@@ -80,17 +80,17 @@ public class HomeworkService {
         String gradeStr = queryMap.get(GRADE);
         String classroomStr = queryMap.get(CLASSROOM);
         Integer classId = classService.getValidClassId(gradeStr, classroomStr);
-        String createdAt = queryMap.get(CREATED_AT);
-        if (Objects.isNull(createdAt)) {
+        String dateStr = queryMap.get(CREATED_AT);
+        if (Objects.isNull(dateStr)) {
             throw new DateInvalidException("Date is null.");
         }
         try {
-            LocalDate.parse(createdAt);
+            LocalDate.parse(dateStr);
         } catch (DateTimeParseException e) {
             throw new DateInvalidException("Date is invalid.");
         }
-        LocalDate createdDate = LocalDate.parse(createdAt);
-        if (!homeworkRepository.existsByStudentHomeworkCreatedAt(createdDate)) {
+        LocalDate date = LocalDate.parse(dateStr);
+        if (!homeworkRepository.existsByStudentHomeworkCreatedAt(date)) {
             throw new DateInvalidException("Date is invalid.");
         }
         String homeworkIdStr = queryMap.get(HOMEWORK_ID);
@@ -103,7 +103,7 @@ public class HomeworkService {
         List<StudentHomeworkEntity> studentHomeworkEntityList = homeworkEntity.getStudentHomework();
         List<StudentHomeworkEntity> list = studentHomeworkEntityList.stream().filter(studentHomeworkEntity ->
                 studentHomeworkEntity.getClassId().equals(classId)
-                        && studentHomeworkEntity.getCreatedAt().equals(createdDate)).collect(Collectors.toList());
+                        && studentHomeworkEntity.getCreatedAt().equals(date)).collect(Collectors.toList());
         List<StudentHomeworkGroupByIdAndDateAndClassResponses.StudentHomeworkResponse> responses = new ArrayList<>();
         list.forEach(studentHomeworkEntity -> {
             StudentHomeworkGroupByIdAndDateAndClassResponses.StudentHomeworkResponse studentHomeworkResponse =
@@ -116,7 +116,7 @@ public class HomeworkService {
                 .homeworkId(homeworkId)
                 .grade(Integer.parseInt(gradeStr))
                 .classroom(Integer.parseInt(classroomStr))
-                .createdAt(createdAt)
+                .createdAt(dateStr)
                 .studentHomeworkList(responses)
                 .build();
     }
