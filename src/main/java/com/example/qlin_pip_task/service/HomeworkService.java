@@ -65,7 +65,6 @@ public class HomeworkService {
         checkIfContentIsValid(content);
         checkIfStudentHomeworkIsDuplicated(studentHomeworkEntityList, homeworkId, studentId);
         StudentEntity studentEntity = studentService.getNotNullStudentEntity(studentId);
-        studentEntity.setId(studentId);
         Integer classId = studentEntity.getClassId();
         StudentHomeworkEntity studentHomeworkEntity = homeworkMapper.homeworkAnswerRequestToEntity(homeworkAnswerSubmitRequest);
         studentHomeworkEntity.setHomeworkEntity(homeworkEntity);
